@@ -1,0 +1,16 @@
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>Manage Homepage Banners</h1>
+      <%= link_to 'New Banner', new_banner_path, class: 'btn btn-primary pull-right' %>
+    </div>
+  </div>
+</div>
+
+
+<% @banners.each do |banner| %>
+  <%= render banner %>
+
+  <br clear="all"/>
+<% end %>

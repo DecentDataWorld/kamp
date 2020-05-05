@@ -1,0 +1,31 @@
+<h1>Listing resourcings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Resourceable</th>
+      <th>Resourceable type</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @resourcings.each do |resourcing| %>
+      <tr>
+        <td><%= resourcing.resource_id %></td>
+        <td><%= resourcing.resourceable_id %></td>
+        <td><%= resourcing.resourceable_type %></td>
+        <td><%= link_to 'Show', resourcing %></td>
+        <td><%= link_to 'Edit', edit_resourcing_path(resourcing) %></td>
+        <td><%= link_to 'Destroy', resourcing, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Resourcing', new_resourcing_path %>

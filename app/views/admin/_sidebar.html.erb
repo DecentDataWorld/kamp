@@ -1,0 +1,94 @@
+
+<ul id="sidebar-nav" class="list-group sidebar-nav-v1">
+  <% if can? :approve, Resource or can? :approve, Collection %>
+    <!-- Moderate Resources and Collections -->
+    <li class="list-group-item">
+      <a href="<%= moderate_submissions_url %>">Manage Pending Submissions</a>
+    </li>
+    <!-- End Moderate Resources and Collections -->
+  <% end %>
+  <% if can? :manage, Banner %>
+    <li class="list-group-item">
+      <a href="<%= banners_url %>">Manage Banners</a>
+    </li>
+  <% end %>
+  <% if can? :view, :reports %>
+    <!-- Reports -->
+    <li class="list-group-item list-toggle">
+      <a href="#collapse-reports" data-parent="#sidebar-nav" data-toggle="collapse">Reports</a>
+      <ul class="collapse" id="collapse-reports">
+        <li><%= link_to private_resources_path do %><i class="fa fa-lock"></i> All Private Documents<% end %></li>
+        <li><%= link_to admin_contest_path do %><i class="fa fa-star-half"></i> Contest Report<% end %></li>
+        <li><%= link_to contest_report_path do %><i class="fa fa-star-half"></i> Downloadable Contest Report<% end %></li>
+        <li><%= link_to survey_report_path do %><i class="fa fa-star-half"></i> Survey Report<% end %></li>
+        <li><%= link_to resource_ratings_path do %><i class="fa fa-thumbs-up"></i> Resource Ratings<% end %></li>
+        <li><%= link_to rails_admin_path do %><i class="fa fa-group"></i> Bulk Export<% end %></li>
+      </ul>
+    </li>
+    <!-- End Reports -->
+  <% end %>
+  <!-- Users -->
+  <li class="list-group-item list-toggle <%= 'active' if current_page?(users_url) %>">
+    <a href="#collapse-users" data-parent="#sidebar-nav" data-toggle="collapse">Users</a>
+    <ul class="collapse <%= 'in' if current_page?(users_url) %>" id="collapse-users">
+      <li><%= link_to users_path do %><i class="fa fa-group"></i> Manage Users<% end %></li>
+    </ul>
+  </li>
+  <!-- End Users -->
+  <!-- Organizations -->
+  <li class="list-group-item list-toggle <%= 'active' if current_page?(orgs_url) %>">
+    <a href="#collapse-organizations" data-parent="#sidebar-nav" data-toggle="collapse">Organizations</a>
+    <ul class="collapse <%= 'in' if current_page?(orgs_url) %>" id="collapse-organizations">
+      <li <%= 'class="active"' if current_page?(orgs_url)  %>><%= link_to orgs_path do %><i class="fa fa-building"></i> Manage Organizations<% end %></li>
+      <li><%= link_to new_organization_path do %><i class="fa fa-plus-square"></i> New Organization<% end %></li>
+    </ul>
+  </li>
+  <!-- End Organizations -->
+  <!-- Organizations -->
+  <li class="list-group-item list-toggle <%= 'active' if current_page?(activities_url) %>">
+    <a href="#collapse-activities" data-parent="#sidebar-nav" data-toggle="collapse">Activities</a>
+    <ul class="collapse <%= 'in' if current_page?(activities_url) %>" id="collapse-activities">
+      <li <%= 'class="active"' if current_page?(activities_url)  %>><%= link_to activities_path do %><i class="fa fa-building"></i> Manage Activities<% end %></li>
+      <li><%= link_to new_activity_path do %><i class="fa fa-plus-square"></i> New Activity<% end %></li>
+    </ul>
+  </li>
+  <!-- End Organizations -->
+  <!-- Resources -->
+  <li class="list-group-item list-toggle <%= 'active' if current_page?(upload_files_url) %>">
+    <a href="#collapse-resources" data-parent="#sidebar-nav" data-toggle="collapse">Resources</a>
+    <ul class="collapse <%= 'in' if current_page?(upload_files_url) %>" id="collapse-resources">
+      <li <%= raw('class="active"') if current_page?(upload_files_url) %>><%= link_to upload_files_path do %><i class="fa fa-file"></i> Upload Resources<% end %></li>
+      <li <%= raw('class="active"') if current_page?(fix_resource_collections_menu_url) %>><%= link_to fix_resource_collections_menu_path do %><i class="fa fa-file"></i> Fix Resource-Collection Links<% end %></li>
+    </ul>
+  </li>
+  <!-- End Resources -->
+  <!-- Tag Categories -->
+  <li class="list-group-item list-toggle">
+    <a href="#collapse-categories" data-parent="#sidebar-nav" data-toggle="collapse">Tag Categories</a>
+    <ul class="collapse" id="collapse-categories">
+      <li><%= link_to categories_path do %><i class="fa fa-tags"></i> Manage Categories<% end %></li>
+      <li><%= link_to manage_tags_path do %><i class="fa fa-tags"></i> Manage Tags<% end %></li>
+      <li><%= link_to new_category_path do %><i class="fa fa-plus-square"></i> New Category<% end %></li>
+    </ul>
+  </li>
+  <!-- End Tag Categories -->
+  <!-- Organization Types -->
+  <li class="list-group-item list-toggle">
+    <a href="#collapse-org-types" data-parent="#sidebar-nav" data-toggle="collapse">Organization Types</a>
+    <ul class="collapse" id="collapse-org-types">
+      <li><%= link_to organization_types_path do %><i class="fa fa-building"></i> Manage Org Types<% end %></li>
+      <li><%= link_to new_organization_type_path do %><i class="fa fa-plus-square"></i> New Org Type<% end %></li>
+    </ul>
+  </li>
+  <!-- End Organization Types -->
+  <!-- Licenses -->
+  <li class="list-group-item list-toggle">
+    <a href="#collapse-licenses" data-parent="#sidebar-nav" data-toggle="collapse">Licenses</a>
+    <ul class="collapse" id="collapse-licenses">
+      <li><%= link_to licenses_path do %><i class="fa fa-gavel"></i> Manage Licenses<% end %></li>
+      <li><%= link_to new_license_path do %><i class="fa fa-plus-square"></i> New License<% end %></li>
+    </ul>
+  </li>
+  <!-- End Licenses -->
+</ul>
+

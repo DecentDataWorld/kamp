@@ -1,0 +1,11 @@
+
+
+<div class="form-group">
+  <label for="name">Heading</label>
+  <%= f.input_field :heading, class: "form-control", id: 'heading', placeholder: 'Enter Heading', maxlength: 250 %>
+</div>
+
+<div class="form-group">
+  <label for="name">Introduction</label>
+  <%= f.input_field :intro_text, as: :ckeditor, input_html: { ckeditor: { tooldbar: 'mini' } }, id: 'intro_text' %>
+</div>

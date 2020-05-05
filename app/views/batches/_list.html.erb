@@ -1,0 +1,20 @@
+<table class="table table-bordered">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Uploader</th>
+    <th># Resources</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @batches.each do |batch| %>
+      <tr>
+        <td><%= link_to batch.name, batch %></td>
+        <td><%= batch.uploader_id %></td>
+        <td><%= batch.resources.count %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+

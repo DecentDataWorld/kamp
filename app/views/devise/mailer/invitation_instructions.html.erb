@@ -1,0 +1,16 @@
+<p>Hello <%= @resource.email %>!</p>
+
+<p>A Portal Administrator has invited you to sign up for the USAID Jordan Knowledge Management Portal (KaMP) (<%= root_url %>). You can accept this invite through the link below.</p>
+
+<p><%= link_to 'Accept invitation', accept_invitation_url(@resource, :invitation_token => @token) %></p>
+
+<p>If the above link does not work you can copy and paste the link below:</p>
+
+<p>
+
+  <%= accept_invitation_url(@resource, :invitation_token => @token) %>
+
+</p>
+
+<p>If you do not want to accept the invitation, please ignore this email.<br />
+Your account will not be created until you access the link above and set your password.</p>

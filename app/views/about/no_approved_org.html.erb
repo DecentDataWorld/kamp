@@ -1,0 +1,7 @@
+<% content_for :title do %><%= @page_title %><% end %>
+<div class="info-board info-board-red">
+    <p>We're sorry. You can't add any collections right now because you're not part of an approved organization yet. </p>
+
+    <p>You can <%= link_to 'add your own organization', new_organization_path %> or request access to an <%= link_to 'approved organization', organizations_path %></p>
+
+</div>

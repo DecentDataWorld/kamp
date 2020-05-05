@@ -1,0 +1,32 @@
+
+<!-- Tab v1 -->
+<div class="tab-v1">
+  <ul class="nav nav-tabs">
+    <li><%= link_to raw('<i class="fa fa-files-o"></i> Resources Uploaded'), @organization %></li>
+    <li><%= link_to raw('<i class="fa fa-users"></i> Members'), @organization %></li>
+    <% if user_signed_in? and @organization.users.exists?(current_user) %>
+        <li class="dropdown">
+          <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> Manage <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+            <li><%= link_to org_private_resources_path(@organization), class: "dropdown-toggle", data: { :toggle=> "dropdown" } do %><i class="fa fa-lock"></i> Private Resources<% end %></li>
+            <% edit_class = 'active' if current_page?(edit_organization_path(@organization)) %>
+            <% edit_class = '' if !current_page?(edit_organization_path(@organization)) %>
+            <li class="<%= edit_class %>"><%= link_to edit_organization_path(@organization) do %>
+                  <i class="fa fa-edit"></i>
+                  Edit
+              <% end %>
+            </li>
+            <% if can? :delete, @organization %>
+                <li class="divider"></li>
+                <li>
+                  <%= link_to @organization, method: :delete, data: { confirm: 'Are you sure?' } do %>
+                      <span class="glyphicon glyphicon-remove"></span>
+                      Delete
+                  <% end %>
+                </li>
+            <% end %>
+          </ul>
+        </li>
+    <% end %>
+  </ul>
+</div>

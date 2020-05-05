@@ -1,0 +1,34 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-md-9">
+    <%= link_to 'New Organization type', new_organization_type_path, class: 'pull-right btn btn-primary' %>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th width="50"></th>
+        <th>Org Type</th>
+        <th width="150"></th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <% @organization_types.each do |organization_type| %>
+          <tr>
+            <td><%= link_to 'Edit', edit_organization_type_path(organization_type), class: 'btn btn-xs btn-primary' %></td>
+            <td><%= organization_type.organization_type %></td>
+            <td><%= link_to 'Destroy', organization_type, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-xs btn-primary' %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="col-md-3">
+
+    <%= render 'admin/sidebar' %>
+
+  </div>
+  </div>
+</div>

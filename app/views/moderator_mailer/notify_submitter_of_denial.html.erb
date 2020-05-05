@@ -1,0 +1,17 @@
+<p>The following submission to the Jordan Knowledge Management Portal (KaMP) has been denied:</p>
+
+<p><strong><%= @submission.class.name %> Name: <%= @submission.title if @submission.is_a? Collection %>
+<%= @submission.name if @submission.is_a? Resource %></strong></p>
+
+<p>The system administrator denied this resource due to the following reason:</p>
+<blockquote><%= @reason.reason %></blockquote>
+
+<p>Please address the issue referenced above before re-uploading.</p>
+
+<p>If you need any further support please contact <a href="mailto:contact@jordankmportal.com">contact@jordankmportal.com</a>.</p>
+
+<p> Best Regards,<br>
+ Jordan KaMP
+</p>
+
+

@@ -1,0 +1,41 @@
+
+<% if search.id.blank? %>
+    <% method_variable = "post" %>
+<% else %>
+    <% method_variable = "patch" %>
+<% end %>
+<%= form_for search, role: 'form', class: 'sky-form page-search-form', html: { method: method_variable } do %>
+
+    <% if !params[:organization_id].nil? %>
+        <input type="hidden" name="organization_id" value="<%= params[:organization_id] %>">
+    <% end %>
+    <% if !params[:license_id].nil? %>
+        <input type="hidden" name="license_id" value="<%= params[:license_id] %>">
+    <% end %>
+    <% if !params[:resource_type].nil? %>
+        <input type="hidden" name="resource_type" value="<%= params[:resource_type] %>">
+    <% end %>
+    <% if !params[:language].nil? %>
+        <input type="hidden" name="language" value="<%= params[:language] %>">
+    <% end %>
+    <div class="input-group">
+      <%= text_field_tag :query, params[:query], id: 'header_search_form', class: 'form-control', placeholder: 'Discover something', title: 'What are you looking for?', maxlength: '250' %>
+      <span class="input-group-btn">
+        <button class="btn-u" type="button" id="search_submit"><i class="fa fa-search"></i></button>
+        <% if !search.id.blank? %>
+            <%= link_to new_search_path, class: 'btn-u btn-u-round btn-u-default' do %>
+                <i class="fa fa-refresh"></i> Reset Search
+            <% end %>
+        <% end %>
+      </span>
+    </div>
+<% end %>
+
+<script>
+    $(document).ready(function() {
+        $("#search_submit").click(function(){
+            $("#new_search").submit();
+            $("#edit_search_<%= search.id.to_s %>").submit();
+        });
+    });
+</script>

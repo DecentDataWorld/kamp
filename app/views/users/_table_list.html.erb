@@ -1,0 +1,68 @@
+<table class="table table-condensed data-tables-user">
+  <thead>
+  <tr>
+    <th>User (Email)</th>
+    <th>Organization(s)</th>
+    <th>Registered/</th>
+    <th>Last Accessed</th>
+    <th>Portal Role</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% users.each do |user| %>
+    <%= render user %>
+      <tr>
+        <td>
+          <strong><%= link_to user.name, user %></strong>
+          <small>(<%= user.email %>)<br>
+            <%= raw("<strong>Logged In:</strong> " + user.last_sign_in_at.strftime("%m/%d/%Y")) if !user.last_sign_in_at.nil? %>
+          </small>
+        </td>
+        <td>
+          <% if !user.organizations.nil? %>
+            <% user.users_organizations.each do |userorganization| %>
+              <%= link_to userorganization.organization.name, organization_path(userorganization.organization) %> (<%= userorganization.role %>)<br>
+            <% end %>
+          <% end %>
+          <% if !user.organization_applications.nil? %>
+            <% user.organization_applications.each do |userapplication| %>
+              <% if userapplication.approved == false || userapplication.approved.nil? %>
+                <%= link_to userapplication.organization.name, organization_path(userapplication.organization) %> (applied to join)<br>
+              <% end %>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= user.created_at.to_date %></td>
+        <td><%= user.last_sign_in_at.to_date if !user.last_sign_in_at.nil? %></td>
+        <td>
+          <small>
+            <% user.roles.each do |role| %>
+              <span class="label label-info"><%= role.name.titleize %></span>
+            <% end %>
+          </small>
+        </td>
+        <td>
+          <% if user != current_user %>
+            <%= link_to user_path(user), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-danger btn-xs rounded' do %>
+              <i class="fa fa-minus-circle"></i> Remove
+            <% end %>
+          <% end %>
+
+          <% if user.organizations.count > 0 %>
+            <a data-toggle="modal" href="#role-options-<%= user.id %>" class="btn btn-info btn-xs rounded" type="button"><i class="fa fa-edit"></i> Change Role</a>
+          <% else %>
+            <span class="btn btn-u btn-u-default btn-xs rounded tooltips" data-toggle="tooltip" data-placement="bottom" data-original-title="Cannot change role without an organization"><i class="fa fa-ban"></i> No Org</span>
+          <% end %>
+
+          <% if !user.expired_at.blank? and !user.expired_at.nil? %>
+            <%= link_to unlock_user_path(user), class: 'btn btn-xs btn-warning rounded' do %>
+              <i class="fa fa-lock"></i> Unlock
+            <% end %>
+          <% end %>
+            &nbsp;
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

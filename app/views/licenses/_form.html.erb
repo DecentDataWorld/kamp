@@ -1,0 +1,23 @@
+<%= simple_form_for(@license) do |f| %>
+    <%= f.error_notification %>
+
+    <% if @license.errors.count > 0 %>
+        <div class="alert alert-danger fade in">
+          <p><strong>Correct Errors Before Continuing</strong></p>
+          <p>The following fields have to be corrected.</p>
+          <% @license.errors.each do |e| %>
+              <%= e %>
+          <% end %>
+        </div>
+    <% end %>
+
+    <div class="form-group">
+      <label for="title">License Text</label>
+      <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter License' %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit %>
+    </div>
+<% end %>
+

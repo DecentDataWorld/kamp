@@ -1,0 +1,85 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <p class=" pull-right"><a href="/admin/contest_report.csv?start_date=<%= @start_date %>&end_date=<%= @end_date %>" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> Export to Excel</a></p>
+      <div class="time-period">
+        <form class="form-inline" action="<%= contest_report_url %>" method="get">
+          <div class="form-group">
+            <label for="exampleInputName2">Start</label>
+            <input class="datepicker" type="text" name="start_date" class="form-control" value="<%= @start_date %>">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail2">End</label>
+            <input class="datepicker" type="text" name="end_date" class="form-control" value="<%= @end_date %>">
+          </div>
+          <button type="submit" class="btn btn-default">Update</button>
+        </form>
+      </div>
+      <% if @impressions.count > 0 %>
+        <table class="table table-bordered">
+          <tr>
+            <th>Resource Name</th>
+            <th>Uploaded By</th>
+            <th>Date of Upload</th>
+            <th>Total Views</th>
+            <th>Uniquely Accessed</th>
+            <th>Viewed By</th>
+            <th>Total Downloads</th>
+            <th>Downloaded By</th>
+          </tr>
+          <% @impressions.each do |resource| %>
+            <% shown = resource.impressions.where("action_name = 'show'") %>
+            <% !@start_date.nil? ? shown = shown.where("created_at >= ?", @start_date) : @start_date = nil %>
+            <% !@end_date.nil? ? shown = shown.where("created_at <= ?", @end_date) : @end_date = nil %>
+            <% downloaded = resource.impressions.where("action_name = 'download'") %>
+            <% !@start_date.nil? ? downloaded = downloaded.where("created_at >= ?", @start_date) : @start_date = nil %>
+            <% !@end_date.nil? ? downloaded = downloaded.where("created_at <= ?", @end_date) : @end_date = nil %>
+            <% if !resource.nil? %>
+              <tr>
+                <td><%= link_to resource.name, resource %></td>
+                <td><%= link_to resource.organization.name, resource.organization if !resource.organization.nil? %></td>
+                <td><%= resource.created_at %></td>
+                <td><%= resource.impressionist_count %> </td>
+                <td><%= shown.count %> </td>
+                <td>
+                  <% shown.select("DISTINCT user_id").each do |impression| %>
+                    <% if !impression.user_id.nil? && User.exists?(impression.user_id) %>
+                      <% user = User.find(impression.user_id) %>
+                      <%= link_to user.name, user if !user.nil? %><br>
+                    <% end %>
+                  <% end %>
+                </td>
+                <td><%= downloaded.count %></td>
+                <td>
+                  <% downloaded.select("DISTINCT user_id").each do |impression| %>
+                    <% if !impression.user_id.nil? && User.exists?(impression.user_id) %>
+                      <% user = User.find(impression.user_id) if User.exists?(impression.user_id) %>
+                      <%= link_to user.name, user if !user.nil? %><br>
+                    <% end %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </table>
+        <%= will_paginate @impressions %>
+      <% else %>
+        <%= raw '<blockquote><i class="fa fa-thumbs-down"></i> No impressions found with those filters</blockquote>' %>
+      <% end %>
+    </div>
+    <div class="col-md-3">
+      <%= render 'admin/sidebar' %>
+    </div>
+  </div>
+</div>
+<% content_for :page_javascript do %>
+  <script>
+    jQuery(document).ready(function() {
+      $('.datepicker').datetimepicker({
+        format: 'MM/DD/YYYY'
+      });
+    });
+  </script>
+<% end %>

@@ -1,0 +1,13 @@
+<p>Your application to become a member of <strong><%= @organization.name %></strong> on the Jordan Knowledge Management Portal (KaMP) has been denied.</p>
+
+<% if !@message.blank? || !@message.nil? %>
+    <p>The organization administrator included the following message:</p>
+    <blockquote><%= @message %></blockquote>
+<% end %>
+
+<p>If you need any further support please contact <a href="mailto:contact@jordankmportal.com">contact@jordankmportal.com</a>.</p>
+
+<p> Best Regards,<br>
+  Jordan KaMP
+</p>
+

@@ -1,0 +1,198 @@
+
+<!--=== Breadcrumbs v3 ===-->
+<div class="breadcrumbs-v3">
+  <div class="container">
+    <h1>Search Collections</h1>
+  </div>
+</div>
+<!--=== End Breadcrumbs v3 ===-->
+
+
+
+<!--=== Search Results ===-->
+<div class="container s-results margin-bottom-50">
+  <div class="row margin-bottom-40 margin-top-20">
+    <%= form_for collections_path, method: 'get', role: 'form', class: 'sky-form page-search-form' do %>
+        <% if !params[:organization_id].nil? %>
+            <input type="hidden" name="organization_id" value="<%= params[:organization_id] %>">
+        <% end %>
+        <% if !params[:tags].nil? %>
+            <input type="hidden" name="tags" value="<%= params[:tags] %>">
+        <% end %>
+        <div class="input-group">
+          <label class="sr-only" for="shop-search">Search</label>
+          <%= text_field_tag :query, params[:query], class: 'form-control border-color', placeholder: 'Search Collections', id: 'shop-search' %>
+            <div class="input-group-btn">
+              <button type="submit" class="btn btn-color"><i class="fa fa-search"></i> Search</button>
+              <% if !params[:query].nil? or !params[:tags].nil? or !params[:organization_id].nil? %>
+                  <%= link_to collections_path, class: 'btn btn-danger ' do %>
+                      <i class="fa fa-refresh"></i>
+                  <% end %>
+              <% end %>
+            </div>
+        </div>
+    <% end %>
+
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-3 related-search">
+      <div class="headline"><h4>FILTER BY</h4></div>
+      <!-- Search -->
+      <% if !@search_results.nil? %>
+
+          <div id="orgs">
+            <h3>Organizations</h3>
+            <% if params[:organization_id].present? %>
+                <% @organization =  Organization.find(params[:organization_id]) %>
+                <%= render partial: 'organizations/info', locals: { :short => true } %>
+                <%= link_to url_for(collections_path(params.except(:organization_id))), class: 'pull-right' do %>
+                    <i class="fa fa-times-circle"></i> reset filter
+                <% end %>
+            <% else %>
+                <ul id="orglist" class="list-unstyled">
+                  <% for row in @search_results.facet(:organization_id).rows %>
+                      <% if !row.instance.nil? %>
+                          <li>
+                            (<%= row.count %>) <%= link_to row.instance.name, collections_path(params.merge(:organization_id => row.value).except(:page)) %>
+                          </li>
+                      <% end %>
+                  <% end %>
+                </ul>
+                <% if @search_results.facet(:organization_id).rows.count > 4 %>
+                    <p><a class="expandOrgsList"><i class="fa fa-arrow-circle-down"></i> More</a></p>
+                <% end %>
+            <% end %>
+
+            <script>
+
+                $(document).ready(function () {
+                    $('#orglist li:gt(4)').hide();
+
+                    $('#orglist .expandOrgsList').live('click',function() {
+                        $('#orglist li:gt(4):visible').animate({height: 'toggle'}, 600, function() {}); // This line MUST come before next line.
+                        $('#orglist li').not(':visible').animate({height: 'toggle'}, 500, function() {});
+                        if(this.innerHTML == '<i class="fa fa-arrow-circle-down"></i> More')
+                            this.innerHTML = '<i class="fa fa-arrow-circle-up"></i> Less';
+                        else
+                            this.innerHTML = '<i class="fa fa-arrow-circle-down"></i> More';
+                    });
+
+                });
+            </script>
+
+            <hr>
+
+          </div>
+          <div id="tags">
+            <h3>Tags</h3>
+            <% if params[:tags].present? %>
+                <%= params[:tags] %>
+                <%= link_to url_for(params.except(:tags)), class: 'pull-right' do %>
+                    <i class="fa fa-times-circle"></i> reset filter
+                <% end %>
+            <% else %>
+                <ul id="tags" class="list-unstyled">
+                  <% for row in @search_results.facet(:tags).rows %>
+                      <li>
+                        <%= link_to(row.value, params.merge(:tags => row.value).except(:page)) %> (<%= row.count %>)
+                      </li>
+                  <% end %>
+                </ul>
+                <% if @search_results.facet(:tags).rows.count > 5 %>
+                    <div class="text-center"><a class="expandTagsList"><i class="fa fa-arrow-circle-down"></i> More</a></div>
+                <% end %>
+            <% end %>
+            <hr>
+          </div>
+      <% else %>
+          <div id="tags">
+            <h3>Browse By Tags</h3>
+            <% if !@tags.empty? %>
+                <% tag_cloud(@tags, %w(btn-xs btn-sm btn-md btn-lg)) do |tag, css_class| %>
+                    <%= link_to raw(tag.name), collection_tags_path(tag.name), :class => css_class + ' ' %>
+                <% end %>
+            <% else %>
+                <div class="info-board info-board-red">
+                  No Tags Added Yet :(
+                </div>
+            <% end %>
+          </div>
+          <div class="text-right">
+            <%= link_to new_search_path do %>
+                <i class="fa fa-arrow-circle-right"></i>
+                Search Resources
+            <% end %>
+          </div>
+      <% end %>
+    </div>
+    <div class="col-xs-12 col-sm-9 ">
+    <% if !params[:tags].nil? or !params[:organization_id].nil? %>
+        <div class="row">
+          <p class="text-muted">Filtered By:
+            <% if !params[:tags].nil? %>
+                <%= link_to url_for(params.except(:tags)), class: 'btn btn-green btn-xs' do %>
+                    <%= params[:tags] %> <i class="fa fa-times"></i>
+                <% end %>
+            <% end %>
+            <% if !params[:organization_id].nil? %>
+                <% @organization =  Organization.find(params[:organization_id]) %>
+
+                <%= link_to url_for(params.except(:organization_id)), class: 'btn btn-green btn-xs' do %>
+                    <%= @organization.name %> <i class="fa fa-times"></i>
+                <% end %>
+            <% end %>
+            <% if !params[:license_id].nil? %>
+                <% @license =  License.find(params[:license_id]) %>
+
+                <%= link_to url_for(params.except(:license_id)), class: 'btn btn-green btn-xs' do %>
+                    <%= @license.name %> <i class="fa fa-times"></i>
+                <% end %>
+            <% end %>
+          </p>
+        </div>
+    <% end %>
+    <div class="row">
+      <%= render partial: 'collections/collection_results' %>
+      <%= will_paginate @collections %>
+    </div>
+  </div>
+
+  </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        var $sameHeightDivs = $('.sameHeight');
+        var maxHeight = 0;
+        $sameHeightDivs.each(function() {
+
+            maxHeight = Math.max(maxHeight, $(this).outerHeight());
+
+        });
+
+        $sameHeightDivs.css({ height: maxHeight + 'px' });
+
+        $('#tags li:gt(4)').hide();
+
+        $('#tags .expandTagsList').live('click',function() {
+            $('#tags li:gt(4):visible').animate({height: 'toggle'}, 600, function() {}); // This line MUST come before next line.
+            $('#tags li').not(':visible').animate({height: 'toggle'}, 500, function() {});
+            if(this.innerHTML == '<i class="fa fa-arrow-circle-down"></i> More')
+                this.innerHTML = '<i class="fa fa-arrow-circle-up"></i> Less';
+            else
+                this.innerHTML = '<i class="fa fa-arrow-circle-down"></i> More';
+        });
+
+        $('#licenses dt:gt(4)').hide();
+
+        $('#licenses .expandLicenseList').live('click',function() {
+            $('#licenses dt:gt(4):visible').animate({height: 'toggle'}, 600, function() {}); // This line MUST come before next line.
+            $('#licenses dt').not(':visible').animate({height: 'toggle'}, 500, function() {});
+            if(this.innerHTML == '<i class="fa fa-arrow-circle-down"></i> More')
+                this.innerHTML = '<i class="fa fa-arrow-circle-up"></i> Less';
+            else
+                this.innerHTML = '<i class="fa fa-arrow-circle-down"></i> More';
+        });
+    });
+</script>

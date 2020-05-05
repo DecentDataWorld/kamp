@@ -1,0 +1,9 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Reason:</strong>
+  <%= @denial_reason.reason %>
+</p>
+
+<%= link_to 'Edit', edit_denial_reason_path(@denial_reason) %> |
+<%= link_to 'Back', denial_reasons_path %>

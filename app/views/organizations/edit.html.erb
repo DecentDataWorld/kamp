@@ -1,0 +1,18 @@
+<% content_for :title do %><%= @page_title %><% end %>
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-3">
+      <%= render partial: 'organizations/info', locals: { :short=>true } %>
+    </div>
+    <div class="col-sm-9">
+
+      <div class="tag-box tag-box-v3 form-page">
+        <div class="headline"><h2>Edit Organization Information</h2></div>
+
+        <%= render 'form' %>
+
+      </div>
+    </div>
+  </div>
+</div>

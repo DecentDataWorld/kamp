@@ -1,0 +1,29 @@
+<%= simple_form_for(resource, :html => { role: "form", multipart: true, class: "sky-form" }) do |f| %>
+    <% if !destination.blank? %>
+        <input type="hidden" name="destination" value="<%= destination %>">
+    <% end %>
+
+    <div class="tag-box tag-box-v3 form-page">
+    <% if resource.errors.count > 0 %>
+          <h4>Correct Errors Before Continuing</h4>
+          <div class="bg-danger">
+          <p>The following fields are mandatory or have errors in them.</p>
+          <dl>
+            <% resource.errors.each do |attr,msg| %>
+              <dd><%= msg.to_s %></dd>
+            <% end %>
+          </dl>
+        </div>
+    <% end %>
+
+
+      <%= render partial: 'resources/form_fields', locals: { f: f, resource: @resource } %>
+
+      <div class="form-group">
+        <%= f.button :submit, class: 'btn btn-u btn-u-blue', value: 'Save & Add Another' if resource.id.blank? %>
+        <%= f.button :submit, class: 'btn btn-u btn-u-blue', value: 'Save' %>
+      </div>
+
+    </div>
+<% end %>
+

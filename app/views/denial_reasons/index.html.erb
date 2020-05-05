@@ -1,0 +1,36 @@
+
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+
+
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>Reason</th>
+          <th colspan="2"><%= link_to 'New Denial reason', new_denial_reason_path, class: 'btn-u btn-u-blue rounded pull-right' %></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% @denial_reasons.each do |denial_reason| %>
+            <tr>
+              <td><%= denial_reason.reason %></td>
+              <td><%= link_to 'Edit', edit_denial_reason_path(denial_reason), class: "btn-u btn-u-blue btn-u-xs rounded" %></td>
+              <td><%= link_to 'Destroy', denial_reason, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn-u btn-u-red btn-u-xs rounded" %></td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="col-md-3">
+
+      <%= render 'moderator/sidebar' %>
+
+    </div>
+  </div>
+</div>
+

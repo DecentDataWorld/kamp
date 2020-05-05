@@ -1,0 +1,35 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="row">
+        <div class="col-xs-12">
+      <%= link_to new_organization_path, class: 'btn btn-u btn-md pull-right' do %>
+          <i class="fa fa-plus-circle"></i>  New Organization
+      <% end %>
+      <p><strong><%= @organizations.count %></strong> Total Organizations</p>
+        </div>
+        </div>
+      <br>
+      <div class="row">
+        <div class="col-xs-12">
+          <%= render partial: 'organizations/table_list' %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= render 'admin/sidebar' %>
+    </div>
+  </div>
+</div>
+
+<% content_for :page_javascript do %>
+  <script>
+      jQuery(document).ready(function() {
+          $('.data-tables-org').DataTable({
+              "searching": true
+          });
+      });
+  </script>
+<% end %>

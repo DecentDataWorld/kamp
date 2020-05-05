@@ -1,0 +1,22 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-md-12">
+      <p id="notice"><%= notice %></p>
+
+      <%= link_to 'Edit', edit_activity_path(@activity), class: 'btn btn-primary pull-right' %>
+<p>
+  <strong>Name:</strong>
+  <%= @activity.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @activity.description %>
+</p>
+
+        </div>
+      </div>
+    </div>
+

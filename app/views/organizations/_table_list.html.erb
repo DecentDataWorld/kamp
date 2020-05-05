@@ -1,0 +1,35 @@
+<table class="table table-condensed data-tables-org">
+  <thead>
+  <tr>
+    <th>Organization</th>
+    <th>Email Domain</th>
+    <th>Admins</th>
+    <th>Editors</th>
+    <th>Members</th>
+    <th>Added</th>
+    <th></th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @organizations.each do |organization| %>
+      <tr>
+        <td><%= link_to organization.name, organization %></td>
+        <td><%= organization.domain %></td>
+        <td><%= organization.admins.count %></td>
+        <td><%= organization.editors.count %></td>
+        <td><%= organization.members.count %></td>
+        <td><%= organization.created_at.to_date %></td>
+        <td>
+          <% if !organization.approved and can? :approve, organization %>
+              <%= link_to organization_approve_path(organization.url), :data => { :confirm => "Approve this organization?" }, class: 'btn-u btn-u-yellow btn-xs rounded' do %>
+                  <i class="fa fa-check"></i>
+                  Approve
+              <% end %>
+          <% end %>
+        </td>
+        <td><%= link_to("Delete", organization_path(organization), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn-u btn-u-red btn-xs rounded') %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

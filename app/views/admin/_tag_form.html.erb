@@ -1,0 +1,16 @@
+<%= simple_form_for @tag,
+                    :url => url_for(:action => 'update_tag', :controller => 'admin'),
+                    :method => 'post' do |f| %>
+    <%= f.input :id, :as => "hidden", :value => @tag %>
+    <%= f.error_notification %>
+
+    <div class="form-group">
+      <label for="title">Tag Text</label>
+      <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter Tag' %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit %>
+    </div>
+<% end %>
+

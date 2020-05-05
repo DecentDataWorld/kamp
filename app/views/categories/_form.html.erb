@@ -1,0 +1,31 @@
+<%= simple_form_for(@category) do |f| %>
+  <%= f.error_notification %>
+
+
+    <div class="form-group">
+      <label for="title">Name</label>
+      <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter Category Name' %>
+    </div>
+    <div class="form-group">
+      <label for="title">Description</label>
+      <%= f.input_field :description, class: "form-control", id: 'description', placeholder: 'Enter Description' %>
+    </div>
+
+    <div class="form-group">
+      <label for="tags">Tag(s)</label>
+      <%= f.collection_select :tags, @full_tags_list, :name, :name, {}, {:multiple => true, :style => 'width:100%', :class => "col-md-10 form-control multiple-chosen-select"} %>
+    </div>
+
+    <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
+
+<script>
+    $(function(){
+
+        $('.multiple-chosen-select').chosen();
+
+    });
+</script>
+

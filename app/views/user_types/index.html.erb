@@ -1,0 +1,33 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-md-9">
+      <%= link_to 'New User type', new_user_type_path, class: 'pull-right btn btn-primary' %>
+      <table class="table table-bordered">
+  <thead>
+    <tr>
+      <th width="50"></th>
+      <th>User type</th>
+      <th width="50"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @user_types.each do |user_type| %>
+      <tr>
+        <td><%= link_to 'Edit', edit_user_type_path(user_type), class: 'btn btn-xs btn-primary' %></td>
+        <td><%= user_type.user_type %></td>
+        <td><%= link_to 'Destroy', user_type, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-xs btn-primary' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+    </div>
+    <div class="col-md-3">
+
+      <%= render 'admin/sidebar' %>
+
+    </div>
+  </div>
+</div>

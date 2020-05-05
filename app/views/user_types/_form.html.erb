@@ -1,0 +1,12 @@
+<%= simple_form_for(@user_type, :html => { role: "form", multipart: true, class: "sky-form" }) do |f| %>
+    <%= f.error_notification %>
+
+    <div class="form-group">
+      <label for="name">User Type</label>
+      <%= f.input_field :user_type, class: "form-control", id: 'user_type', placeholder: 'Enter User Type' %>
+    </div>
+    <div class="form-group">
+      <%= f.button :submit %>
+    </div>
+
+<% end %>

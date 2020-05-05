@@ -1,0 +1,134 @@
+<% content_for :title do %>Search Portal<% end %>
+<!--=== Breadcrumbs v3 ===-->
+<div class="breadcrumbs-v3">
+  <div class="container">
+    <h1 class="pull-left">Search Portal</h1>
+  </div>
+</div>
+<!--=== End Breadcrumbs v3 ===-->
+
+<!--=== Search Results ===-->
+<div class="container s-results margin-bottom-50">
+  <div class="row">
+    <div class="col-xs-12 col-md-2 related-search">
+      <div class="headline"><h4>FILTER BY</h4></div>
+      <div class="row">
+      <%= render partial: 'searches/filters', locals: { collections_only: @collections_only } %>
+    </div>
+    </div><!--/col-md-2-->
+
+    <div class="col-xs-12 col-md-10">
+      <%= render partial: 'searches/show_filters' %>
+      <% if @resources.count > 0 %>
+          <p class="pull-right padding-top-5"><%= link_to survey_index_path do %><span class="label label-info rounded"><i class="fa fa-asterisk"></i> Find this useful? Take our survey</span><% end %></p>
+          <span class="results-number"><strong><%= @search_results.total %></strong> results found. Showing most recently updated</span>
+          <% @resources.each do |resource| %>
+              <%= render resource %>
+          <% end %>
+          <%= will_paginate @resources %>
+      <% else %>
+          <blockquote><i class="fa fa-thumbs-down"></i> No resources found with that combination</blockquote>
+          <div class="alert alert-info fade in">
+            <h4>Let Us Know What We're Missing</h4>
+            <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
+            <p>
+              <a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a>
+            </p>
+          </div>
+      <% end %>
+    </div>
+  </div>
+</div><!--/container-->
+<!--=== End Search Results ===-->
+
+<div class="modal fade bs-survey-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
+        <h2>Found What You Were Looking For?</h2>
+        <p>We hope you found this portal useful. Please take a minute to tell us how we're doing by taking a brief 3 question survey.</p>
+        <p>When you are done you will be returned to this page.</p>
+        <p>
+          <a class="btn-u btn-u-xs btn-u-blue" id="survey_button" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :page_javascript do %>
+<script>
+
+
+    function createCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + value + expires + "; path=/";
+    }
+
+    function readCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
+    function eraseCookie(name) {
+        createCookie(name,"",-1);
+    }
+
+
+    $(document).ready(function () {
+
+        var cookie_data = readCookie('survey_prompt');
+        var show_modal = false;
+        if(cookie_data) {
+            var updated_count = parseInt(cookie_data) + 1;
+            if(parseInt(cookie_data) > 5 && parseInt(cookie_data) % 15 == 0) {
+                show_modal = true;
+            }
+            createCookie('survey_prompt',updated_count,10);
+        }
+        else {
+            createCookie('survey_prompt','1',10);
+            show_modal = true;
+
+        }
+        if(show_modal) {
+            $.ajax({
+
+                url : '<%= log_event_url %>',
+                type : 'GET',
+                data : {
+                    'model' : 'Search Result',
+                    'event': 'Survey Offered'
+                },
+                dataType:'json'
+            });
+            $('.bs-survey-modal-sm').modal("show");
+        }
+
+        $('#survey_button').click(function() {
+            $.ajax({
+
+                url : '<%= log_event_url %>',
+                type : 'GET',
+                data : {
+                    'model' : 'Search Result',
+                    'event': 'Survey Accepted'
+                },
+                dataType:'json'
+            });
+        });
+
+    });
+</script>
+<% end %>

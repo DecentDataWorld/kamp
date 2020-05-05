@@ -1,0 +1,75 @@
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container">
+      <!-- Topbar Navigation -->
+      <ul class="loginbar pull-right">
+
+
+        <% if current_page?(root_url) %>
+            <li><a href="javascript:void(0);" id="help_link"><i class="fa fa-info-circle"></i> Help</a></li>
+            <!-- Administration Drop -->
+            <li class="topbar-devider"></li>
+
+        <% end %>
+        <li><%= link_to faq_path do %><i class="fa fa-question-circle"></i> FAQs<% end %></li>
+
+
+        <% if user_signed_in? and (can? :approve, Resource or can? :approve, Collection) %>
+            <!-- Administration Drop -->
+            <li class="topbar-devider"></li>
+            <li>
+              <%= link_to 'Moderate Submissions', moderate_submissions_path %>
+            </li>
+            <!-- End Administration Drop -->
+
+
+        <% end %>
+
+        <% if user_signed_in? and can? :dashboard, current_user%>
+            <!-- Administration Drop -->
+            <li class="topbar-devider"></li>
+            <li>
+              <%= link_to 'Administration', admin_index_path %>
+            </li>
+            <!-- End Administration Drop -->
+
+
+        <% end %>
+        <% if user_signed_in? %>
+            <!-- Profile -->
+            <li class="topbar-devider"></li>
+            <li><%= link_to user_path(current_user) do %><i class="fa fa-user"></i> Profile<% end %></li>
+            <!-- End Profile -->
+        <% end %>
+        <% if user_signed_in? %>
+            <% if @current_user.has_approved_org %>
+                <!-- Organization -->
+                <li class="topbar-devider"></li>
+                <li class=" <%= 'active' if current_page?(organization_url(@current_user.organizations.first)) %>"><%= link_to raw('<i class="fa fa-building"></i> My Organization'), organization_path(@current_user.organizations.first) %></li>
+                <!-- End My Organization -->
+            <% else %>
+                <li class="topbar-devider"></li>
+                <li class=" <%= 'active' if current_page?(organization_apply_url) %>"><%= link_to raw('<i class="fa fa-building"></i> My Organization'), organization_apply_path %></li>
+            <% end %>
+        <% end %>
+        <% if user_signed_in? %>
+            <li class="topbar-devider"></li>
+        <li>
+              <%= link_to destroy_user_session_path, :method=>'delete' do %> <i class="fa fa-sign-out-alt"></i> Log Out &nbsp;&nbsp;&nbsp;&nbsp;</a> <% end %>
+        </li>
+        <% else %>
+            <li class="topbar-devider"></li>
+            <li>
+              <%= link_to new_user_session_path do %> <i class="fa fa-sign-in-alt"></i> Sign In <% end %>
+            </li>
+            <li class="topbar-devider"></li>
+            <li>
+              <%= link_to new_registration_path(User) do %> <i class="fa fa-sign-in-alt"></i> Register <% end %>
+            </li>
+        <% end %>
+      </ul>
+      <!-- End Topbar Navigation -->
+    </div>
+  </div>
+  <!-- End Topbar -->

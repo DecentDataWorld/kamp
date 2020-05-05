@@ -1,0 +1,54 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-md-9">
+      <%= link_to 'New Activity', new_activity_path, class: 'pull-right btn btn-primary' %>
+      <br>
+      <br>
+      <table class="table table-bordered data-table-activities">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Name</th>
+      <th>Url</th>
+      <th>Description</th>
+      <th>Resources</th>
+      <th>Collections</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @activities.each do |activity| %>
+      <tr>
+        <td><%= link_to edit_activity_path(activity), class: 'btn btn-xs btn-success' do %> <i class="fa fa-edit"></i> <% end %></td>
+        <td><%= link_to activity.name, activity %></td>
+        <td><%= activity.url %></td>
+        <td><%= activity.description %></td>
+        <td><%= activity.resources.count %></td>
+        <td><%= activity.collections.count %></td>
+        <td><%= link_to activity, method: :delete, data: { confirm: 'Are you sure?' } do %><i class="fa fa-trash"></i><% end %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+    </div>
+    <div class="col-md-3">
+
+      <%= render 'admin/sidebar' %>
+
+    </div>
+  </div>
+</div>
+
+<% content_for :page_javascript do %>
+  <script>
+      jQuery(document).ready(function() {
+          $('.data-table-activities').DataTable({
+              "searching": true
+          });
+      });
+  </script>
+<% end %>

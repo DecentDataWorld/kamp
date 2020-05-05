@@ -1,0 +1,22 @@
+<div class="heading">
+  <h3>Tags without a category (<%= @tags_left.count %>)</h3>
+</div>
+<% if !@tags_left.nil? %>
+    <table class="table table-condensed">
+      <thead>
+      <tr>
+        <th>Name</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <% @tags_left.each do |tag| %>
+          <tr>
+            <td><%= tag %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+<% else %>
+    <p>All tags have been categorized :)</p>
+<% end %>

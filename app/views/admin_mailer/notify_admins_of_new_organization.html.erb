@@ -1,0 +1,13 @@
+<p>The following organization has applied to join USAID/Jordan Knowledge Management Portal (KaMP):</p>
+
+<p><%= link_to @organization.name, organizations_url(:id => @organization.url) %> <br>
+  <%= @organization.users.first.name %>  <%= @organization.users.first.name %></p>
+<p><b>Domain</b>: <%= @organization.domain %></p>
+<p><b>Description</b><br>
+  <%= @organization.description %></p>
+
+<p>If you need any further support please contact <a href="mailto:contact@jordankmportal.com">contact@jordankmportal.com</a>.</p>
+
+<p> Best Regards,<br>
+  USAID/Jordan KaMP
+</p>

@@ -1,0 +1,15 @@
+<%= simple_form_for '/admin/process_uploaded_files',
+                    :url => url_for(:action => 'process_uploaded_files', :controller => 'admin'),
+                    :method => 'post', :html => { role: "form", multipart: true, class: "sky-form" } do |f| %>
+    <%= f.error_notification %>
+
+    <div class="form-group">
+      <label for="zip_file">Choose ZIP File</label>
+      <input type="file" name="file_upload" id="file_upload" value="Click to choose file(s)" />
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit, value: 'Process Group Upload' %>
+    </div>
+<% end %>
+

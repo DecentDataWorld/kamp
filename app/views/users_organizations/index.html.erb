@@ -1,0 +1,31 @@
+<h1>Listing users_organizations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Organization</th>
+      <th>User</th>
+      <th>Role</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users_organizations.each do |users_organization| %>
+      <tr>
+        <td><%= users_organization.organization_id %></td>
+        <td><%= users_organization.user_id %></td>
+        <td><%= users_organization.role %></td>
+        <td><%= link_to 'Show', users_organization %></td>
+        <td><%= link_to 'Edit', edit_users_organization_path(users_organization) %></td>
+        <td><%= link_to 'Destroy', users_organization, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Users organization', new_users_organization_path %>

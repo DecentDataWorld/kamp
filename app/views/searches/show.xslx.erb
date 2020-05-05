@@ -1,0 +1,9 @@
+<%=
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "Resources") do |sheet|
+    sheet.add_row @resources.first.column_names
+    @resources.each do |resource|
+        sheet.add_row resource.attributes.values_at(*column_name)
+    end
+end
+%>

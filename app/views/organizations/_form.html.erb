@@ -1,0 +1,69 @@
+<%= simple_form_for(@organization, :html => { role: "form", multipart: true }) do |f| %>
+
+    <%= f.error_notification %>
+
+    <% if @organization.errors.count > 0 %>
+        <%= logger.info @organization.errors %>
+        <div class="info-board info-board-red">
+          <h4>Correct Errors Before Continuing</h4>
+          <p>The following fields have to be corrected.</p>
+          <% @organization.errors.each do |e| %>
+              <%= e %>
+          <% end %>
+        </div>
+    <% end %>
+
+    <% if !@organization.logo.blank? %>
+        <div class="pull-left">
+          <b>Current Logo</b><br>
+          <%= link_to raw('<i class="fa fa-save"></i> ' + @organization.logo_file_name), @organization.logo.url %>
+        </div>
+        <div class="form-group col-lg-offset-3">
+          <label for="logo">Replace Logo</label>
+    <% else %>
+        <div class="form-group">
+          <label for="logo">Attach Logo</label>
+    <% end %>
+    <%= f.input_field :logo, id: 'logo', label: false,  data: { :"show-upload" => "false" } %>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter Name' %>
+    </div>
+
+    <div class="form-group">
+      <label for="domain">Email Domain</label>
+      <% if can? :manage, :all %>
+          <%= f.input_field :domain, class: "form-control", id: 'domain', placeholder: 'Organization Email Domain' if can? :manage, @organization %>
+      <% else %>
+          <%= @organization.domain %>
+          <%= raw '<small><i>&nbsp;&nbsp;&nbsp;[Generated automatically]</i></small>' if @organization.domain.blank? %>
+      <% end %>
+    </div>
+
+    <div class="form-group">
+      <label for="attachment">Organization Type</label>
+      <%= f.select :organization_type_id, OrganizationType.all.collect {|x| [x.organization_type, x.id]}, label: false, :include_blank => true %>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <%= f.input_field :description, class: "form-control", id: 'description', placeholder: 'Enter a description' %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.button :submit, class: 'btn btn-lg btn-color' %>
+    </div>
+<% end %>
+
+<script>
+    $(function(){
+
+        $(".chosen-select").chosen();
+
+        $('#collection_tag_list').tagsInput();
+
+
+    });
+</script>

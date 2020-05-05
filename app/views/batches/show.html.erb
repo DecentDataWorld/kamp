@@ -1,0 +1,95 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+
+      <div class="headline"><h2>Batch <%= @batch.name %> (<%= @batch.uploader.name %>)</h2></div>
+
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>File</th>
+          <th>Type</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Tags</th>
+          <th><small>Private?</small></th>
+          <th><small>View</small></th>
+          <th><small>Edit</small></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @batch.resources.each do |resource| %>
+            <tr>
+              <td><%= link_to raw(resource.attachment_file_name.truncate(40)), resource.attachment.url %></td>
+              <td><%= resource.resource_type %></td>
+              <td><%= resource.name %></td>
+              <td><%= resource.description %></td>
+              <td><%= resource.tag_list %></td>
+              <td><%= raw('<i class="fa fa-lock"></i>') if resource.private %></td>
+              <td><%= link_to raw('<i class="fa fa-eye"></i>'), resource_path(resource) %></td>
+              <td><%= link_to raw('<i class="fa fa-edit"></i>'), edit_resource_path(resource, destination: batch_path(@batch)) %></td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+    var substringMatcher = function(strs) {
+        return function findMatches(q, cb) {
+            var matches, substringRegex;
+
+// an array that will be populated with substring matches
+            matches = [];
+
+// regex used to determine if a string contains the substring `q`
+            substrRegex = new RegExp(q, 'i');
+
+// iterate through the pool of strings and for any string that
+// contains the substring `q`, add it to the `matches` array
+            $.each(strs, function(i, str) {
+                if (substrRegex.test(str)) {
+// the typeahead jQuery plugin expects suggestions to a
+// JavaScript object, refer to typeahead docs for more info
+                    matches.push({ value: str });
+                }
+            });
+
+            cb(matches);
+        };
+    };
+
+    $(function(){
+        //$('.multiple-chosen-select').chosen();
+
+        $('.collectionshow').bind('change',function(){
+
+            if($('.collectionshow').val() == 0) {
+                $(".chosen-select").val('').trigger("chosen:updated");
+                $(".newtitle").val('');
+            }
+            else {
+            }
+            $('.collectiontoggle').slideToggle( "slow", function() {
+
+            });
+
+
+        });
+
+        $('.newtitle').keyup(function () {
+            if($('.newtitle').length > 0) {
+                $(".col-chosen-select").val('').trigger("chosen:updated");
+            }
+        });
+
+    });
+</script>
+

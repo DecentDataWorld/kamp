@@ -1,0 +1,85 @@
+<% if resource.can_edit(@current_user) %>
+    <div class="headline"><h4>Manage Resource</h4></div>
+    <ul class="list-group sidebar-nav-v1">
+      <% if resource.can_edit(current_user) %>
+          <li class="list-group-item"><%= link_to edit_resource_path(resource), class: 'btn btn-rounded btn-primary' do %><i class="fa fa-edit"></i> Edit Resource<% end %></li>
+      <% end %>
+      <% if can? :delete, resource or can? :moderate, resource %>
+          <li class="list-group-item"><%= link_to resource, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-rounded btn-primary' do %><i class="fa fa-remove"></i> Delete<% end %></li>
+      <% end %>
+    </ul>
+<% end %>
+<% if can? :approve, @resource and !@resource.approved %>
+    <ul class="list-group sidebar-nav-v1">
+      <li class="list-group-item"><%= link_to approve_submission_path(submission_id: @resource.id, submission_type: "resource"), data: { confirm: 'Are you sure you want to approve this resource?' }, class: "btn btn-rounded btn-primary" do %><i class="fa fa-thumbs-up"></i> Approve Resource<% end %></li>
+      <li class="list-group-item"><%= link_to denial_submission_path(submission_id: @resource.id, submission_type: "resource"), class: "btn btn-rounded btn-primary" do %><i class="fa fa-thumbs-down"></i> Deny Resource<% end %></li>
+    </ul>
+    <br>
+<% end %>
+
+<div class="well well-sm">
+  <% if !resource.issue_date.blank? %>
+      <p><strong>Date Added</strong><br>
+        <%= resource.created_at.strftime("%Y-%m-%d") %></p>
+  <% end %>
+  <% if !resource.corporate_authorship.blank? %>
+      <p><strong>Corporate Authorship</strong><br><%= resource.corporate_authorship %></p>
+  <% end %>
+  <% if !resource.issue_date.blank? %>
+      <p><strong>Issue Date</strong><br>
+        <%= resource.issue_date %></p>
+  <% end %>
+  <p><strong>Uploaded By:</strong><br>
+    <% if !resource.organization.nil? %>
+        <%= link_to organization_path(resource.organization) do %>
+            <% if resource.organization.logo.blank? %>
+                <img src="/img/placeholder-organization.png" alt="Placeholder Image" style="height: 20px; width: 50px;" class="img-responsive pull-left pad-right">
+                <%= resource.organization.name %>
+            <% else %>
+                <img src="<%= resource.organization.logo.expiring_url(10) %>" alt="<%= resource.organization.name %>" style="height: 20px; width: 50px;" class="img-responsive pull-left pad-right">
+                <%= resource.organization.name %>
+            <% end %>
+        <% end %>
+    <% end %>
+    <br>
+    (<%= link_to resource.author.name, user_path(resource.author) if !resource.author.nil? %>)
+
+    <% if can? :manage, :all and !resource.batch.nil?  %>
+        <br><small><strong>Batch:</strong> <%= link_to resource.batch.name, batch_path(resource.batch) %></small><br>
+    <% end %>
+  </p>
+  <p><strong>Resource Type</strong><br>
+    <%= resource.resource_type %></p>
+
+  <% if !resource.language.blank? %>
+      <p><strong>Language</strong><br>
+        <%= resource.language.titlecase %></p>
+  <% end %>
+  <% if !resource.activity_id.nil? %>
+      <p><strong>Activity</strong><br>
+        <%= resource.activity.name %></p>
+  <% end %>
+</div>
+
+<% if resource.collections.count > 0 %>
+    <div class="headline"><h4>Collections</h4></div>
+    <p><small>This resource is part of the following collections:</small></p>
+    <ul class="list-group sidebar-nav-v1" id="sidebar-nav">
+      <% resource.collections.each do |collection| %>
+      <li class="list-group-item">
+        <%= link_to collection do %><%= collection.title.truncate(50) %><% end %>
+      </li>
+      <% end %>
+    </ul>
+<% end %>
+
+
+
+<% if resource.private %>
+    <div class="panel panel-green">
+      <div class="panel-heading"><i class="fa fa-eye-slash"></i> Private Resource</div>
+      <div class="panel-body">
+        This resource is marked <b>private</b> so can only be viewed by members of your organization.
+      </div>
+    </div>
+<% end %>

@@ -1,0 +1,64 @@
+<!--=== Content Part ===-->
+<div class="container content">
+<div class="row blog-page">
+<!-- Left Sidebar -->
+<div class="col-md-9">
+  <div class="headline"><h2>Join Now to Contribute</h2></div>
+
+  <div class="alert alert-info fade in">
+    <h4>Contributing to the portal requires being part of one of our approved partner organizations. </h4>
+  </div>
+
+  <!-- Colored Funny Boxes -->
+  <div class="funny-boxes funny-boxes-left-orange">
+    <div class="row">
+      <div class="col-md-3 funny-boxes-img text-center">
+        <span class="glyphicon glyphicon-cloud-upload" style="font-size: 100px; color: #95A5A6;"></span>
+      </div>
+      <div class="col-md-9">
+        <h2>Register now with your partner organization.</h2>
+        <p><strong>Registration is open to anyone with a valid email address.</strong></p>
+        <p>Being part of an approved partner organization means you can add resources to the portal and share them with other users in the region.</p>
+        <%= link_to 'Register Now', new_user_registration_path, class: 'btn-u btn-u-blue' %>
+      </div>
+    </div>
+  </div>
+  <!--End Colored Funny Boxes -->
+
+  <!-- Bordered Funny Boxes -->
+  <div class="funny-boxes funny-boxes-right-u">
+    <div class="row">
+      <div class="col-md-3 funny-boxes-img text-center">
+        <span class="glyphicon glyphicon-info-sign" style="font-size: 100px; color:#95A5A6;"></span>
+      </div>
+      <div class="col-md-9">
+        <h2><a href="#">Already Registered?</a></h2>
+        <%= link_to 'Existing Users Log In Here', new_session_path(resource=User), class: 'btn-u btn-u-green' %>
+      </div>
+    </div>
+  </div>
+  <!-- End Bordered Funny Boxes -->
+
+</div>
+<!-- End Left Sidebar -->
+
+<!-- Right Sidebar -->
+<div class="col-md-3">
+  <!-- Social Icons -->
+  <div class="magazine-sb-social margin-bottom-30">
+    <div class="headline headline-md"><h2><i class="fa fa-share-square-o"></i> Spread the word</h2></div>
+    <p>If you find this portal useful, help spread the word using the links below.</p>
+    <!-- AddToAny BEGIN -->
+    <a class="a2a_dd" href="https://www.addtoany.com/share"><img src="https://static.addtoany.com/buttons/share_save_256_24.png" width="256" height="24" border="0" alt="Share"/></a>
+    <script async src="https://static.addtoany.com/menu/page.js"></script>
+    <!-- AddToAny END -->
+    <div class="clearfix"></div>
+  </div>
+  <!-- End Social Icons -->
+
+</div>
+<!-- End Right Sidebar -->
+</div><!--/row-->
+</div><!--/container-->
+<!--=== End Content Part ===-->
+

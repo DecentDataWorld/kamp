@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--[if IE 7]> <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+  <title><%= @page_title + " | " if !@page_title.nil? %><%= content_for?(:title) ? yield(:title) : "Jordan Development KaMP" %></title>
+
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache,no-Store">
+  <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "USAID/Jordan created the Jordan Development KaMP to improve sharing of data and information between the USAID/Jordan Mission, local implementing partners and development organizations within Jordan. " %>">
+  <meta name="author" content="<%= content_for?(:author) ? (yield(:author)) : 'USAID Jordan MESP' %>">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/favicon.ico">
+  <script src="//cdn.ckeditor.com/4.11.3/standard/ckeditor.js"></script>
+
+  <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+
+  <%= render 'layouts/analytics' %>
+
+  <script src='https://www.google.com/recaptcha/api.js'></script>
+
+  <!-- Start of msidevcloud Zendesk Widget script -->
+  <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(c){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var o=this.createElement("script");n&&(this.domain=n),o.id="js-iframe-async",o.src=e,this.t=+new Date,this.zendeskHost=t,this.zEQueue=a,this.body.appendChild(o)},o.write('<body onload="document._l();">'),o.close()}("https://assets.zendesk.com/embeddable_framework/main.js","msidevcloud.zendesk.com");/*]]>*/</script>
+  <!-- End of msidevcloud Zendesk Widget script -->
+
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<div class="wrapper">
+  <!--=== Header ===-->
+  <div class="header">
+    <!-- Topbar -->
+    <%= render  'layouts/header_bar' %>
+
+    <%= render 'layouts/navigation_links' %>
+
+  </div>
+  <!--=== End Header ===-->
+
+  <div class="body_content">
+    <% if !@page_title.nil? %>
+        <!--=== Breadcrumbs ===-->
+        <div class="breadcrumbs">
+          <div class="container">
+            <h1 class="pull-left"><%= @page_title %></h1>
+            <%= render_crumbs %>
+          </div><!--/container-->
+        </div><!--/breadcrumbs-->
+        <!--=== End Breadcrumbs ===-->
+    <% end %>
+
+
+    <%= render 'layouts/messages' %>
+    <%= yield %>
+
+    <!--=== Footer Version 1 ===-->
+    <div class="footer-v1">
+      <%= render 'layouts/footer' %>
+
+      <%= render 'layouts/copyright' %>
+
+    </div>
+    <!--=== End Footer Version 1 ===-->
+  </div>
+</div><!--/wrapper-->
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        App.init();
+        App.initCounter();
+        App.initParallaxBg();
+        OwlCarousel.initOwlCarousel();
+
+    });
+</script>
+
+<%= content_for?(:page_javascript) ? (yield(:page_javascript)) : '' %>
+
+
+<!--[if lt IE 9]>
+<script src="/plugins/respond.js"></script>
+<script src="/plugins/html5shiv.js"></script>
+<script src="/plugins/placeholder-IE-fixes.js"></script>
+<![endif]-->
+
+</body>
+</html>

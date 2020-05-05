@@ -1,0 +1,52 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <p>To deny this submission, select a reason for the denial below and click the button to confirm</p>
+
+      <%= simple_form_for @submission, url: deny_submission_path, method: "post", html: { id: 'denial_form' } do |f| %>
+        <input type="hidden" name="submission_id" value="<%= @submission.id.to_s %>">
+        <input type="hidden" name="submission_type" value="<%= params[:submission_type] %>">
+
+          <div class="form-group">
+            <label for="reason">Reason for Denial</label>
+
+            <%= f.select :reason, DenialReason.all.collect {|x| [x.reason, x.id]}, html: { class: 'form-control', id: 'reason' }, label: false, placeholder: 'Choose a Reason', :include_blank => true %><br>
+          </div>
+
+          <div class="form-group">
+            <%= f.button :submit, class: 'btn btn-u btn-u-blue', value: 'Confirm' %>
+          </div>
+
+          <% end %>
+
+
+
+
+    </div>
+    <div class="col-md-3">
+
+      <%= render 'sidebar' %>
+
+    </div>
+  </div>
+</div>
+
+<script>
+
+  $(function() { //shorthand document.ready function
+    $('#denial_form').on('submit', function(e) { //use on if jQuery 1.7+
+      var reason_value = $('#<%= @submission.class.name.downcase %>_reason').val();
+      if (reason_value == "") {
+        alert("Choose a reason for this denial");
+        return false;
+      }
+
+      // e.preventDefault();  //prevent form from submitting
+
+    });
+  });
+
+</script>
+

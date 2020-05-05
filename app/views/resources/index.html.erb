@@ -1,0 +1,86 @@
+<style>
+    .search-block {
+       // background: url("/img/amman_bg_2.jpg") repeat fixed 50% 0 rgba(0, 0, 0, 0);
+        margin-bottom: 20px;
+        padding: 80px 0;
+        position: relative;
+        text-align: center;
+    }
+</style>
+
+<!--=== Breadcrumbs v3 ===-->
+<div class="breadcrumbs-v3">
+  <div class="container">
+    <h1 class="pull-left">Search Resources</h1>
+  </div>
+</div>
+<!--=== End Breadcrumbs v3 ===-->
+
+<!--=== Content Part ===-->
+<div class="container content">
+<div class="clearfix margin-bottom-30"></div>
+<div class="job-img-inputs">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-10">
+
+        <%= render partial: 'searches/form' %>
+        <br>
+      </div>
+      <div class="col-sm-2">
+        <%= link_to raw('<i class="fa fa-plus"></i> Add A Resource'), new_resource_path, class: "btn-u btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix margin-bottom-30"></div>
+<!--=== Search Results ===-->
+<div class="container s-results margin-bottom-50">
+    <div class="row">
+        <div class="col-md-3 hidden-xs related-search">
+          <div class="row">
+            <div class="headline"><h4>FILTERS</h4></div>
+            <%= render partial: 'searches/filters' %>
+
+          </div>
+        </div><!--/col-md-3-->
+
+        <div class="col-md-9">
+          <%= render partial: 'searches/show_filters' %>
+          <% if @resources.count > 0 %>
+              <p class="text-muted">Sort resources by
+                </p>
+              <% @resources.each do |resource| %>
+                <%= render partial: 'resources/resource_results', locals: {resource: resource} %>
+              <% end %>
+              <%= will_paginate @resources %>
+          <% else %>
+              <%= raw '<blockquote><i class="fa fa-thumbs-down"></i> No resources found with that combination</blockquote>' %>
+          <% end %>
+
+        </div><!--/col-md-9-->
+    </div>
+</div><!--/container-->
+<!--=== End Search Results ===-->
+
+
+</div><!--/container-->
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        App.init();
+        App.initCounter();
+
+        var $sameHeightDivs = $('.sameHeight');
+        var maxHeight = 0;
+        $sameHeightDivs.each(function() {
+
+            maxHeight = Math.max(maxHeight, $(this).outerHeight());
+
+        });
+
+        $sameHeightDivs.css({ height: maxHeight + 'px' });
+
+
+    });
+</script>

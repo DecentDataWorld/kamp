@@ -1,0 +1,360 @@
+class OrganizationsController < ApplicationController
+  before_action :authenticate_user!, :except => [:index, :show, :not_found]
+  load_and_authorize_resource :only => [:edit, :update, :destroy], :find_by => :url
+  before_action :set_organization, only: [:show, :edit, :update, :destroy, :private_resources]
+
+  add_crumb("View All Organizations") { |instance| instance.send :organizations_path }
+
+  # GET /organizations
+  def index
+    if !params[:query].nil?
+      add_crumb("Find Organization(s)")
+      @page_title = 'Find Organization(s)'
+    else
+      add_crumb("Recent Organizations")
+      @page_title = "Recent Organizations"
+    end
+    if can? :manage, :all
+      add_crumb "Administration", admin_index_path
+    end
+    # @organizations = Organization.text_search(params[:query]).page(params[:page]).per_page(8)
+
+    @search_results = Sunspot.search(Organization) do
+      fulltext params[:query]
+      with :approved, true
+      order_by :updated_at, :desc
+      paginate :page => params[:page], :per_page => 4
+    end
+    @organizations = @search_results.results
+
+
+  end
+
+  # GET /organizations/1
+  # GET /organizations/1.json
+  def show
+    @page_title = @organization.name
+
+    @users = @organization.users
+    params[:id] = @organization.id
+
+    # decide if we have to hide private and pending resources from this user
+    if !@organization.can_add_collections(current_user)
+      hide_private = true
+      @hide_pending = true
+    else
+      @hide_pending = false
+    end
+
+    if current_user.nil?
+      @subscribed = false
+      @logged_in = false
+    else
+      @logged_in = true
+      check_subscription = UserSubscriptions.where("user_id = ? and subscribed_to = 'organization' and subscribed_to_id = ?", current_user.id, @organization.id)
+      if check_subscription.count == 0
+        @subscribed = false
+      else
+        @subscribed = true
+      end
+    end
+
+    # if user is able to view pending user applications get any that aren't yet approved
+    if (@organization.can_manage_users(current_user) or can? :manage, :all)
+      puts 'Checking for pending applications'
+      @pending_applications = OrganizationApplication.where("organization_id = ? and approved IS NULL", @organization.id)
+    end
+
+    # get all submissions for this organization
+    @resource_search_results = Sunspot.search(Resource, Collection) do
+      fulltext params[:resource_query]
+      with :organization_id, params[:id]
+      if hide_private
+        without(:private, 0)
+      end
+
+      if current_user.nil? || current_user.mail_chimp_user == false
+        puts "cannot see newsletter stuff"
+        with(:newsletter_only, false)
+      end
+
+      with(:approved, true)
+
+      facet :organization_id
+      order_by :updated_at, :desc
+      paginate :page => params[:resources_page], :per_page => 10
+    end
+    @resources = @resource_search_results.results
+
+    # if user can view pending submissions, query for them
+    if @hide_pending == false
+      @resource_pending_results = Sunspot.search(Resource, Collection) do
+        with :organization_id, params[:id]
+        with(:approved, false)
+
+        order_by :updated_at, :desc
+        paginate :page => params[:resources_page], :per_page => 10
+      end
+      @resources_pending = @resource_pending_results.results
+    end
+
+  end
+
+  # GET /organizations/new
+  def new
+    @page_title = "Apply To Become A Partner Organization"
+    @organization = Organization.new
+    @organization.creator_id = current_user.id.to_s
+  end
+
+  # GET /organizations/1/edit
+  def edit
+    add_crumb("Edit " + @organization.name)
+    @page_title = "Edit " + @organization.name
+
+    if !@organization.can_edit_organization(current_user) and !can? :manage, :all
+      return redirect_to @organization, notice: 'You do not have the ability to edit this organization'
+    end
+  end
+
+  # POST /organizations
+  # POST /organizations.json
+  def create
+    @organization = Organization.new(organization_params)
+
+    respond_to do |format|
+      if @organization.save
+        # add current user to this organization
+        user_org = UsersOrganization.new
+        user_org.role = "admin"
+        user_org.organization = @organization
+        user_org.user = current_user
+        user_org.save
+        # get the current user's email domain and store it with the organization
+        @organization.domain = current_user.email.split("@").last
+        @organization.save
+        AdminMailer.notify_admins_of_new_organization(@organization).deliver
+        format.html { redirect_to @organization, notice: 'Organization was successfully created.' }
+        format.json { render action: 'show', status: :created, location: @organization }
+      else
+        format.html { render action: 'new' }
+        format.json { render json: @organization.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH/PUT /organizations/1
+  # PATCH/PUT /organizations/1.json
+  def update
+    if @organization.domain.blank?
+      @organization.domain = @organization.users.first.email.split("@").last
+    end
+
+    if !@organization.can_edit_organization(current_user) and !can? :manage, :all
+      return redirect_to @organization, notice: 'You do not have the ability to edit this organization'
+    end
+
+    respond_to do |format|
+      if @organization.update(organization_params)
+        format.html { redirect_to @organization, notice: 'Organization was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @organization.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /organizations/1
+  # DELETE /organizations/1.json
+  def destroy
+
+    if !@organization.admins and !@organization.admins.first.nil
+      OrganizationMailer.deny_organization_application(@organization, @organization.admins.first.user).deliver
+    end
+
+
+    @organization.destroy
+    respond_to do |format|
+      format.html { redirect_to admin_index_path }
+      format.json { head :no_content }
+    end
+  end
+
+  def process_application
+
+    @get_application = OrganizationApplication.find(params[:id])
+
+    if @get_application.nil?
+      return redirect_to @get_application.organization, alert: 'Cannot find application'
+    end
+
+    if !@get_application.organization.can_manage_users(current_user) and !can? :manage, :all
+      return redirect_to @get_application.organization, alert: 'You are not able to manage users of this organization'
+    end
+
+
+
+    if params[:result] == "approve"
+      # add user to organization
+      users_organization = UsersOrganization.new
+      users_organization.organization_id = @get_application.organization_id
+      users_organization.user_id = @get_application.user_id
+      users_organization.role = "member"
+      users_organization.save
+
+      #update application to reflect approved status
+      @get_application.approved = true
+      @get_application.save
+
+      # send email notification
+      OrganizationMailer.approve_membership_to_user(@get_application.organization, @get_application.user).deliver
+      return redirect_to organization_path(@get_application.organization_id), notice: 'User application processed'
+    elsif params[:result] != "deny"
+      return redirect_to @get_application.organization, alert: 'Invalid status for application'
+    end
+
+    @organization = @get_application.organization
+
+
+  end
+
+  def process_application_denial
+
+    @get_application = OrganizationApplication.find(params[:organization_application][:id])
+
+    if !@get_application.organization.can_manage_users(current_user) and !can? :manage, :all
+      return redirect_to @organization, notice: 'You are not able to manage users of this organization'
+    end
+
+    @get_application.approved = false
+
+    if !params[:organization_application][:comment].blank?
+      @get_application.comment = params[:organization_application][:comment]
+    end
+
+    @get_application.save
+
+    OrganizationMailer.deny_membership_to_user(@get_application.organization, @get_application.user, @get_application.comment).deliver
+
+    return redirect_to organization_path(@get_application.organization_id), notice: 'User application denied'
+
+
+
+  end
+
+  def add_user
+    @page_title = "Add User To Organization"
+    @organization = Organization.find_by_url(params[:organization])
+    @users_organization = UsersOrganization.new
+    @users_organization.organization_id = @organization.id
+    @inviteuser = User.new
+
+    if !@organization.can_manage_users(current_user) and !can? :manage, :all
+      return redirect_to @organization, notice: 'You are not able to manage users of this organization'
+    end
+  end
+
+  def edit_user
+    add_crumb("Modify Member Role")
+    @page_title = "Modify Member Role"
+    @users_organization = UsersOrganization.find_by :id => params[:userorg]
+    @organization = @users_organization.organization
+
+    if !@organization.can_manage_users(current_user) and !can? :manage, :all
+      return redirect_to @organization, notice: 'You are not able to manage users of this organization'
+    end
+  end
+
+  def process_new_user
+    @users_organization = UsersOrganization.new(users_organization_params)
+
+    @users_organization.organization_id = params[:organization_id]
+    @users_organization.user_id = params[:user_id]
+    @users_organization.role = params[:role]
+
+    respond_to do |format|
+      if @users_organization.save
+        format.html { redirect_to @users_organization.organization, notice: 'Users organization was successfully created.' }
+        format.json { render action: 'show', status: :created, location: @users_organization.organization }
+      else
+        format.html { render action: 'add_user' }
+        format.json { render json: @users_organization.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def approve_organization
+
+    @organization = Organization.find_by_url(params[:organization])
+
+    if cannot? :approve, @organization
+      redirect_to organizations_no_access_path, notice: 'You do not have sufficient rights to perform that action.'
+    end
+
+    @organization.approved = true
+    @organization.save
+
+    AdminMailer.notify_organization_admins_of_org_approval(@organization).deliver
+
+    redirect_to admin_index_path, notice: 'Organization was successfully approved.'
+
+  end
+
+  def apply
+    add_crumb("No Approved Organization")
+    @page_title = "No Approved Organization"
+
+    if !current_user.organizations.blank?
+      @has_pending = true
+    else
+      @has_pending = false
+    end
+
+  end
+
+  def not_found
+
+  end
+
+  # check to see if the current user is part of the organization
+  def check_organization_privileges!
+    if !@organization.users.exists?(current_user)
+      redirect_to organization_add_user_path, notice: 'You do not have sufficient rights to perform that action.'
+    end
+  end
+
+  def private_resources
+    @page_title = @organization.name
+
+    @resources = @organization.private_resources.paginate(:page => params[:page]).per_page(20)
+
+  end
+
+  def invite_user
+    @user = User.invite!(:email => params[:user][:email], :name => params[:user][:name])
+    redirect_to organizations_process_user_path(params[:organization_id]), notice: 'Invitation was successfully sent.'
+  end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+    def set_organization
+      @organization = Organization.find_by_url(params[:id])
+      if @organization.nil?
+        @organization = Organization.find_by_id(params[:id])
+      end
+      if @organization.nil?
+        redirect_to organization_not_found_path
+      end
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def organization_params
+      params.require(:organization).permit(:url, :name, :description, :status, :logo, :users, :domain, :organization_type_id)
+    end
+    # Never trust parameters from the scary internet, only allow the white list through.
+  def users_organization_params
+    params.permit(:organization_id, :user_id, :role, :organization_type_id)
+  end
+end

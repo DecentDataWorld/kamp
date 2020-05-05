@@ -1,0 +1,27 @@
+<%= simple_form_for(@activity, :html => { role: "form", multipart: true, class: "sky-form" }) do |f| %>
+    <% if @activity.errors.count > 0 %>
+        <h4>Correct Errors Before Continuing</h4>
+        <div class="bg-danger">
+          <p>The following fields are mandatory or have errors in them.</p>
+          <dl>
+            <% @activity.errors.each do |attr,msg| %>
+                <dd><%= msg.to_s %></dd>
+            <% end %>
+          </dl>
+        </div>
+    <% end %>
+
+    <div class="form-group">
+      <label for="name">Activity Name</label>
+        <%= f.input_field :name, class: 'form-control' %>
+    </div>
+
+    <p>Description</p>
+    <div class="form-group">
+        <%= f.input_field :description, class: 'form-control' %>
+      </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

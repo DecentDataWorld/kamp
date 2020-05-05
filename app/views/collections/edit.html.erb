@@ -1,0 +1,22 @@
+<% content_for :title do %>Edit <%= @collection.title  %><% end %>
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="tag-box tag-box-v3 form-page">
+      <% if !@collection.errors.nil? and @collection.errors.count == 0 %><p>Update your collection below</p><% end %>
+
+      <%= render partial: 'form' %>
+
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <h2>What are Collections?</h2>
+      <p>A Collection is a collection of data resources (such as files), together with a description and other information, at a fixed URL. Collections are what users see when searching for data. </p>
+      <h3>Don't forget the Title</h3>
+      <p>Collections require at least a title.</p>
+      <h3><i class="fa fa-tags"></i> Tags</h3>
+      <p>Apply any tags that might help users locate this information.</p>
+    </div>
+  </div>
+</div>

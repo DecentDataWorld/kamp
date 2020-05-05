@@ -1,0 +1,87 @@
+<!--=== Breadcrumbs ===-->
+<div class="breadcrumbs">
+  <div class="container">
+    <h1 class="pull-left">Registration</h1>
+    <ul class="pull-right breadcrumb">
+      <li><%= link_to "Home", root_path %></li>
+      <li class="active">Registration</li>
+    </ul>
+  </div><!--/container-->
+</div><!--/breadcrumbs-->
+<!--=== End Breadcrumbs ===-->
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+      <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :role => 'form', :class=>'reg-page'}) do |f| %>
+        <div class="reg-header">
+          <h2>Register a new account</h2>
+          <div class="well well-sm"><p>All users, whether registering as part of an existing or new organization, will receive an automatically generated acknowledgement email. The acknowledgment will be sent to the email address they provided as a security measure in order to confirm they have the necessary access and authority to use the given address. Once the email address is confirmed by the user by following the link provided in the email, (pending) the System Administrator (SA) will automatically receive a notification of a new user. The SA is then tasked with reviewing the information provided before approving or rejecting the registration/request.</p></div>
+          <p>Already Signed Up? Click <%= link_to 'Sign in', new_user_session_path %> to login your account.</p>
+        </div>
+
+          <%= devise_error_messages! %>
+
+        <label>Name</label>
+          <%= f.text_field :name, :autofocus => true, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "name", placeholder: "Your name" %>
+
+          <%= simple_fields_for :organization_applications do |o| %>
+            <label>Choose Organization</label>
+              <%= o.input_field :organization_id, :collection => Organization.where("approved = true").order("name"), :id => "organization_select_list", class: "form-control margin-bottom-20", :value_method => "id", :include_blank => true, :label  => false, :label_method => lambda { |organization| "#{organization.name}".html_safe } %>
+                  <%#= o.select :organization_id, :collection => Organization.where("approved = true").order("name").map { |r| [r.name, r.id, { :label => false ,:include_blank => true, class: 'form-control margin-bottom-20' }] } %>
+          <% end %>
+
+        <label>Or Apply For A New Organization</label>
+          <%= f.text_field :organization_entered, :id => "organization_name", autocomplete: 'off', class: 'form-control margin-bottom-20', placeholder: "Organization Name" %>
+
+        <label>Email Address <span class="color-red">*</span></label>
+          <%= f.text_field :email, :autofocus => true, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "email", placeholder: "Your email" %>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <label>Password <span class="color-red">*</span></label>
+            <%= f.password_field :password, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "password", placeholder: "Password" %>
+          </div>
+          <div class="col-sm-6">
+            <label>Confirm Password <span class="color-red">*</span></label>
+            <%= f.password_field :password_confirmation, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "repeat_password", placeholder: "Repeat Password" %>
+          </div>
+        </div>
+
+        <%= flash[:recaptcha_error] %>
+        <%= recaptcha_tags %>
+
+        <hr>
+
+        <div class="row">
+          <div class="col-lg-6">
+            &nbsp;
+          </div>
+          <div class="col-lg-6 text-right">
+            <%= f.submit 'Sign Up', :class => 'btn-u' %>
+          </div>
+        </div>
+          <p>Remembered your password? <%= link_to 'Sign In', new_session_path(resource) %></p>
+          <p>Lost your password? <%= link_to "Forgot your password?", new_password_path(resource_name), class: "btn btn-link text-inverse" %></p>
+      <% end %>
+    </div>
+  </div>
+</div><!--/container-->
+<!--=== End Content Part ===-->
+
+
+<script>
+  $(document).ready(function() {
+
+    $('#new_user').on('submit', function(e) { //use on if jQuery 1.7+
+      if($('#organization_select_list').val() != "" && $("#organization_name").val() != "") {
+        alert("Choose either an existing organization or enter apply for a new one.");
+        return false;
+      }
+    });
+
+  });
+
+
+</script>

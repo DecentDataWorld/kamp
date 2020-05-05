@@ -1,0 +1,13 @@
+<p>The following user has applied to join your organization on the Jordan Knowledge Management Portal (KaMP):</p>
+
+<p>Name: <%= @user.name %><br>
+Email: <%= @user.email %></p>
+
+<p>You can approve or deny this request through your organization dashboard below:</p>
+<p><a href="<%= organizations_url %>/<%= @organization.url %>"><%= @organization.name %></a>    </p>
+
+<p>If you need any further support please contact <a href="mailto:contact@jordankmportal.com">contact@jordankmportal.com</a>.</p>
+
+<p> Best Regards,<br>
+  Jordan KaMP
+</p>

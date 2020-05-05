@@ -1,0 +1,68 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <p class=" pull-right"><a href="/admin/survey_report.csv" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> Export to Excel</a></p>
+      <div class="time-period">
+        <form class="form-inline" action="<%= survey_report_url %>" method="get">
+          <div class="form-group">
+            <label for="exampleInputName2">Start</label>
+            <input class="datepicker datepicker-start" type="text" name="start_date" class="form-control" value="<%= @start_date %>">
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail2">End</label>
+            <input class="datepicker datepicker-end" type="text" name="end_date" class="form-control" value="<%= @end_date %>">
+          </div>
+          <button type="submit" class="btn btn-default">Update</button>
+        </form>
+      </div>
+
+      <table class="datatables">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>User</th>
+            <th>Page</th>
+            <th></th>
+            <th>Occurred</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @logs.each do |log| %>
+          <tr>
+            <td><%= log.event %></td>
+            <% !log.user_id.nil? ? log_user = User.find(log.user_id) : log_user = nil %>
+            <td><%= link_to log_user.email, log_user if !log_user.nil? %></td>
+            <td><%= log.model_type %></td>
+            <% if log.model_type != 'Search Result' and !log.model_id.nil? %>
+              <% log.model_type == 'Resource' ? item = Resource.find(log.model_id) : item = Collection.find(log.model_id) %>
+            <% end %>
+            <td><%= link_to item.name, item if !item.nil? %></td>
+            <td><%= log.created_at %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+    </div>
+    <div class="col-md-3">
+      <%= render 'admin/sidebar' %>
+    </div>
+  </div>
+</div>
+
+<% content_for :page_javascript do %>
+  <script>
+      jQuery(document).ready(function() {
+          $('.datepicker').datetimepicker({
+              format: 'MM/DD/YYYY'
+          });
+          $('.datepicker-start').datetimepicker('update', '<%= @start_date %>');
+          $('.datepicker-end').datetimepicker('update', '<%= @end_date %>');
+
+          $('.datatables').DataTable();
+      });
+  </script>
+<% end %>
+

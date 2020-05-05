@@ -1,0 +1,47 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">  <div class="col-sm-3">
+    <%= render partial: 'organizations/info', locals: { :short=>false } %>
+  </div>
+    <div class="col-sm-9">
+
+      <%= render partial: 'organizations/tab_nav' %>
+
+      <div class="tab-content">
+        <%= simple_form_for(@users_organization) do |f| %>
+            <%= f.error_notification %>
+
+            <% if @users_organization.errors.count > 0 %>
+                <div class="info-board info-board-red">
+                  <h4>Correct Errors Before Continuing</h4>
+                  <p>The following fields have to be corrected.</p>
+                  <% @users_organization.errors.each do |e| %>
+                      <%= e %>
+                  <% end %>
+                </div>
+            <% end %>
+            <div class="row-fluid">
+              <h4 class="text-color">Modify Member Role</h4>
+              <p>Adjust the following member's role within this organization:</p>
+              <p><span class="label label-success"><%= @users_organization.role %></span> <b><%= "#{@users_organization.user.name.capitalize} (#{@users_organization.user.email})".html_safe %></b></p>
+            </div>
+            <div class="row-fluid">
+              Make this user a: <%= f.select :role, UsersOrganization.role.options %>
+            </div>
+            <div class="row-fluid">
+              <br>
+              <div class="form-actions col-lg-offset-4">
+                <%= button_tag(type: 'submit', class: "btn btn-info") do %>
+                    <i class="icon icon-plus-sign"></i>
+                    Update Role
+                <% end %>
+              </div>
+            </div>
+
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>

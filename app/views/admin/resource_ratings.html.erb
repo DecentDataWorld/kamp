@@ -1,0 +1,112 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="tab-v2">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#resources" data-toggle="tab">Resources</a></li>
+          <li><a href="#collections" data-toggle="tab">Collections</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade in active" id="resources">
+            <% if @resources.count > 0 %>
+                <p class="text-muted">Showing highest rated resources
+                </p>
+                <table class="table table-bordered">
+                  <tr>
+                    <th>Resource Name</th>
+                    <th>Resource Organization</th>
+                    <th>Positive</th>
+                    <th>Positive Users</th>
+                    <th>Negative</th>
+                    <th>Negative Users</th>
+                    <th>Score (CI Lower Bound)</th>
+                  </tr>
+                  <% @resources.each do |resource| %>
+                      <% get_resource = Resource.find(resource.id) %>
+                      <tr>
+                        <td><%= link_to get_resource.name, get_resource %></td>
+                        <td><%= link_to get_resource.organization.name, get_resource.organization %></td>
+                        <td><%= get_resource.positive %></td>
+                        <td>
+                          <% get_resource.positive_users.each do |user| %>
+                              <% get_user = User.find(user) %>
+                              <%= link_to get_user do %>
+                                  <%= get_user.name %> (<%= get_user.email %>)<br>
+                              <% end %>
+                          <% end %>
+                        </td>
+                        <td><%= get_resource.negative %> </td>
+                        <td>
+                          <% get_resource.positive_users.each do |user| %>
+                              <% get_user = User.find(user) %>
+                              <%= link_to get_user do %>
+                                  <%= get_user.name %> (<%= get_user.email %>)<br>
+                              <% end %>
+                          <% end %>
+                        </td>
+                        <td><%= resource.ci_lower_bound %></td>
+                      </tr>
+                  <% end %>
+                </table>
+            <% else %>
+                <%= raw '<blockquote><i class="fa fa-thumbs-down"></i> No resources have been rated yet</blockquote>' %>
+            <% end %>
+
+          </div>
+          <div class="tab-pane fade in" id="collections">
+            <% if @collections.count > 0 %>
+                <p class="text-muted">Showing highest rated collections
+                </p>
+                <table class="table table-bordered">
+                  <tr>
+                    <th>Collection title</th>
+                    <th>Collection Organization</th>
+                    <th>Positive</th>
+                    <th>Positive Users</th>
+                    <th>Negative</th>
+                    <th>Negative Users</th>
+                    <th>Score (CI Lower Bound)</th>
+                  </tr>
+                  <% @collections.each do |row| %>
+                      <% get_collection = Collection.find(row.id) %>
+                      <tr>
+                        <td><%= link_to get_collection.title, get_collection %></td>
+                        <td><%= link_to get_collection.organization.name, get_collection.organization %></td>
+                        <td><%= get_collection.positive %></td>
+                        <td>
+                          <% get_collection.positive_users.each do |user| %>
+                              <% get_user = User.find(user) %>
+                              <%= link_to get_user do %>
+                                  <%= get_user.name %> (<%= get_user.email %>)<br>
+                              <% end %>
+                          <% end %>
+                        </td>
+                        <td><%= get_collection.negative %> </td>
+                        <td>
+                          <% get_collection.positive_users.each do |user| %>
+                              <% get_user = User.find(user) %>
+                              <%= link_to get_user do %>
+                                  <%= get_user.name %> (<%= get_user.email %>)<br>
+                              <% end %>
+                          <% end %>
+                        </td>
+                        <td><%= row.ci_lower_bound %></td>
+                      </tr>
+                  <% end %>
+                </table>
+            <% else %>
+                <%= raw '<blockquote><i class="fa fa-thumbs-down"></i> No resources have been rated yet</blockquote>' %>
+            <% end %>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <%= render 'admin/sidebar' %>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,15 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <%= link_to 'New License', new_license_path, class: "btn btn-u pull-right" %>
+      <p>Click on a tag below to view it or use one of the available buttons</p>
+      <%= render partial: 'licenses/table_list' %>
+    </div>
+    <div class="col-md-3">
+      <%= render 'admin/sidebar' %>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,63 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-3">
+      <%= render partial: 'organizations/info', locals: { :short=>false } %>
+    </div>
+    <div class="col-sm-9">
+
+      <%= render partial: 'organizations/tab_nav' %>
+
+      <div class="tab-content">
+
+          <%= simple_form_for @get_application,
+              :url => url_for(:action => 'process_application_denial', :controller => 'organizations'),
+              :method => 'post' do |f| %>
+
+              <div class="row">
+                <%= f.input :id, :as => "hidden", :value => @get_application.id %>
+
+              <h3>Deny Organization Membership</h3>
+              <p>You are about to deny the following user membership to this organization.</p>
+                <p><strong><%= @get_application.user.name %> (<%= @get_application.user.email %>)</strong></p>
+
+                <p>Optional: If you would like to include a message in the notification please enter it below.</p>
+
+              <%= f.input_field :comment, :as => :text, :class => 'form-control' %>
+
+              </div>
+            <div class="row-fluid">
+              <br>
+              <div class="form-actions col-lg-offset-4">
+                <%= button_tag(type: 'submit', class: "btn btn-u btn-u-red") do %>
+                    <i class="icon icon-plus-sign"></i>
+                    Deny Membership Application
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $(function(){
+
+    $(".chosen-select").chosen();
+
+    $('#new_user').submit(function( event ) {
+
+      if ($('#name').val() == "" || $('#email').val() == "" ) {
+        alert("Please enter both a name and email address for the person you are inviting");
+        return false;
+      }
+
+    });
+
+  });
+</script>

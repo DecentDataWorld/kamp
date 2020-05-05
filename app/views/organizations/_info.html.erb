@@ -1,0 +1,17 @@
+<% if @organization.logo.blank? %>
+    <img src="/img/placeholder-organization.png" alt="Placeholder Image" class="img-responsive">
+<% else %>
+    <%= link_to organization_path(@organization) do %>
+        <%= image_tag @organization.logo.expiring_url(10), class: "img-responsive" %>
+    <% end %>
+<% end %>
+<h4><%= link_to @organization.name, organization_path(@organization) %></h4>
+<% if !@organization.organization_type.blank? %>
+    <p><strong>Organization Type:</strong><br>
+      <%= @organization.organization_type.organization_type %></p>
+<% end %>
+<% if short.nil? or !short %>
+    <p>
+      <%= simple_format @organization.description, class: 'well well-sm' %>
+    </p>
+<% end %>

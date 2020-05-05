@@ -1,0 +1,18 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-3">
+
+      <div class="headline"><h2>Edit Resource</h2></div>
+      <%= render 'resources/form_instructions' %>
+
+    </div>
+    <div class="col-sm-9">
+      <%= render partial: 'form', locals: { resource: @resource, destination: '' } %>
+
+    </div>
+  </div>
+</div>
+
+

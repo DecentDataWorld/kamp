@@ -1,0 +1,19 @@
+<% content_for :title do %>Portal Survey<% end %>
+<div class="container s-results margin-bottom-50">
+  <div class="row">
+    <div class = "col-xs-12">
+      <script type='text/javascript' src='https://www.sogosurvey.com/zdm/embed.aspx?val=QsQsVVPSsVUPsTPP&key=VsQRSTRUsRSsPsPsP'> </script>
+    </div>
+  </div>
+    <div class="row text-center">
+      <% unless @return_to_search.nil? %>
+        <a href="/searches/<%= session[:last_search_id] %>" class="btn btn-primary">Return To Search Results</a>
+      <% end %>
+      <% unless @return_to_resource.nil? %>
+        <a href="/resources/<%= @return_to_resource %>" class="btn btn-primary">Return To Resource</a>
+      <% end %>
+      <% unless @return_to_collection.nil? %>
+        <a href="/collections/<%= @return_to_collection %>" class="btn btn-primary">Return To Collection</a>
+      <% end %>
+    </div>
+</div>

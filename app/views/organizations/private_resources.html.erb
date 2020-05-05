@@ -1,0 +1,40 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-3">
+      <%= render partial: 'organizations/info', locals: { :short=>false } %>
+    </div>
+    <div class="col-sm-9">
+
+      <%= render partial: 'organizations/tab_nav' %>
+
+      <div class="tab-content">
+        <h2>Private Resources</h2>
+
+        <% if @resources.count > 0 %>
+            <% @resources.each do |resource| %>
+                <%= render partial: 'resources/resource_results', locals: {resource: resource} %>
+            <% end %>
+            <%= will_paginate @resources %>
+        <% else %>
+            <p>None found.</p>
+        <% end %>
+
+     </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+    $(function(){
+
+        $(".chosen-select").chosen();
+
+        $('#collection_tag_list').tagsInput();
+
+
+    });
+</script>

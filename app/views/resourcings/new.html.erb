@@ -1,0 +1,18 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="headline"><h4><%= @klass_name %></h4></div>
+      <p><strong><%= @coll.title %></strong></p>
+
+      <%= render partial: 'form', locals: { resource: @resource, destination: '' } %>
+    </div>
+    <div class="col-sm-3">
+
+      <%= render 'form_instructions' %>
+
+    </div>
+  </div>
+</div>
+

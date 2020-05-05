@@ -1,0 +1,42 @@
+
+<span class="results-number">
+        <% if @tag_filter_list.length > 0 or !params[:organization_id].nil? or !params[:license_id].nil? or !params[:language].nil? or !params[:resource_type].nil? %>
+          <ul class="list-inline">
+            Filtered By:
+            <% if @tag_filter_list.length > 0 %>
+                <% @tag_filter_list.each do |t| %>
+                    <%= raw(t) %>
+                <% end %>
+            <% end %>
+            <% if !params[:organization_id].nil? and Organization.where(id: params[:organization_id]).exists? %>
+                <% @organization =  Organization.find(params[:organization_id]) %>
+
+                <li><%= link_to url_for(update_search_path(params.except(:organization_id))), class: 'btn btn-green btn-xs' do %>
+                      <%= @organization.name %> <i class="fa fa-times"></i>
+                  <% end %></li>
+            <% end %>
+            <% if !params[:license_id].nil? %>
+                <% @license =  License.find_by :id => params[:license_id] %>
+
+                <li><%= link_to url_for(update_search_path(params.except(:license_id))), class: 'btn btn-green btn-xs' do %>
+                      <%= @license.name %> <i class="fa fa-times"></i>
+                  <% end %></li>
+            <% end %>
+            <% if !params[:resource_type].nil? %>
+                <% @resource_type =  params[:resource_type] %>
+
+                <li><%= link_to url_for(update_search_path(params.except(:resource_type))), class: 'btn btn-green btn-xs' do %>
+                      <%= @resource_type %> <i class="fa fa-times"></i>
+                  <% end %></li>
+            <% end %>
+            <% if !params[:language].nil? %>
+                <% @language =  params[:language] %>
+
+                <li><%= link_to url_for(update_search_path(params.except(:language))), class: 'btn btn-green btn-xs' do %>
+                      <%= @language %> <i class="fa fa-times"></i>
+                  <% end %></li>
+            <% end %>
+          </ul>
+    <% end %>
+
+  </span>

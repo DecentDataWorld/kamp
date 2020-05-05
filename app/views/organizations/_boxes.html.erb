@@ -1,0 +1,19 @@
+<% @organizations.each do |organization| %>
+    <div class="col-sm-3 sameHeight">
+      <div class="shop-product">
+        <% if organization.logo.blank? %>
+            <img src="/img/placeholder-organization.png" alt="Placeholder Image" class="img-responsive pull-right">
+        <% else %>
+            <%= image_tag organization.logo.expiring_url(10), class: "img-responsive"  %>
+        <% end %>
+        <h4 class='primary-font'><%= link_to raw("" + organization.name.truncate(27) + ""), organization_path(organization) %></h4>
+        <p class="text-muted">
+          <%= simple_format organization.description.truncate(50) if !organization.description.nil? %>
+        </p>
+        <%= link_to organization, class: 'btn btn-sm btn-color' do %>
+            <i class="fa fa-eye"></i> View
+        <% end %>
+      </div>
+    </div>
+<% end %>
+

@@ -1,0 +1,29 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+
+      <div class="headline"><h2>Upload Resources</h2></div>
+      <p>This section of the portal will let you upload multiple resources at one time.</p>
+      <p>Please note that resources must be uploaded in ZIP format. Resources in the ZIP file <b>should not</b> be within folders.</p>
+
+      <%= render 'upload_files' %>
+
+      <hr>
+
+      <h4>Recently Uploaded Groups</h4>
+
+      <%= render '/batches/list' if @batches.count > 0 %>
+      <%= 'No group uploads currently in the system' if @batches.count == 0 %>
+
+      <hr>
+
+    </div>
+    <div class="col-md-3">
+
+      <%= render 'admin/sidebar' %>
+
+    </div>
+  </div>
+</div>

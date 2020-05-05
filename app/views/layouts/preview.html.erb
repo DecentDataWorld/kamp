@@ -1,0 +1,47 @@
+<% current_uri = request.env['PATH_INFO'] %>
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+  <title><%= @page_title + " | " if !@page_title.nil? %><%= content_for?(:title) ? yield(:title) : "USAID Jordan Knowledge Management Portal (KaMP)" %></title>
+
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+  <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache,no-Store">
+  <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "USAID Jordan Knowledge Management Portal (KaMP)" %>">
+  <meta name="author" content="">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <!-- %= #csrf_meta_tag % -->
+
+  <!-- %= #render 'layouts/analytics' % -->
+</head>
+<body>
+<div class="wrapper">
+  <!--=== Header ===-->
+  <div class="header">
+    <!-- %= #render 'layouts/navigation_links' % -->
+
+  </div>
+  <!--=== End Header ===-->
+
+  <%= yield %>
+
+  <%= render 'layouts/copyright' %>
+
+</div><!--/wrapper-->
+
+<%= content_for?(:page_javascript) ? (yield(:page_javascript)) : '' %>
+
+</body>
+</html>
+
+

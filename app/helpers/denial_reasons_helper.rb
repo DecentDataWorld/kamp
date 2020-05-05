@@ -1,0 +1,2 @@
+module DenialReasonsHelper
+end

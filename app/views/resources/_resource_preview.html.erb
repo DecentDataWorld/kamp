@@ -1,0 +1,44 @@
+
+<% if resource.resource_type == "pdf" || resource.resource_type == "PDF" %>
+    <div class="alert alert-info fade in">
+      <button data-dismiss="alert" class="close">
+        ×
+      </button>
+      <i class="fa-fw fa fa-info"></i>
+      <strong>PDF Plugin required</strong><br>
+      Don't see a document preview below? Click the button to download the <strong>free</strong> Adobe Reader plugin
+      <div class="text-center">
+        <a href="http://get.adobe.com/reader/" target="_blank">
+          <img width="158" height="39" src="/img/get_adobe_reader.png" alt="Get Acrobat Reader web logo"><br>
+          Get Adobe Reader</a>
+      </div>
+    </div>
+<% end %>
+
+<% if resource.resource_type.downcase != "document" and resource.resource_type.downcase != "csv" and resource.resource_type != "other" and resource.resource_type != "GeoJSON" %>
+    <div class="row-fluid" id="previewbox">
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+          <strong>Preview:</strong>
+
+          <% if resource.resource_type.downcase == "csv" %>
+              <iframe src="http://docs.google.com/viewer?url=<%= resource.attachment.expiring_url(10) %>&embedded=true" style="width:100%; height: 100%;min-height: 650px;border: none;"></iframe>
+          <% elsif resource.resource_type.downcase == "document" %>
+              <iframe src="https://docs.google.com/viewer?url=<%= resource.attachment.expiring_url(10) %>&embedded=true" style="width:100%; height: 100%;min-height: 650px;border: none;"></iframe>
+          <% elsif resource.resource_type.downcase == "pdf" %>
+              <iframe class="myIframe" id="myIframe" src="<%= resource.attachment.expiring_url(10) %>" width="100%" height="100%" style="min-height: 650px;" >
+
+              </iframe>
+
+          <% elsif resource.resource_type.downcase == "image" %>
+
+            <a href="<%= resource.attachment.expiring_url(10) %>" target="_blank"><img src="<%= resource.attachment.expiring_url(10) %>" class="img-responsive"></a>
+
+          <% else %>
+              <p>A preview is not available for this resource</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+<% end %>

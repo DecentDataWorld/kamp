@@ -1,0 +1,17 @@
+<p>Hello <%= @email %>!</p>
+
+<p>Thanks for registering to be part of the USAID Jordan Knowledge Management Portal (KaMP). Before you can access the site however, we need to make sure it was really you who created this account.</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+
+<p>If the above link does not work you can copy and paste the link below:</p>
+
+<p>
+
+  <%= confirmation_url(@resource, confirmation_token: @token) %>
+
+</p>
+
+<p>If you did not register and feel this was done in error, please ignore this email. Thanks again for choosing to be part of our community.</p>

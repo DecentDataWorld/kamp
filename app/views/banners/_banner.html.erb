@@ -1,0 +1,48 @@
+
+<section id="team" style="background: #cfcdc9;">
+  <div class="container g-pt-100 g-pb-40">
+    <div class="row">
+      <div class="col-xs-12 text-center">
+        <% if can? :edit, banner %>
+
+          <%= link_to raw('<i class="fa fa-edit"></i> Edit'), edit_banner_path(banner), class: 'btn btn-primary' %>
+        <% end %>
+        <% if can? :destroy, banner %>
+          &nbsp;&nbsp;|&nbsp;&nbsp;<%= link_to raw('<i class="fa fa-trash"></i> Delete'), banner, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+        <% end %>
+        <% if can? :manage, banner and !current_page?(controller: 'banners', action: 'index') %>
+          &nbsp;&nbsp;|&nbsp;&nbsp;<%= link_to 'Manage Banners', banners_path, class: 'btn btn-primary' %>
+        <% end %>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 col-sm-12 competition-about">
+        <div class="g-heading-v9 g-mb-30">
+          <h2><strong><%= banner.heading %><% if can? :edit, banner and current_page?(controller: 'banners', action: 'index') %>&nbsp;&nbsp;|&nbsp;&nbsp;<span class="btn btn-info"><%= banner.visible? ? 'Visible' : 'Inactive' %></span><% end %></strong></h2>
+        </div>
+        <%= raw(banner.intro_text) %>
+        <p class="read-more" style="background: #cfcdc9;"><a href="#" class="button btn btn-primary btn-rounded">Read More</a></p>
+      </div>
+      <div class="col-md-4 col-xs-4 col-3xs-12">
+        <div class="team-v-8">
+          <p class="post text-uppercase g-theme-text-color-1 g-mb-15"><strong><%= banner.col1_heading %></strong></p>
+          <%= raw(banner.col1_body) %>
+          <hr>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-4 col-3xs-12">
+        <div class="team-v-8">
+          <p class="post text-uppercase g-theme-text-color-1 g-mb-15"><strong><%= banner.col2_heading %></strong></p>
+          <%= raw(banner.col2_body) %>
+          <hr>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 text-center">
+        <%= raw(banner.footnote) %>
+      </div>
+    </div>
+  </div>
+</section>

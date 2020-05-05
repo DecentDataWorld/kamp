@@ -1,0 +1,7 @@
+<p>The following submission to the Jordan KaMP has been submitted for approval.</p>
+
+<p><strong><%= @submission.class.name %> Name: <% if @submission.is_a? Collection %><a href="<%= collection_url(@submission) %>"><%= @submission.title %></a><% end %>
+  <% if @submission.is_a? Resource %><a href="<%= resource_url(@submission) %>"><%= @submission.name  %></a><% end %></strong></p>
+
+
+

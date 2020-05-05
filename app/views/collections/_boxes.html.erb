@@ -1,0 +1,20 @@
+<% @collections.each do |collection| %>
+    <div class="col-sm-4">
+      <div class="portfolio-item">
+        <% if !collection.image.blank? %>
+            <%= link_to collection do %>
+                <%= image_tag collection.image.url(:large), class: "img-responsive", alt: collection.title + ' Preview'  %>
+                <div class="mask">
+                  <span class="pull-right"><i class="fa fa-file-text"></i> <%= collection.resources.count %> Resources</span>
+                </div>
+            <% end %>
+        <% end %>
+        <div class="portfolio-desc">
+          <%= link_to raw("<h3 class='primary-font'>" + collection.title.truncate(27) + "</h3>"), collection %>
+          <p class="text-muted">
+            <%= simple_format collection.description.truncate(100) %>
+          </p>
+        </div>
+      </div>
+    </div>
+<% end %>

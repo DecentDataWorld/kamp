@@ -1,0 +1,23 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <% if @most_accessed.count > 0 %>
+          <p class="text-muted">Showing most accessed resources
+          </p>
+          <% @most_accessed.each do |resource| %>
+              <p><strong>Uniquely Accessed <%= resource.impressions_count %> times. (<%= resource.impressions.count %> total views/<%= resource.impressions.where("action_name = 'download'").count %> downloads)</strong></p>
+              <%= render partial: 'resources/resource_results', locals: {resource: resource} %>
+          <% end %>
+          <%= will_paginate @most_accessed %>
+      <% else %>
+          <%= raw '<blockquote><i class="fa fa-thumbs-down"></i> No resources found with that combination</blockquote>' %>
+      <% end %>
+    </div>
+    <div class="col-md-3">
+      <%= render 'admin/sidebar' %>
+    </div>
+  </div>
+</div>
+

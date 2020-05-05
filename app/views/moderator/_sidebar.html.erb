@@ -1,0 +1,12 @@
+
+<ul id="sidebar-nav" class="list-group sidebar-nav-v1">
+  <!-- Moderate Resources and Collections -->
+  <li class="list-group-item  <%= 'active' if current_page?(moderate_submissions_url) %>">
+    <a href="<%= moderate_submissions_url %>">Pending Submissions</a>
+  </li>
+  <li class="list-group-item  <%= 'active' if current_page?(denial_reasons_url) %>">
+    <a href="<%= denial_reasons_url %>">Denial Reasons</a>
+  </li>
+  <!-- End Moderate Resources and Collections -->
+</ul>
+

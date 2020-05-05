@@ -1,0 +1,19 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <%= link_to 'Edit', edit_category_path(@category), class: "btn btn-u pull-right" %>
+    <div class="headline"><h2> <%= @category.name %></h2></div>
+    <p>
+      <%= @category.description %>
+    </p>
+
+    <% if !@category.tags.nil? %>
+        <div class="well well-sm">
+          <b>Tag(s)</b><br>
+          <%= raw @category.tag_list.map { |t| link_to raw('<span class=" btn btn-xs btn-info rounded"><i class="fa fa-tag"></i> ' + t + '</span>'), new_search_path(:tags=>[t]) }.join(' ') %>
+        </div>
+    <% end %>
+
+  </div>
+</div>

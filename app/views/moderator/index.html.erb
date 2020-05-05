@@ -1,0 +1,17 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+
+      <%= render :partial => 'admin/show_pending_submissions', :locals => { :pending_submissions => @pending_submissions } %>
+
+    </div>
+    <div class="col-md-3">
+
+      <%= render 'sidebar' %>
+
+    </div>
+  </div>
+</div>
+

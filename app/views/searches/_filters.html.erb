@@ -1,0 +1,182 @@
+<div id="collections_only" class="col-md-12 col-sm-4 margin-bottom-5">
+  <h3><strong>Limit To</strong></h3>
+  <% show_collection_link = true %>
+  <% show_resource_link = true %>
+  <% if @search.collections_only == true || params[:collections_only] == true || params[:collections_only] == "true" %>
+      <ul class="list-unstyled">
+        <li><b>Filtering By:</b></li>
+        <%= link_to url_for(update_search_path(params.except(:collections_only))) do %>
+            Collections <i class="fa fa-times"></i>
+        <% end %>
+        <% show_collection_link = false %>
+      </ul>
+  <% elsif @search.resources_only == true || params[:resources_only] == true || params[:resources_only] == "true" %>
+      <ul class="list-unstyled">
+        <li><b>Filtering By:</b></li>
+        <%= link_to url_for(update_search_path(params.except(:resources_only))) do %>
+            Resources <i class="fa fa-times"></i>
+        <% end %>
+      </ul>
+      <% show_resource_link = false %>
+  <% end %>
+
+  <ul class="list-unstyled">
+    <% if show_collection_link %>
+        <li><%= link_to update_search_path(params.merge(:collections_only => true, :resources_only => false).except(:page)) do %><i class="fa fa-files-o"></i> Collections<% end %></li>
+    <% end %>
+    <% if show_resource_link %>
+      <li><%= link_to update_search_path(params.merge(:resources_only => true, :collections_only => false).except(:page)) do %><i class="fa fa-file"></i> Resources<% end %></li>
+    <% end %>
+  </ul>
+</div>
+
+
+<%
+   # check for existing tags in query string
+   existing_tag_facets = []
+   if params[:tags].present?
+     existing_tag_facets = params[:tags]
+   end
+
+   @tag_facet_links_off = ''
+   tag_facet_links_off_counter = 1
+   @tag_facet_links_on = ''
+   @tag_filter_list = []
+
+   @search_results.facet(:tags).rows.each_with_index do |facet, index|
+
+     # check if facet is selected
+     if (!params[:tags].nil? and params[:tags].include? facet.value)
+       tag_facets = existing_tag_facets - [facet.value]
+       updated_params = params.merge(:tags => tag_facets).except(:page)
+       @tag_filter_list << "<li>#{link_to raw(facet.value + " <i class='fa fa-times' rel='tooltip' title='Remove' id='Remove This Filter'></i>"), update_search_path(updated_params)}</li>"
+       @tag_facet_links_on << "<li>#{link_to raw("<i class='fa fa-times' rel='tooltip' title='Remove' id='Remove This Filter'></i> " + facet.value), update_search_path(updated_params)}</li>"
+     elsif @search_results.hits.size > 0
+       if existing_tag_facets.size < 1
+         tag_facets = existing_tag_facets + [facet.value]
+       else
+         tag_facets = existing_tag_facets + [facet.value]
+       end
+       tag_facet_links_off_counter = tag_facet_links_off_counter + 1
+       @tag_facet_links_off << "<li>(#{facet.count}) #{link_to facet.value, update_search_path(params.merge(:tags => tag_facets))}</li>"
+     end
+
+   end
+%>
+<div id="tags" data-step="1" data-intro="Click 'More Tags' to see all available tags" data-position="top" class="col-md-12 col-sm-4 margin-bottom-10">
+  <h3><strong>Tag(s)</strong></h3>
+  <% if @tag_facet_links_on.length > 1 %>
+      <ul class="list-unstyled">
+        <li><b>Filtering By:</b></li>
+        <%= raw @tag_facet_links_on %>
+      </ul>
+  <% end %>
+
+  <ul class="list-unstyled">
+    <% if @tag_facet_links_on.length > 1 and @tag_facet_links_off.length > 1 %><li><b>Available Tags:</b></li><% end %>
+    <%= raw @tag_facet_links_off %>
+  </ul>
+  <% if tag_facet_links_off_counter > 8 %>
+      <div class="text-center"><a class="expandTagsList"><i class="fa fa-arrow-circle-down"></i> More Tags</a></div>
+  <% end %>
+</div>
+
+<% if !@collections_only %>
+<div id="resourcetypes" class="col-md-12 col-sm-4 margin-bottom-10">
+  <h3><strong>Resource Type</strong></h3>
+  <% if params[:resource_type].present? %>
+      <%= params[:resource_type] %>
+      <%= link_to url_for(update_search_path(params.except(:resource_type))), class: 'pull-right' do %>
+          <i class="fa fa-times-circle"></i> reset filter
+      <% end %>
+  <% else %>
+      <ul class="list-unstyled">
+        <% for row in @search_results.facet(:resource_type).rows %>
+            <li>
+              (<%= row.count %>) <%= link_to(row.value, update_search_path(params.merge(:resource_type => row.value).except(:page))) %>
+            </li>
+        <% end %>
+      </ul>
+      <% if @search_results.facet(:resource_type).rows.count > 4 %>
+          <div class="text-center"><a class="expandResourceTypesList"><i class="fa fa-arrow-circle-down"></i> More Resource Types</a></div>
+      <% end %>
+  <% end %>
+</div>
+
+<div id="languages" class="col-md-12 col-sm-4 margin-bottom-10">
+  <h3><strong>Language</strong></h3>
+  <% if params[:language].present? %>
+      <%= params[:language] %>
+      <%= link_to url_for(update_search_path(params.except(:language))), class: 'pull-right' do %>
+          <i class="fa fa-times-circle"></i> reset filter
+      <% end %>
+  <% else %>
+      <ul class="list-unstyled">
+        <% for row in @search_results.facet(:language).rows %>
+            <li>
+              (<%= row.count %>) <%= link_to(row.value.titleize, update_search_path(params.merge(:language => row.value).except(:page))) %>
+            </li>
+        <% end %>
+      </ul>
+      <% if @search_results.facet(:language).rows.count > 5 %>
+          <div class="text-center"><a class="expandLanguageList"><i class="fa fa-arrow-circle-down"></i> More Languages</a></div>
+      <% end %>
+  <% end %>
+</div>
+<% end %>
+
+<div class="col-md-12 col-sm-4 margin-bottom-10">
+  <h3><strong>Uploaded By</strong></h3>
+  <%= render partial: 'collections/facet_org' %>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        <% if !params.has_key?('more_tags') %>
+        $('#tags li:gt(8)').hide();
+        <% else %>
+        $('#tags li:gt(15)').hide();
+        introJs().start();
+        <% end %>
+
+        $('#tags .expandTagsList').click(function() {
+
+            if(this.innerHTML == '<i class="fa fa-arrow-circle-down"></i> More Tags') {
+                $('#tags li:gt(8)').show();
+                this.innerHTML = '<i class="fa fa-arrow-circle-up"></i> Less Tags';
+            } else {
+                $('#tags li:gt(8)').hide();
+                this.innerHTML = '<i class="fa fa-arrow-circle-down"></i> More Tags';
+            }
+        });
+
+
+        $('#resourcetypes li:gt(4)').hide();
+
+        $('#resourcetypes .expandResourceTypesList').click(function() {
+            if(this.innerHTML == '<i class="fa fa-arrow-circle-down"></i> More Resource Types') {
+                $('#resourcetypes li:gt(4)').show();
+                this.innerHTML = '<i class="fa fa-arrow-circle-up"></i> Less Resource Types';
+            } else {
+                $('#resourcetypes li:gt(4)').hide();
+                this.innerHTML = '<i class="fa fa-arrow-circle-down"></i> More Resource Types';
+            }
+
+        });
+
+        $('#languages li:gt(4)').hide();
+
+        $('#languages .expandLanguageList').click(function() {
+            if(this.innerHTML == '<i class="fa fa-arrow-circle-down"></i> More') {
+                $('#languages li:gt(4)').show();
+                this.innerHTML = '<i class="fa fa-arrow-circle-up"></i> Less';
+            } else {
+                $('#languages li:gt(4)').hide();
+                this.innerHTML = '<i class="fa fa-arrow-circle-down"></i> More';
+            }
+
+        });
+
+    });
+</script>

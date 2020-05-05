@@ -1,0 +1,20 @@
+
+
+<% @collections.each do |collection| %>
+    <div class="well well-sm">
+      <% if !collection.image.blank? %>
+          <p><%= image_tag collection.image.url(:thumb), class: "author pull-left pad-right"  %></p>
+      <% end %>
+      <%= link_to collection, class: 'btn btn-sm btn-color pull-right' do %>
+          <i class="fa fa-eye"></i> View
+      <% end %>
+      <% str_title = collection.title.truncate(55) %>
+      <% if collection.private == true %>
+          <% str_title = str_title + ' <i class="fa fa-eye-slash"></i>' %>
+      <% end %>
+      <%= link_to raw("<h5 class='primary-font'>" + str_title + "</h5>"), collection_path(collection) %>
+      <p class="text-muted "><smaller>
+        <%= simple_format collection.description.truncate(80) if !collection.description.nil? %></smaller>
+      </p>
+    </div>
+<% end %>
