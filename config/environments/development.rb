@@ -48,7 +48,7 @@ Mesp::Application.configure do
       domain: "jordanmela.com",
       authentication: "plain",
       enable_starttls_auto: true,
-      user_name: "kamp-support@jordanmela.com",
+      user_name: "kampadmin@jordanmela.com",
       password: "zyp!2B%!9GMz"
   }
   # ActionMailer Config

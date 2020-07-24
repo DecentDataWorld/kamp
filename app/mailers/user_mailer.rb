@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default from: "kamp-support@jordanmela.com"
+  default from: "kampadmin@jordanmela.com"
 
   def registration_email(user)
     admins = User.with_role :admin

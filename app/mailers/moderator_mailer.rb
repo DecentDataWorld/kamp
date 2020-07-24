@@ -1,5 +1,5 @@
 class ModeratorMailer < ActionMailer::Base
-  default from: "kamp-support@jordanmela.com"
+  default from: "kampadmin@jordanmela.com"
 # changed to go to support@jordanmela.com
   def notify_submitter_of_approval(submission, user)
     @submission = submission
