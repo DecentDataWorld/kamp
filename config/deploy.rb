@@ -1,6 +1,6 @@
 # Change these
 
-set :repo_url,        'git@bitbucket.org:msi_ims/mesp.git'
+set :repo_url,        'git@bitbucket.org:webdevmela/kamp.git'
 set :application,     'mesp'
 set :user,            'deployer'
 set :puma_threads,    [4, 16]
