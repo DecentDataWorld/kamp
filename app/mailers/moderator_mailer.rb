@@ -1,6 +1,6 @@
 class ModeratorMailer < ActionMailer::Base
-  default from: ENV['GMAIL_USERNAME']
-
+  default from: "kamp-support@jordanmela.com"
+# changed to go to support@jordanmela.com
   def notify_submitter_of_approval(submission, user)
     @submission = submission
     @user = user

@@ -78,11 +78,11 @@ Mesp::Application.configure do
   config.action_mailer.smtp_settings = {
       address: "smtp.gmail.com",
       port: 587,
-      domain: ENV["DOMAIN_NAME"],
+      domain: "jordanmela.com",
       authentication: "plain",
       enable_starttls_auto: true,
-      user_name: ENV["GMAIL_USERNAME"],
-      password: ENV["GMAIL_PASSWORD"]
+      user_name: "kamp-support@jordanmela.com",
+      password: "zyp!2B%!9GMz"
   }
   # ActionMailer Config
   config.action_mailer.default_url_options = { :host => 'kampstaging.msidevcloud.com' }
