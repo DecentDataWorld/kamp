@@ -81,7 +81,7 @@ Mesp::Application.configure do
       authentication: "plain",
       enable_starttls_auto: true,
       user_name: "kampadmin@jordanmela.com",
-      password: "zyp!2B%!9GMz"
+      password: "A@wug3FN22%C"
   }
   # ActionMailer Config
   config.action_mailer.default_url_options = { :host => 'jordankmportal.com' }
