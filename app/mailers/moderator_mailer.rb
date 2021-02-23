@@ -31,7 +31,8 @@ class ModeratorMailer < ActionMailer::Base
     @submission = submission
     @user = user
 
-    @moderators = User.with_role(:moderator, :admin)
+    #@moderators = User.with_role(:moderator, :admin)
+    @moderators = User.with_role(:admin)
     @recipients = @moderators.pluck(:email)
 
 
