@@ -49,7 +49,7 @@ Mesp::Application.configure do
       authentication: "plain",
       enable_starttls_auto: true,
       user_name: "kampadmin@jordanmela.com",
-      password: "A@wug3FN22%C"
+      password: "aKB9s5V#nTWR"
   }
   # ActionMailer Config
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
