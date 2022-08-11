@@ -67,7 +67,7 @@ gem 'puma'
 group :assets do
   gem "chardinjs-rails"
   gem 'momentjs-rails'
-  gem 'datetimepicker-rails', git: 'git@github.com:zpaulovics/datetimepicker-rails.git', branch: 'master', submodules: true
+  gem 'datetimepicker-rails', :git => 'https://github.com/zpaulovics/datetimepicker-rails.git',  :branch => 'master', :submodules => true
 end
 group :development do
   gem 'capistrano',         require: false
