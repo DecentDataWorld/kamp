@@ -62,7 +62,7 @@ gem "recaptcha", require: "recaptcha/rails"
 gem 'rails_12factor'
 gem 'newrelic_rpm'
 
-gem 'puma'
+gem 'puma', '< 5.0.0'
 
 group :assets do
   gem "chardinjs-rails"
