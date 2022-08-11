@@ -76,13 +76,13 @@ Mesp::Application.configure do
   config.active_support.deprecation = :notify
 
   config.action_mailer.smtp_settings = {
-      address: "smtp.gmail.com",
+      address: "email-smtp.us-east-1.amazonaws.com",
       port: 587,
-      domain: "jordanmela.com",
-      authentication: "plain",
+      domain: "jordankmportal.com",
+      authentication: "login",
       enable_starttls_auto: true,
-      user_name: "kampadmin@jordanmela.com",
-      password: "pRx3Q8@Y36Qq1"
+      user_name: "AKIASBPD5MQSUEH4VG7N",
+      password: "BH1RDW3F6eLwM9OGT4D/+dTlgA4LhPbLqi2NusYWK/Dz"
   }
   # ActionMailer Config
   config.action_mailer.default_url_options = { :host => 'kampstaging.msidevcloud.com' }

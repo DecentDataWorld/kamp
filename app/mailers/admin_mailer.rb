@@ -1,5 +1,5 @@
 class AdminMailer < ActionMailer::Base
-  default from: "kampadmin@jordanmela.com"
+  default from: "help@jordankmportal.com"
   
   def notify_admins_of_new_organization(organization)
     @organization = organization
@@ -7,7 +7,7 @@ class AdminMailer < ActionMailer::Base
     admins = User.with_role :admin
     @recipients = admins.pluck(:email)
     # should go to support@msidevcloud.com
-    # changed to go to support@jordanmela.com
+    # changed to go to help@jordankmportal.com
     mail(to: @recipients, subject: '[KaMP] New Organization Pending Approval: ')
 
   end
