@@ -13,15 +13,15 @@
     <div class="col-xs-12 col-md-2 related-search">
       <div class="headline"><h4>FILTER BY</h4></div>
       <div class="row">
-      <%= render partial: 'searches/filters', locals: { collections_only: @collections_only } %>
+    <!--===    render partial: 'searches/filters', locals: { collections_only: @collections_only } ===-->
     </div>
     </div><!--/col-md-2-->
 
     <div class="col-xs-12 col-md-10">
-      <%= render partial: 'searches/show_filters' %>
+     <!--===  render partial: 'searches/show_filters'  ===-->
       <% if @resources.count > 0 %>
           <p class="pull-right padding-top-5"><%= link_to survey_index_path do %><span class="label label-info rounded"><i class="fa fa-asterisk"></i> Find this useful? Take our survey</span><% end %></p>
-          <span class="results-number"><strong><%= @search_results.total %></strong> results found. Showing most recently updated</span>
+          <span class="results-number"><strong><%= @record_count %></strong> results found.</span>
           <% @resources.each do |resource| %>
               <%= render resource %>
           <% end %>
@@ -56,79 +56,4 @@
   </div>
 </div>
 
-<% content_for :page_javascript do %>
-<script>
 
-
-    function createCookie(name,value,days) {
-        var expires = "";
-        if (days) {
-            var date = new Date();
-            date.setTime(date.getTime() + (days*24*60*60*1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + value + expires + "; path=/";
-    }
-
-    function readCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0;i < ca.length;i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
-    }
-
-    function eraseCookie(name) {
-        createCookie(name,"",-1);
-    }
-
-
-    $(document).ready(function () {
-
-        var cookie_data = readCookie('survey_prompt');
-        var show_modal = false;
-        if(cookie_data) {
-            var updated_count = parseInt(cookie_data) + 1;
-            if(parseInt(cookie_data) > 5 && parseInt(cookie_data) % 15 == 0) {
-                show_modal = true;
-            }
-            createCookie('survey_prompt',updated_count,10);
-        }
-        else {
-            createCookie('survey_prompt','1',10);
-            show_modal = true;
-
-        }
-        if(show_modal) {
-            $.ajax({
-
-                url : '<%= log_event_url %>',
-                type : 'GET',
-                data : {
-                    'model' : 'Search Result',
-                    'event': 'Survey Offered'
-                },
-                dataType:'json'
-            });
-            $('.bs-survey-modal-sm').modal("show");
-        }
-
-        $('#survey_button').click(function() {
-            $.ajax({
-
-                url : '<%= log_event_url %>',
-                type : 'GET',
-                data : {
-                    'model' : 'Search Result',
-                    'event': 'Survey Accepted'
-                },
-                dataType:'json'
-            });
-        });
-
-    });
-</script>
-<% end %>

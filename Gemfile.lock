@@ -1,17 +1,17 @@
 GIT
-  remote: git@github.com:zpaulovics/datetimepicker-rails.git
+  remote: https://github.com/viseztrance/rails-sitemap.git
+  revision: 3c99256d131a753079a78fb9deac1f7703ebe4d9
+  specs:
+    sitemap (0.3.3)
+
+GIT
+  remote: https://github.com/zpaulovics/datetimepicker-rails.git
   revision: 7a4640cb932e55866500a86c4f78808a4fca46e6
   branch: master
   submodules: true
   specs:
     datetimepicker-rails (4.7.16)
       momentjs-rails (>= 2.9.0)
-
-GIT
-  remote: https://github.com/viseztrance/rails-sitemap.git
-  revision: 3c99256d131a753079a78fb9deac1f7703ebe4d9
-  specs:
-    sitemap (0.3.3)
 
 GEM
   remote: https://rubygems.org/
@@ -1804,9 +1804,6 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
   will_paginate (~> 3.0)
-
-RUBY VERSION
-   ruby 2.3.0p0
 
 BUNDLED WITH
    1.17.3

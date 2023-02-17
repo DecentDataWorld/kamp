@@ -163,7 +163,7 @@ class Resource < ActiveRecord::Base
     logger.debug 'resource type set to: ' + self.resource_type
 
   end
-
+=begin
   searchable do
     text :name, :url
     text :description
@@ -182,7 +182,36 @@ class Resource < ActiveRecord::Base
     time :created_at
     time :updated_at
   end
+=end
 
+def self.search_kmp(search_terms=nil)
+  query = "
+    WITH resources_search AS (
+      SELECT 
+        r.id,
+        r.updated_at,
+        setweight(to_tsvector('english', r.name), 'A') || 
+        setweight(to_tsvector('english', r.description), 'B') as document
+      FROM resources r 
+    )
+    SELECT 
+      rs.id,
+      rs.updated_at
+    FROM resources_search rs
+    WHERE 0=0 "
+    if !search_terms.nil? && search_terms.length > 0
+      query = query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+      query = query + " ORDER BY rs.updated_at DESC, ts_rank(rs.document, to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')) DESC"
+    else 
+      query = query + " ORDER BY rs.updated_at DESC"
+    end
+
+    results = Resource.find_by_sql(query)
+    ids = results.map { |r| r.id }
+    count = results.length
+
+    return {ids: ids, count: count}
+end
 
   private
 

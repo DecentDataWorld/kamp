@@ -9,7 +9,7 @@ class SearchesController < ApplicationController
 
     check_collections_only
 
-    get_search_results
+    get_pg_results
 
     puts '@collections_only = '+@collections_only.to_s
 
@@ -30,7 +30,7 @@ class SearchesController < ApplicationController
 
     update_params_with_search
 
-    get_search_results
+    get_pg_results
   end
 
   # PATCH/PUT /licenses/1
@@ -152,6 +152,11 @@ class SearchesController < ApplicationController
 
   end
 
+  def get_pg_results
+    results = Resource.search_kmp(params[:query])
+    @record_count = results[:count]
+    @resources = Resource.where(id: results[:ids]).paginate(page: params[:page], per_page: 10)
+  end
 
   def get_search_results
     tags_array= params[:tags].split(",") unless params[:tags].blank?

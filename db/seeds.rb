@@ -8,25 +8,16 @@
 # Environment variables (ENV['...']) can be set in the file config/application.yml.
 # See http://railsapps.github.io/rails-environment-variables.html
 
-puts 'ROLES'
+puts 'ROLES...'
 roles = ['admin','user','member']
 roles.each do |role|
   Role.find_or_create_by :name => role
   puts 'role: ' << role
 end
-puts 'DEFAULT TAGS'
-puts 'DEFAULT USERS'
-user = User.find_or_create_by :email => ENV['ADMIN_EMAIL'].dup
-user.name = ENV['ADMIN_NAME'].dup
-user.password = ENV['ADMIN_PASSWORD'].dup
-user.password_confirmation = ENV['ADMIN_PASSWORD'].dup
-user.save
+puts 'DEFAULT USER...'
+user = User.new(email: ENV['ADMIN_EMAIL'].dup, password: ENV['ADMIN_PASSWORD'].dup, password_confirmation: ENV['ADMIN_PASSWORD'].dup, name: ENV['ADMIN_NAME'].dup)
 puts 'user: ' << user.name
 user.confirm
 user.add_role :admin
-new_resource = Resource.find_or_create_by :name => 'First Resource'
-#new_resource.tag_list = ENV['TAGS']
-new_resource.author = user
-new_resource.save
-new_resource.delete
+
 

@@ -16,11 +16,10 @@ development:
   adapter:  postgresql
   encoding: unicode
   host: <%= ENV['POSTGRES_HOST'] %>
-  database: <%= ENV['POSTGRES_DB'] %>
+  database: <%= ENV['POSTGRES_DATABASE'] %>
   pool:     5
-  username: <%= ENV['MESP_DATABASE_USERNAME'] %>
-  password: <%= ENV['MESP_DATABASE_PASSWORD'] %>
-  template: template0
+  username: <%= ENV['POSTGRES_USERNAME'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
