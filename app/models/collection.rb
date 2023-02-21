@@ -87,21 +87,43 @@ class Collection < ActiveRecord::Base
 
   end
 
-  searchable do
-    text :title, :description, :tags, :url
-    boolean :private
-    boolean :newsletter_only
-    integer :author_id, :references => User
-    integer :maintainer_id, :references => User
-    integer :type_id, :references => Type
-    integer :organization_id, :references => Organization
-    integer :license_id, :references => License
-    boolean :approved
-    time :created_at
-    time :updated_at
-    string :tags, :multiple => true do
-      tags.map { |p| p.name}
-    end
+  def self.search_kmp(search_terms=nil, tags=nil)
+    query = "
+      WITH collections_search AS (
+        SELECT 
+          c.id,
+          c.updated_at,
+          setweight(to_tsvector('english', c.title), 'A') || 
+          setweight(to_tsvector('english', c.description), 'B') as document
+        FROM collections c
+      ),
+      filtered_collections_tags AS (
+        SELECT c.id 
+        FROM collections c
+        INNER JOIN taggings tg on c.id = tg.taggable_id and tg.taggable_type = 'Collection'
+        INNER JOIN tags t on tg.tag_id = t.id"
+        query = query + "
+        WHERE 0=0 "
+        query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
+        query = query + " GROUP BY c.id "
+        query = query + " HAVING COUNT( c.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
+        query = query + "
+      )
+      SELECT 
+        cs.id,
+        cs.updated_at
+      FROM collections_search cs
+      INNER JOIN filtered_collections_tags fct on cs.id = fct.id
+      WHERE 0=0 "
+      if !search_terms.nil? && search_terms.length > 0
+        query = query + " AND cs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+      end
+  
+      results = Collection.find_by_sql(query)
+      ids = results.map { |c| c.id }
+      count = ids.length
+  
+      return {ids: ids, count: count}
   end
 
 end

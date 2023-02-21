@@ -184,34 +184,83 @@ class Resource < ActiveRecord::Base
   end
 =end
 
-def self.search_kmp(search_terms=nil)
+def self.search_kmp(search_terms=nil, tags=nil)
   query = "
     WITH resources_search AS (
       SELECT 
         r.id,
-        r.updated_at,
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
+    ),
+    filtered_resources_tags AS (
+      SELECT r.id 
+      FROM resources r 
+      INNER JOIN taggings tg on r.id = tg.taggable_id and tg.taggable_type = 'Resource'
+      INNER JOIN tags t on tg.tag_id = t.id"
+      query = query + "
+      WHERE 0=0 "
+      query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
+      query = query + " GROUP BY r.id "
+      query = query + " HAVING COUNT( r.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
+      query = query + "
     )
     SELECT 
-      rs.id,
-      rs.updated_at
+      distinct rs.id
     FROM resources_search rs
+    INNER JOIN filtered_resources_tags frt on rs.id = frt.id
     WHERE 0=0 "
     if !search_terms.nil? && search_terms.length > 0
       query = query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
-      query = query + " ORDER BY rs.updated_at DESC, ts_rank(rs.document, to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')) DESC"
-    else 
-      query = query + " ORDER BY rs.updated_at DESC"
     end
 
     results = Resource.find_by_sql(query)
     ids = results.map { |r| r.id }
-    count = results.length
+    count = ids.length
 
-    return {ids: ids, count: count}
-end
+    return {ids: ids, count: count }
+  end
+
+  def self.search_tags(search_terms=nil, tags=nil)
+    tags_query = "
+    WITH resources_search AS (
+      SELECT 
+        r.id,
+        setweight(to_tsvector('english', r.name), 'A') || 
+        setweight(to_tsvector('english', r.description), 'B') as document
+      FROM resources r 
+    ),
+    filtered_resources_tags AS (
+      SELECT r.id 
+      FROM resources r 
+      INNER JOIN taggings tg on r.id = tg.taggable_id and tg.taggable_type = 'Resource'
+      INNER JOIN tags t on tg.tag_id = t.id"
+      tags_query = tags_query + "
+      WHERE 0=0 "
+      tags_query = tags_query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
+      tags_query = tags_query + " GROUP BY r.id "
+      tags_query = tags_query + " HAVING COUNT( r.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
+      tags_query = tags_query + "
+    )
+    SELECT 
+      t.id, 
+      t.name,
+      count(t.name) as tag_count
+    FROM resources_search rs
+    INNER JOIN filtered_resources_tags frt on rs.id = frt.id
+    INNER JOIN taggings tg on rs.id = tg.taggable_id and tg.taggable_type = 'Resource'
+    INNER JOIN tags t on tg.tag_id = t.id
+    WHERE 0=0 "
+    if !search_terms.nil? && search_terms.length > 0
+      tags_query = tags_query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+    end
+    tags_query = tags_query + " GROUP BY t.name, t.id ORDER BY tag_count desc"
+
+    tag_results = ActiveRecord::Base.connection.exec_query(tags_query)
+
+    return tag_results.to_hash
+  end
+
 
   private
 
