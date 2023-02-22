@@ -73,32 +73,8 @@ class Organization < ActiveRecord::Base
     return Resource.where("organization_id = ?", self.id).where("private = ?", true)
   end
 
-  def self.text_search(query)
-
-    if query.present?
-      rank = <<-RANK
-        ts_rank(to_tsvector(name), plainto_tsquery(#{sanitize(query)})) +
-        ts_rank(to_tsvector(description), plainto_tsquery(#{sanitize(query)}))
-      RANK
-      where("name @@ :q or description @@ :q", q: query).order("#{rank} desc")
-    else
-      scoped
-    end
-
-  end
-
   def to_param
     url
-  end
-
-  searchable do
-    text :name, :description, :url
-    boolean :approved
-    string :name
-    string :description
-    integer :user_ids, :references => User, :multiple => true
-    time :created_at
-    time :updated_at
   end
 
 end

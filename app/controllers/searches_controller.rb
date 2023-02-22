@@ -15,10 +15,7 @@ class SearchesController < ApplicationController
     session[:page] = params[:page] || nil
     session[:collection_page] = params[:collection_page] || nil
 
-
     get_pg_results
-
-    puts @tags
   end
 
   def create
@@ -44,8 +41,6 @@ class SearchesController < ApplicationController
     update_params_with_search
 
     get_pg_results
-
-    puts @tags
   end
 
   # PATCH/PUT /licenses/1
@@ -114,21 +109,26 @@ class SearchesController < ApplicationController
   end
 
   def get_pg_results
-    if params[:query] || params[:tags]
-      resource_results = Resource.search_kmp(params[:query], params[:tags])
+    if params[:query] || params[:tags] || params[:organization_id]
+      resource_results = Resource.search_kmp(params[:query], params[:tags], params[:organization_id])
       @resource_count = resource_results[:count]
       @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
-      @tags = Resource.search_tags(params[:query], params[:tags])
+      @tags = Resource.search_tags(params[:query], params[:tags], params[:organization_id])
+      @orgs = []
+      if !params[:organization_id]
+        @orgs = Resource.search_orgs(params[:query], params[:tags])
+      end
 
-      collection_results = Collection.search_kmp(params[:query], params[:tags])
+      collection_results = Collection.search_kmp(params[:query], params[:tags], params[:organization_id])
       @collection_count = collection_results[:count]
       @collections = Collection.where(id: collection_results[:ids]).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
     else
-      @resources = Resource.all.order("updated_at desc").paginate(page: params[:page], per_page: 10)
-      @resource_count = Resource.all.length
-      @tags = Resource.search_tags(nil)
+      @resources = Resource.where(:private => false).where(:approved => true).order("updated_at desc").paginate(page: params[:page], per_page: 10)
+      @resource_count = Resource.where(:private => false).where(:approved => true).length
+      @tags = Resource.search_tags
+      @orgs = Resource.search_orgs
 
-      @collections = Collection.all.order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
+      @collections = Collection.where(:private => false).where(:approved => true).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
     end
     
   end

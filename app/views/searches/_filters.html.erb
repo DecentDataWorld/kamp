@@ -2,35 +2,40 @@
 
 <%
    # check for existing tags in query string
-   existing_tag_facets = []
-   if params[:tags].present?
-     existing_tag_facets = params[:tags]
-   end
+  existing_tag_facets = []
+  if params[:tags].present?
+    existing_tag_facets = params[:tags]
+  end
 
-   @tag_facet_links_off = ''
-   tag_facet_links_off_counter = 1
-   @tag_facet_links_on = ''
-   @tag_filter_list = []
+  @tag_facet_links_off = ''
+  tag_facet_links_off_counter = 1
+  @tag_facet_links_on = ''
 
-   @tags.each do |t| 
-    tag_facets = existing_tag_facets + [t["id"]]
-    @tag_facet_links_off << "<li>(#{t["tag_count"]}) #{link_to t["name"], update_search_path(params.merge(:tags => tag_facets))}</li>"
-    tag_facet_links_off_counter = tag_facet_links_off_counter + 1
+  @tags.each do |t| 
+    if !existing_tag_facets.include? t["id"]
+      tag_facets = existing_tag_facets + [t["id"]]
+      @tag_facet_links_off << "<li>(#{t["tag_count"]}) #{link_to t["name"], update_search_path(params.merge(:tags => tag_facets))}</li>"
+      tag_facet_links_off_counter = tag_facet_links_off_counter + 1
+    else
+      tag_facets = existing_tag_facets - [t["id"]]
+      updated_params = params.merge(:tags => tag_facets).except(:page)
+      @tag_facet_links_on << "<li>#{link_to raw("<i class='fa fa-times' rel='tooltip' title='Remove' id='Remove This Filter'></i> " + t["name"]), update_search_path(updated_params)}</li>"
+    end
   end
 
 %>
 
 <div id="tags" data-step="1" data-intro="Click 'More Tags' to see all available tags" data-position="top" class="col-md-12 col-sm-4 margin-bottom-10">
   <h3><strong>Tag(s)</strong></h3>
-  <% if @search.tags && @search.tags.length > 1 %>
+  <% if @tag_facet_links_on.length > 0 %>
     <ul class="list-unstyled">
       <li><b>Filtering By:</b></li>
-
+      <%= raw @tag_facet_links_on %>
     </ul>
   <% end %>
 
     <ul class="list-unstyled">
-      <% if @tag_facet_links_on.length > 1 and @tag_facet_links_off.length > 1 %><li><b>Available Tags:</b></li><% end %>
+      <% if @tag_facet_links_on.length > 0 and @tag_facet_links_off.length > 0 %><li><b>Available Tags:</b></li><% end %>
       <%= raw @tag_facet_links_off %>
     </ul>
 
@@ -42,7 +47,7 @@
 
 <div class="col-md-12 col-sm-4 margin-bottom-10">
   <h3><strong>Uploaded By</strong></h3>
-
+  <%= render partial: 'collections/facet_org' %>
 </div>
 
 <script type="text/javascript">

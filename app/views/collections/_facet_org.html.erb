@@ -6,15 +6,13 @@
     <% end %>
 <% else %>
     <ul id="orglist" class="list-unstyled">
-      <% for row in @search_results.facet(:organization_id).rows %>
-          <% if !row.instance.nil? %>
-              <li>
-                (<%= row.count %>) <%= link_to row.instance.name, update_search_path(params.merge(:organization_id => row.value).except(:page)) %>
-              </li>
-          <% end %>
+      <% @orgs.each do |o| %>
+        <li>
+          (<%= o["org_count"] %>) <%= link_to o["name"], update_search_path(params.merge(:organization_id => o["id"]).except(:page)) %>
+        </li>
       <% end %>
     </ul>
-    <% if @search_results.facet(:organization_id).rows.count > 5 %>
+    <% if @orgs.count > 5 %>
         <p><a id="expandOrgsList"><i class="fa fa-arrow-circle-down"></i> More Organizations</a></p>
     <% end %>
 <% end %>

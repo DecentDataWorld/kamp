@@ -35,20 +35,6 @@ class Collection < ActiveRecord::Base
   has_attached_file :image, :styles => { :xlarge => "470x315>", :large => "300x200>", :medium => "240x160>", :small => "200x130>", :thumb => "100x70>" }, :default_url => "/images/:style/missing.png"
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
 
-  def self.text_search(query)
-
-    if query.present?
-      rank = <<-RANK
-        ts_rank(to_tsvector(title), plainto_tsquery(#{sanitize(query)})) +
-        ts_rank(to_tsvector(description), plainto_tsquery(#{sanitize(query)}))
-      RANK
-      where("title @@ :q or description @@ :q", q: query).order("#{rank} desc")
-    else
-      scoped
-    end
-
-  end
-
   def to_param
     url
   end
@@ -87,7 +73,7 @@ class Collection < ActiveRecord::Base
 
   end
 
-  def self.search_kmp(search_terms=nil, tags=nil)
+  def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exclude_private=true)
     query = "
       WITH collections_search AS (
         SELECT 
@@ -96,14 +82,19 @@ class Collection < ActiveRecord::Base
           setweight(to_tsvector('english', c.title), 'A') || 
           setweight(to_tsvector('english', c.description), 'B') as document
         FROM collections c
+        WHERE 0=0 "
+        query = query + " AND c.approved = true " if only_approved
+        query = query + " AND c.private = false " if exclude_private
+        query = query + "
       ),
       filtered_collections_tags AS (
         SELECT c.id 
         FROM collections c
         INNER JOIN taggings tg on c.id = tg.taggable_id and tg.taggable_type = 'Collection'
-        INNER JOIN tags t on tg.tag_id = t.id"
+        INNER JOIN tags t on tg.tag_id = t.id "
         query = query + "
         WHERE 0=0 "
+        query = query + " AND c.organization_id = " + org.to_s if !org.nil? 
         query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
         query = query + " GROUP BY c.id "
         query = query + " HAVING COUNT( c.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
