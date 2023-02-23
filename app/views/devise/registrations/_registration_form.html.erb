@@ -24,7 +24,7 @@
           <%= f.text_field :organization_entered, :id => "organization_name", autocomplete: 'off', class: 'form-control margin-bottom-20', placeholder: "Organization Name" %>
 
         <label>Email Address <span class="color-red">*</span></label>
-          <%= f.text_field :email, :autofocus => true, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "email", placeholder: "Your email" %>
+          <%= f.text_field :email, :autofocus => true, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "email", placeholder: "Your email", value: params[:email_address]  %>
 
         <div class="row">
           <div class="col-sm-6">
