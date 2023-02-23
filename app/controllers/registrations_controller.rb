@@ -1,9 +1,8 @@
 class RegistrationsController < Devise::RegistrationsController
   before_action :update_sanitized_params, if: :devise_controller?
   # prepend_before_action :check_captcha, only: [:create]
-
+  
   def create
-
     if verify_recaptcha
       super
       if resource.save
@@ -64,7 +63,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update_sanitized_params
-    devise_parameter_sanitizer.permit(:sign_up) {|u| u.permit(:name, :email, :password, :password_confirmation, :avatar, :humanizer_answer, :humanizer_question_id, :organization_id, :organization_entered)}
+    devise_parameter_sanitizer.permit(:sign_up) {|u| u.permit(:name, :email, :password, :password_confirmation, :avatar, :humanizer_answer, :humanizer_question_id, :organization_id, :organization_entered, :email_token)}
     devise_parameter_sanitizer.permit(:account_update) {|u| u.permit(:name, :email, :password, :password_confirmation, :current_password, :avatar, :title, :google, :twitter, :facebook, :linkedin)}
   end
 
