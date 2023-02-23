@@ -12,10 +12,18 @@
 
 <!--=== Content Part ===-->
 <div class="container content">
-<% if params[:email_token].presence %>
-  <%= render partial: 'registration_form' %>
+<% if params[:email_token].presence && params[:email_address].presence %>
+  <%
+    digest = OpenSSL::Digest.new('sha1')
+    hmac = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], params[:email_address])
+  %>
+  <% if params[:email_token] == hmac %>
+    <%= render partial: 'registration_form' %>
+  <% else %>
+    Not able to validate. Please request another invite.
+  <% end %>
 <% else %>
-  Not Authorized
+  Not Authorized. Please request an invitation using the link at the top right corner of the screen.
 <% end %>
 
   

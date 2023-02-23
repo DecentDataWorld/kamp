@@ -9,6 +9,7 @@
 
           <%= devise_error_messages! %>
           <%= hidden_field_tag :email_token, params[:email_token].presence %>
+          <%= hidden_field_tag :email_address, params[:email_address].presence %>
 
         <label>Name</label>
           <%= f.text_field :name, :autofocus => true, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "name", placeholder: "Your name" %>

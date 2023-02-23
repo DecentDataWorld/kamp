@@ -63,7 +63,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def update_sanitized_params
-    devise_parameter_sanitizer.permit(:sign_up) {|u| u.permit(:name, :email, :password, :password_confirmation, :avatar, :humanizer_answer, :humanizer_question_id, :organization_id, :organization_entered, :email_token)}
+    devise_parameter_sanitizer.permit(:sign_up) {|u| u.permit(:name, :email, :password, :password_confirmation, :avatar, :humanizer_answer, :humanizer_question_id, :organization_id, :organization_entered, :email_token, :email_address)}
     devise_parameter_sanitizer.permit(:account_update) {|u| u.permit(:name, :email, :password, :password_confirmation, :current_password, :avatar, :title, :google, :twitter, :facebook, :linkedin)}
   end
 

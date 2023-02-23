@@ -1,0 +1,29 @@
+
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+      <%= form_tag "/users/send_invite" do %>
+        <div class="reg-header">
+          <h2>Request An Invite</h2>
+        </div>
+
+        <div class="input-group margin-bottom-20">
+          <span class="input-group-addon"><i class="fa fa-user"></i></span>
+          <%= email_field_tag 'invitation_email', nil, class: 'form-control' %>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <%= submit_tag "Send Invitation Email", :class => 'btn-u pull-right' %>
+          </div>
+        </div>
+
+        <hr>
+
+      <% end %>
+    </div>
+  </div><!--/row-->
+</div><!--/container-->
+<!--=== End Content Part ===-->

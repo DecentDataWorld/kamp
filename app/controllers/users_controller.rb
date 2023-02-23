@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, except: [:show]
+  before_filter :authenticate_user!, except: [:show, :request_invite, :send_invite]
   before_filter :authorize_user_admin, only: [:index, :get_users]
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
 
@@ -172,6 +172,19 @@ class UsersController < ApplicationController
     render layout: false
   end
 
+  def request_invite
+
+  end
+
+  def send_invite
+    digest = OpenSSL::Digest.new('sha1')
+    @email_address = params[:invitation_email]
+    @verify = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], @email_address)
+    puts @verify
+    UserMailer.invitation_email(@email_address, @verify)
+    redirect_to root_path, :notice => "An invitation to register has been sent to #{@verify}. Please check your email inbox."
+  end
+
   private
   def authorize_user_admin
     unless can? :manage, User
@@ -190,6 +203,6 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:id, :role_ids)
+    params.require(:user).permit(:id, :role_ids, :invitation_email)
   end
 end
