@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181212170901) do
+ActiveRecord::Schema.define(version: 20230227182606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,12 +93,13 @@ ActiveRecord::Schema.define(version: 20181212170901) do
     t.integer  "positive"
     t.integer  "negative"
     t.float    "ci_lower_bound"
-    t.string   "positive_users",                 default: [],    array: true
-    t.string   "negative_users",                 default: [],    array: true
+    t.string   "positive_users",     limit: 255, default: [],    array: true
+    t.string   "negative_users",     limit: 255, default: [],    array: true
     t.boolean  "newsletter_only",                default: false
   end
 
   add_index "collections", ["ci_lower_bound"], name: "index_collections_on_ci_lower_bound", using: :btree
+  add_index "collections", ["organization_id"], name: "index_collections_on_organization_id", using: :btree
 
   create_table "datasets", force: :cascade do |t|
     t.string   "url",                limit: 255
@@ -230,12 +231,13 @@ ActiveRecord::Schema.define(version: 20181212170901) do
     t.integer  "positive"
     t.integer  "negative"
     t.float    "ci_lower_bound"
-    t.string   "positive_users",                      default: [],    array: true
-    t.string   "negative_users",                      default: [],    array: true
+    t.string   "positive_users",          limit: 255, default: [],    array: true
+    t.string   "negative_users",          limit: 255, default: [],    array: true
     t.boolean  "newsletter_only",                     default: false
   end
 
   add_index "resources", ["ci_lower_bound"], name: "index_resources_on_ci_lower_bound", using: :btree
+  add_index "resources", ["organization_id"], name: "index_resources_on_organization_id", using: :btree
 
   create_table "resourcings", force: :cascade do |t|
     t.integer  "resource_id"
@@ -288,15 +290,9 @@ ActiveRecord::Schema.define(version: 20181212170901) do
     t.datetime "created_at"
   end
 
-  add_index "taggings", ["context"], name: "index_taggings_on_context", using: :btree
   add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
-  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
   add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
-  add_index "taggings", ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy", using: :btree
-  add_index "taggings", ["taggable_id"], name: "index_taggings_on_taggable_id", using: :btree
-  add_index "taggings", ["taggable_type"], name: "index_taggings_on_taggable_type", using: :btree
-  add_index "taggings", ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type", using: :btree
-  add_index "taggings", ["tagger_id"], name: "index_taggings_on_tagger_id", using: :btree
+  add_index "taggings", ["taggable_id", "taggable_type", "tag_id"], name: "taggable_resources_index", using: :btree
 
   create_table "tags", force: :cascade do |t|
     t.string  "name",           limit: 255

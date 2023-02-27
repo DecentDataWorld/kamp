@@ -28,14 +28,6 @@ class User < ActiveRecord::Base
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
   belongs_to :user_type, :class_name => "UserType", :foreign_key => "user_type_id"
-=begin
-  searchable do
-    text :name
-    text :about
-    text :title
-    integer :organization_ids, :references => Organization, :multiple => true
-  end
-=end 
 
   # after_update :assign_default_role
 

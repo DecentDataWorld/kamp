@@ -35,7 +35,7 @@
       <div class="tab-v1">
       <ul class="nav nav-tabs">
         <li class="active"><a href="#resources" data-toggle="tab"><i class="fa fa-files-o"></i> Uploaded <span class="badge badge-yellow"><%= @resource_count %></span></a></li>
-        <% if !@resources_pending.nil? and @resources_pending.count > 0 %>
+        <% if (!@resources_pending.nil? and @resources_pending.count > 0) || (!@collections_pending.nil? and @collections_pending.count > 0) %>
             <li><a href="#resources_pending" data-toggle="tab"><i class="fa fa-spinner"></i> Pending Approval</a></li>
         <% end %>
 
@@ -138,7 +138,7 @@
             </div>
           </div>
         </div>
-        <% if !@resources_pending.nil? and @resources_pending.count > 0 %>
+        <% if (!@resources_pending.nil? and @resources_pending.count > 0)  || (!@collections_pending.nil? and @collections_pending.count > 0) %>
           <div class="tab-pane" id="resources_pending">
           <div class="row-fluid">
             <div class="col-sm-12">
@@ -160,7 +160,7 @@
                   <%= render resource %>
                 <% end %>
               <% else %>
-                <p>No pending resources found.</p>
+                <p>No pending collections found.</p>
               <% end %>
             </div>
           </div>
