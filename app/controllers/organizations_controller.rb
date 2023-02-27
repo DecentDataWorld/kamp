@@ -24,6 +24,14 @@ class OrganizationsController < ApplicationController
   # GET /organizations/1
   # GET /organizations/1.json
   def show
+    if !params[:collection_page].nil? && session[:collection_page] != params[:collection_page]
+      @show_collections = true
+    else
+      @show_collections = false
+    end
+
+    session[:collection_page] = params[:collection_page] || nil
+
     @page_title = @organization.name
 
     @users = @organization.users
@@ -58,19 +66,22 @@ class OrganizationsController < ApplicationController
 
     # get all submissions for this organization
     resource_results = Resource.search_kmp(params[:resource_query], "", @organization.id, true, hide_private)
-    #@resource_count = resource_results[:count]
-    @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:resources_page], per_page: 10)
+    @resource_count = resource_results[:count]
+    @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
+
+    collection_results = Collection.search_kmp(params[:resource_query], "", @organization.id, true, hide_private)
+    @collection_count = collection_results[:count]
+    @collections = Collection.where(id: collection_results[:ids]).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
 
      # if current_user.nil? || current_user.mail_chimp_user == false
        # puts "cannot see newsletter stuff"
        # with(:newsletter_only, false)
      # end
 
-
-
     # if user can view pending submissions, query for them
     if @hide_pending == false
-      @resources_pending = Resource.where(:organization_id => @organization.id).where(:approved => false).order("updated_at desc").paginate(page: params[:resources_page], per_page: 10)
+      @resources_pending = Resource.where(:organization_id => @organization.id).where(:approved => false).order("updated_at desc")
+      @collections_pending = Collection.where(:organization_id => @organization.id).where(:approved => false).order("updated_at desc")
     end
 
   end

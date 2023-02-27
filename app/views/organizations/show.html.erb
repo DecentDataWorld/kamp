@@ -34,7 +34,7 @@
       <!-- Tab v1 -->
       <div class="tab-v1">
       <ul class="nav nav-tabs">
-        <li class="active"><a href="#resources" data-toggle="tab"><i class="fa fa-files-o"></i> Uploaded <span class="badge badge-yellow"><%= @resources.total_entries %></span></a></li>
+        <li class="active"><a href="#resources" data-toggle="tab"><i class="fa fa-files-o"></i> Uploaded <span class="badge badge-yellow"><%= @resource_count %></span></a></li>
         <% if !@resources_pending.nil? and @resources_pending.count > 0 %>
             <li><a href="#resources_pending" data-toggle="tab"><i class="fa fa-spinner"></i> Pending Approval</a></li>
         <% end %>
@@ -89,18 +89,52 @@
           <div class="row-fluid">
             <div class="col-sm-12">
               <% if !params[:resource_query].nil? %>
-                <h4 class="text-color"><%= @resources.total_entries %> results <%= 'found with "' + params[:resource_query] + '"'  %></h4>
+                <h4 class="text-color"><%= @resource_count %> resources <%= 'found with "' + params[:resource_query] + '"'  %></h4>
               <% else %>
                 <br>
               <% end %>
-              <% if @resources.count > 0 %>
-                  <% @resources.each do |resource| %>
-                    <%= render resource %>
-                  <% end %>
-                  <%= will_paginate @resources, param_name: 'resources_page' %>
-              <% else %>
-                  <p>No resources found.</p>
-              <% end %>
+              <div class="tab-v1">
+                <ul class="nav nav-tabs">
+                  <li class="<%= !@show_collections ? 'active' : ''%>"><a data-toggle="tab" href="#inner_resources">Resources</a></li>
+                  <li class="<%= @show_collections ? 'active' : ''%>"><a data-toggle="tab" href="#inner_collections">Collections</a></li>
+                </ul>
+                <div class="tab-content">
+                  <div id="inner_resources" class="tab-pane fade in <%= !@show_collections ? 'active' : ''%>">
+                    <% if @resources.count > 0 %>
+                        <% @resources.each do |resource| %>
+                            <%= render resource %>
+                        <% end %>
+                        <%= will_paginate @resources %>
+                    <% else %>
+                        <blockquote><i class="fa fa-thumbs-down"></i> No resources found with that combination</blockquote>
+                        <div class="alert alert-info fade in">
+                          <h4>Let Us Know What We're Missing</h4>
+                          <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
+                          <p>
+                            <a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a>
+                          </p>
+                        </div>
+                    <% end %>
+                  </div>
+                  <div id="inner_collections" class="tab-pane fade in <%= @show_collections ? 'active' : ''%>">
+                    <% if @collections.count > 0 %>
+                        <% @collections.each do |resource| %>
+                            <%= render resource %>
+                        <% end %>
+                        <%= will_paginate @collections, :param_name => 'collection_page' %>
+                    <% else %>
+                        <blockquote><i class="fa fa-thumbs-down"></i> No collections found with that combination</blockquote>
+                        <div class="alert alert-info fade in">
+                          <h4>Let Us Know What We're Missing</h4>
+                          <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
+                          <p>
+                            <a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a>
+                          </p>
+                        </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -108,18 +142,25 @@
           <div class="tab-pane" id="resources_pending">
           <div class="row-fluid">
             <div class="col-sm-12">
-              <% if !params[:resource_query].nil? %>
-                <h4 class="text-color"><%= @resources_pending.count %> Resources Pending Approval</h4>
-              <% else %>
-                <br>
-              <% end %>
+              <h2>Resources</h2>
               <% if @resources_pending.count > 0 %>
-                  <% @resources_pending.each do |resource| %>
-                    <%= render resource %>
-                  <% end %>
-                  <%= will_paginate @resources_pending, param_name: 'resources_page' %>
+                <h4 class="text-color"><%= @resources_pending.count %> Resources Pending Approval</h4>
+                <% @resources_pending.each do |resource| %>
+                  <%= render resource %>
+                <% end %>
               <% else %>
-                  <p>No pending resources found.</p>
+                <p>No pending resources found.</p>
+              <% end %>
+            </div>
+            <div class="col-sm-12">
+              <h2>Collections</h2>
+              <% if @collections_pending.count > 0 %>
+                <h4 class="text-color"><%= @collections_pending.count %> Collections Pending Approval</h4>
+                <% @collections_pending.each do |resource| %>
+                  <%= render resource %>
+                <% end %>
+              <% else %>
+                <p>No pending resources found.</p>
               <% end %>
             </div>
           </div>
