@@ -12,17 +12,7 @@ class HomeController < ApplicationController
     @resources_viewed = Resource.where("id in (?)", most_viewed_ids)
     @tags = Resource.tag_counts_on(:tags).limit(15)
     #@search_results = []
-=begin
-    @search_results = Sunspot.search(Resource) do
-      fulltext params[:query]
-      if params[:organization_id].present?
-        with(:organization_id, params[:organization_id].to_i)
-      end
-      facet :organization_id
-      order_by :updated_at, :desc
-      paginate :page => params[:page], :per_page => 5
-    end
-=end
+
   end
 
   def error
