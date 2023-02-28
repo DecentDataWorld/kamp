@@ -4,15 +4,18 @@ class SearchesController < ApplicationController
   end
 
   def new
-
     @search = Search.new
 
-    check_collections_only
+    if !params[:collection_page].nil? && session[:collection_page] != params[:collection_page]
+      @show_collections = true
+    else
+      @show_collections = false
+    end
 
-    get_search_results
+    session[:page] = params[:page] || nil
+    session[:collection_page] = params[:collection_page] || nil
 
-    puts '@collections_only = '+@collections_only.to_s
-
+    get_pg_results
   end
 
   def create
@@ -26,11 +29,18 @@ class SearchesController < ApplicationController
     @search = Search.find(params[:id])
     session[:last_search_id] = @search.id.to_s
 
-    check_collections_only
+    if !params[:collection_page].nil? && session[:collection_page] != params[:collection_page]
+      @show_collections = true
+    else
+      @show_collections = false
+    end
+
+    session[:page] = params[:page] || nil
+    session[:collection_page] = params[:collection_page] || nil
 
     update_params_with_search
 
-    get_search_results
+    get_pg_results
   end
 
   # PATCH/PUT /licenses/1
@@ -73,36 +83,6 @@ class SearchesController < ApplicationController
       @search.organization_id = nil
     end
 
-    if !params[:collections_only].nil? && (params[:collections_only] == true || params[:collections_only] == "true")
-      @search.collections_only = true
-    else
-      @search.collections_only = false
-    end
-
-    if !params[:resources_only].nil? && (params[:resources_only] == true || params[:resources_only] == "true")
-      @search.resources_only = true
-    else
-      @search.resources_only = false
-    end
-
-    if !params[:license_id].nil?
-      @search.license_id = params[:license_id]
-    else
-      @search.license_id = nil
-    end
-
-    if !params[:resource_type].nil?
-      @search.resource_type = params[:resource_type]
-    else
-      @search.resource_type = nil
-    end
-
-    if !params[:language].nil?
-      @search.language = params[:language]
-    else
-      @search.language = nil
-    end
-
     if !params[:tags].nil?
       @search.tags = params[:tags]
     else
@@ -118,32 +98,8 @@ class SearchesController < ApplicationController
       params[:query] = @search.query
     end
 
-    if @search.collections_only == true
-      params[:collections_only] = true
-    else
-      params[:collections_only] = false
-    end
-
-    if @search.resources_only == true
-      params[:resources_only] = true
-    else
-      params[:resources_only] = false
-    end
-
     if !@search.organization_id.blank?
       params[:organization_id] = @search.organization_id
-    end
-
-    if !@search.license_id.blank?
-      params[:license_id] = @search.license_id
-    end
-
-    if !@search.resource_type.blank?
-      params[:resource_type] = @search.resource_type
-    end
-
-    if !@search.language.blank?
-      params[:language] = @search.language
     end
 
     if !@search.tags.nil?
@@ -152,208 +108,29 @@ class SearchesController < ApplicationController
 
   end
 
-
-  def get_search_results
-    tags_array= params[:tags].split(",") unless params[:tags].blank?
-
-    puts 'collections_only = '+@collections_only.to_s
-
-    if @collections_only == true
-      puts 'in collections_only = '+@collections_only.to_s
-      @search_results = Sunspot.search Collection do
-        # keyword search
-        fulltext params[:query]
-
-        # check to see if organization is being included in this search
-        if params[:organization_id].present?
-          with(:organization_id, params[:organization_id].to_i)
-        end
-        # we want to expose this as a facet
-        facet :organization_id
-
-        # check to see if license is being included in this search
-        if params[:license_id].present?
-          with(:license_id, params[:license_id].to_i)
-        end
-        # we want to expose this as a facet
-        facet :license_id
-
-        with(:private, false)
-        with(:approved, true)
-
-        if current_user.nil? || !current_user.mail_chimp_user
-          with(:newsletter_only, false)
-        end
-
-        # tags, AND'd
-        if params[:tags].present?
-          all_of do
-            params[:tags].each do |tag|
-              with(:tags, tag)
-            end
-          end
-        end
-
-        facet :tags
-
-        # set sort order
-        if params[:order_by] == "Updated"
-          order_by :updated_at, :desc
-        elsif params[:order_by] == "Created"
-          order_by :created_at, :desc
-        else
-          #default
-          order_by :updated_at, :desc
-        end
-
-        # activate pagination after 5 results
-        paginate :page => params[:page], :per_page => 10
+  def get_pg_results
+    if params[:query] || params[:tags] || params[:organization_id]
+      resource_results = Resource.search_kmp(params[:query], params[:tags], params[:organization_id])
+      @resource_count = resource_results[:count]
+      @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
+      @tags = Resource.search_tags(params[:query], params[:tags], params[:organization_id])
+      @orgs = []
+      if !params[:organization_id]
+        @orgs = Resource.search_orgs(params[:query], params[:tags])
       end
-    elsif @search.resources_only == true
-      @search_results = Sunspot.search Resource do
-        # keyword search
-        fulltext params[:query]
 
-        # check to see if organization is being included in this search
-        if params[:organization_id].present?
-          with(:organization_id, params[:organization_id].to_i)
-        end
-        # we want to expose this as a facet
-        facet :organization_id
-
-        # check to see if license is being included in this search
-        if params[:license_id].present?
-          with(:license_id, params[:license_id].to_i)
-        end
-        # we want to expose this as a facet
-        facet :license_id
-
-        # check to see if resource type is being included in this search
-        with(:resource_type).equal_to(params[:resource_type]) unless params[:resource_type].blank?
-
-        # we want to expose resource type as a facet
-        facet :resource_type
-
-        # check to see if language is being included in this search
-        with(:language).equal_to(params[:language]) unless params[:language].blank?
-
-        # we want to expose language as a facet
-        facet :language
-
-        with(:private, false)
-        with(:approved, true)
-
-        if current_user.nil? || !current_user.mail_chimp_user
-          with(:newsletter_only, false)
-        end
-
-        # tags, AND'd
-        if params[:tags].present?
-          all_of do
-            params[:tags].each do |tag|
-              with(:tags, tag)
-            end
-          end
-        end
-
-        facet :tags
-
-        # set sort order
-        if params[:order_by] == "Updated"
-          order_by :updated_at, :desc
-        elsif params[:order_by] == "Created"
-          order_by :created_at, :desc
-        else
-          #default
-          order_by :updated_at, :desc
-        end
-
-        # activate pagination after 5 results
-        paginate :page => params[:page], :per_page => 10
-        end
-      else
-        @search_results = Sunspot.search Resource, Collection do
-        # keyword search
-        fulltext params[:query]
-
-        # check to see if organization is being included in this search
-        if params[:organization_id].present?
-          with(:organization_id, params[:organization_id].to_i)
-        end
-        # we want to expose this as a facet
-        facet :organization_id
-
-        # check to see if license is being included in this search
-        if params[:license_id].present?
-          with(:license_id, params[:license_id].to_i)
-        end
-        # we want to expose this as a facet
-        facet :license_id
-
-        # check to see if resource type is being included in this search
-        with(:resource_type).equal_to(params[:resource_type]) unless params[:resource_type].blank?
-
-        # we want to expose resource type as a facet
-        facet :resource_type
-
-        # check to see if language is being included in this search
-        with(:language).equal_to(params[:language]) unless params[:language].blank?
-
-        # we want to expose language as a facet
-        facet :language
-
-        with(:private, false)
-        with(:approved, true)
-
-
-        if current_user.nil? || current_user.mail_chimp_user == false
-          puts "cannot see newsletter stuff"
-          with(:newsletter_only, false)
-        end
-
-        # tags, AND'd
-        if params[:tags].present?
-          all_of do
-            params[:tags].each do |tag|
-              with(:tags, tag)
-            end
-          end
-        end
-
-        facet :tags
-
-        # set sort order
-        if params[:order_by] == "Updated"
-          order_by :updated_at, :desc
-        elsif params[:order_by] == "Created"
-          order_by :created_at, :desc
-        else
-          #default
-          order_by :updated_at, :desc
-        end
-
-        # activate pagination after 5 results
-        paginate :page => params[:page], :per_page => 10
-      end
-    end
-
-
-    # set this to a global variable that is used by many partials
-    @resources = @search_results.results
-
-    if !params[:license_id].nil?
-      @license = License.find_by :id => params[:license_id]
-    end
-
-  end
-
-  def check_collections_only
-    if @search.collections_only == true || (params.has_key?(:collections_only) && (params[:collections_only] == true || params[:collections_only] == "true"))
-      @collections_only = true
+      collection_results = Collection.search_kmp(params[:query], params[:tags], params[:organization_id])
+      @collection_count = collection_results[:count]
+      @collections = Collection.where(id: collection_results[:ids]).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
     else
-      @collections_only = false
-    end
+      @resources = Resource.where(:private => false).where(:approved => true).order("updated_at desc").paginate(page: params[:page], per_page: 10)
+      @resource_count = Resource.where(:private => false).where(:approved => true).length
+      @tags = Resource.search_tags
+      @orgs = Resource.search_orgs
 
+      @collections = Collection.where(:private => false).where(:approved => true).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
+    end
+    
   end
 
 end

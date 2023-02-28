@@ -17,22 +17,21 @@ class OrganizationsController < ApplicationController
     if can? :manage, :all
       add_crumb "Administration", admin_index_path
     end
-    # @organizations = Organization.text_search(params[:query]).page(params[:page]).per_page(8)
 
-    @search_results = Sunspot.search(Organization) do
-      fulltext params[:query]
-      with :approved, true
-      order_by :updated_at, :desc
-      paginate :page => params[:page], :per_page => 4
-    end
-    @organizations = @search_results.results
-
-
+    @organizations = Organization.where(approved: true).page(params[:page]).per_page(5).order("created_at asc")
   end
 
   # GET /organizations/1
   # GET /organizations/1.json
   def show
+    if !params[:collection_page].nil? && session[:collection_page] != params[:collection_page]
+      @show_collections = true
+    else
+      @show_collections = false
+    end
+
+    session[:collection_page] = params[:collection_page] || nil
+
     @page_title = @organization.name
 
     @users = @organization.users
@@ -66,36 +65,23 @@ class OrganizationsController < ApplicationController
     end
 
     # get all submissions for this organization
-    @resource_search_results = Sunspot.search(Resource, Collection) do
-      fulltext params[:resource_query]
-      with :organization_id, params[:id]
-      if hide_private
-        without(:private, 0)
-      end
+    resource_results = Resource.search_kmp(params[:resource_query], "", @organization.id, true, hide_private)
+    @resource_count = resource_results[:count]
+    @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
 
-      if current_user.nil? || current_user.mail_chimp_user == false
-        puts "cannot see newsletter stuff"
-        with(:newsletter_only, false)
-      end
+    collection_results = Collection.search_kmp(params[:resource_query], "", @organization.id, true, hide_private)
+    @collection_count = collection_results[:count]
+    @collections = Collection.where(id: collection_results[:ids]).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
 
-      with(:approved, true)
-
-      facet :organization_id
-      order_by :updated_at, :desc
-      paginate :page => params[:resources_page], :per_page => 10
-    end
-    @resources = @resource_search_results.results
+     # if current_user.nil? || current_user.mail_chimp_user == false
+       # puts "cannot see newsletter stuff"
+       # with(:newsletter_only, false)
+     # end
 
     # if user can view pending submissions, query for them
     if @hide_pending == false
-      @resource_pending_results = Sunspot.search(Resource, Collection) do
-        with :organization_id, params[:id]
-        with(:approved, false)
-
-        order_by :updated_at, :desc
-        paginate :page => params[:resources_page], :per_page => 10
-      end
-      @resources_pending = @resource_pending_results.results
+      @resources_pending = Resource.where(:organization_id => @organization.id).where(:approved => false).order("updated_at desc")
+      @collections_pending = Collection.where(:organization_id => @organization.id).where(:approved => false).order("updated_at desc")
     end
 
   end

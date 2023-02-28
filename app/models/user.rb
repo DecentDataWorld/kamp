@@ -29,20 +29,13 @@ class User < ActiveRecord::Base
 
   belongs_to :user_type, :class_name => "UserType", :foreign_key => "user_type_id"
 
-  searchable do
-    text :name
-    text :about
-    text :title
-    integer :organization_ids, :references => Organization, :multiple => true
-  end
-
   # after_update :assign_default_role
 
   def assign_default_role
     self.add_role(:member) if self.confirmed? and self.roles.count == 0
   end
 
-  after_create :send_admin_mail
+  #after_create :send_admin_mail
 
   def send_admin_mail
     @user = self

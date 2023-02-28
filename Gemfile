@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.3.0'
+ruby '2.6.3'
 gem 'rails', '4.2.11.1'
 gem 'rake', '< 11.0'
 gem 'sass-rails', '~> 4.0.0'
@@ -33,8 +33,6 @@ gem 'datagrid'
 gem 'leaflet-rails'
 gem 'jquery-datatables-rails', '~> 3.2.0'
 gem 'fastercsv'
-gem 'sunspot_rails'
-gem 'sunspot_solr'
 gem 'progress_bar'
 gem 'social-share-button'
 gem 'stringex'
@@ -67,7 +65,7 @@ gem 'puma', '< 5.0.0'
 group :assets do
   gem "chardinjs-rails"
   gem 'momentjs-rails'
-  gem 'datetimepicker-rails', git: 'git@github.com:zpaulovics/datetimepicker-rails.git', branch: 'master', submodules: true
+  gem 'datetimepicker-rails', git: 'https://github.com/zpaulovics/datetimepicker-rails.git', branch: 'master', submodules: true
 end
 group :development do
   gem 'capistrano',         require: false

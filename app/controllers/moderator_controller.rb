@@ -67,13 +67,13 @@ class ModeratorController < ApplicationController
     @page_title = "Denied Submissions"
 
 
-    @sunspot_search = Sunspot.search Resource, Collection do
-      with(:approved, false)
+    #@sunspot_search = Sunspot.search Resource, Collection do
+     # with(:approved, false)
 
       # activate pagination after 10 results
-      paginate :page => params[:page], :per_page => 10
-    end
-    @pending_submissions = @sunspot_search.results
+     # paginate :page => params[:page], :per_page => 10
+    #end
+    #@pending_submissions = @sunspot_search.results
   end
 
   def users
@@ -91,13 +91,7 @@ class ModeratorController < ApplicationController
 
   def handle_pending_resources
 
-    @sunspot_search = Sunspot.search Resource, Collection do
-      with(:approved, false)
-
-      # activate pagination after 50 results
-     # paginate :page => params[:page], :per_page => 50
-    end
-    @pending_submissions = @sunspot_search.results
+    @pending_submissions = Resource.where(:approved => false).paginate(page: params[:page], per_page: 10)
 
   end
 

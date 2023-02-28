@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, except: [:show]
+  before_filter :authenticate_user!, except: [:show, :request_invite, :send_invite]
   before_filter :authorize_user_admin, only: [:index, :get_users]
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
 
@@ -8,8 +8,8 @@ class UsersController < ApplicationController
     @page_title = "Manage Users"
 
     #authorize! :index, @user, :message => 'Not authorized as an administrator.'
-    @admin_role = User.preload(:users_organizations, :organizations, :roles, :users_roles).order(created_at: :desc).with_any_role(:admin, :moderator)
-    @member_role = User.preload(:users_organizations, :organizations, :roles, :users_roles).order(created_at: :desc).without_role(:admin)
+    @admin_role = User.joins(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).includes(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).order(created_at: :desc).with_any_role(:admin, :moderator)
+    @member_role = User.joins(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).includes(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).order(created_at: :desc).without_role(:admin)
   end
 
   def show
@@ -172,6 +172,19 @@ class UsersController < ApplicationController
     render layout: false
   end
 
+  def request_invite
+
+  end
+
+  def send_invite
+    digest = OpenSSL::Digest.new('sha1')
+    @email_address = params[:invitation_email]
+    @verify = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], @email_address)
+    puts @verify
+    UserMailer.invitation_email(@email_address, @verify)
+    redirect_to root_path, :notice => "An invitation to register has been sent to #{@verify}. Please check your email inbox."
+  end
+
   private
   def authorize_user_admin
     unless can? :manage, User
@@ -190,6 +203,6 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:id, :role_ids)
+    params.require(:user).permit(:id, :role_ids, :invitation_email)
   end
 end

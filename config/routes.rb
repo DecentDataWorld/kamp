@@ -113,6 +113,8 @@ Mesp::Application.routes.draw do
   get 'users/unlock_user/:id', to: 'users#unlock_user', as: :unlock_user
   get 'users/get_users', to: 'users#get_users', as: :get_users
   get 'users/export', to: 'users#export', as: :users_export
+  get 'request_invite', to: 'users#request_invite', as: :request_invite
+  post 'users/send_invite', to: 'users#send_invite', as: :send_invite
   devise_for :users, :controllers => {:registrations => 'registrations'}, :path => '', :path_names => {:sign_in => 'login', :sign_out => 'logout'}
   resources :users
 end
