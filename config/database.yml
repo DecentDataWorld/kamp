@@ -42,29 +42,17 @@ development:
 test:
   adapter:  postgresql
   encoding: unicode
-  host: localhost
-  database: mesp_test
+  host:     <%= ENV['POSTGRES_HOST'] %>
+  database: <%= ENV['POSTGRES_DATABASE'] %>
   pool:     5
-  username: mesp
-  password: Xku[V^7k6H76U$5
-  template: template0
-
-staging:
-  adapter:  postgresql
-  host: localhost
-  database: mesp_development
-  pool:     5
-  username: mesp
-  password: Xku[V^7k6H76U$5
-  template: template0
+  username: <%= ENV['POSTGRES_USERNAME'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
 
 production:
   adapter:  postgresql
   encoding: unicode
-  host:     localhost
-  encoding: unicode
-  database: mesp_production
+  host:     <%= ENV['POSTGRES_HOST'] %>
+  database: <%= ENV['POSTGRES_DATABASE'] %>
   pool:     5
-  username: mespuser
-  password: Xku[V^7k6H76U$5
-  template: template0
+  username: <%= ENV['POSTGRES_USERNAME'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
