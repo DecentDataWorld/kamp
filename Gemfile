@@ -58,9 +58,7 @@ gem 'ckeditor'
 gem 'negative_captcha'
 gem "recaptcha", require: "recaptcha/rails"
 gem 'rails_12factor'
-gem 'newrelic_rpm'
-
-gem 'puma', '< 5.0.0'
+gem 'puma', '~> 3.11'
 
 group :assets do
   gem "chardinjs-rails"
@@ -68,11 +66,6 @@ group :assets do
   gem 'datetimepicker-rails', git: 'https://github.com/zpaulovics/datetimepicker-rails.git', branch: 'master', submodules: true
 end
 group :development do
-  gem 'capistrano',         require: false
-  gem 'capistrano-rvm',     require: false
-  gem 'capistrano-rails',   require: false
-  gem 'capistrano-bundler', require: false
-  gem 'capistrano3-puma',   require: false
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_19, :mri_20, :rbx]
   gem 'powder'

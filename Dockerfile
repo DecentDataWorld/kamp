@@ -5,7 +5,6 @@ RUN apt update -qq \
  && echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
  && apt-get update -qq && apt-cache search postgresql | grep postgresql-client \
  && apt-get install -y postgresql-client-12 \
- && apt-get install default-jre -y \
  && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
  && apt install nodejs -y \
  && apt-get clean autoclean \
