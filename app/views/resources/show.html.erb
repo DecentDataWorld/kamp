@@ -147,31 +147,6 @@
 <% content_for :page_javascript do %>
     <script>
 
-        function createCookie(name,value,days) {
-            var expires = "";
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days*24*60*60*1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + value + expires + "; path=/";
-        }
-
-        function readCookie(name) {
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for(var i=0;i < ca.length;i++) {
-                var c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-            }
-            return null;
-        }
-
-        function eraseCookie(name) {
-            createCookie(name,"",-1);
-        }
-
         $(document).ready(function () {
             $('#jumptopreview').click(function() {
                 $('html, body').animate({
@@ -185,36 +160,6 @@
                 $('.extra-description').slideToggle("slow", function(){ });
             });
 
-            $('#download_button').click(function() {
-                var cookie_data = readCookie('survey_prompt');
-                var show_modal = false;
-                if(cookie_data) {
-                    var updated_count = parseInt(cookie_data) + 1;
-                    if(parseInt(cookie_data) % 3 == 0) {
-                        show_modal = true;
-                    }
-                    createCookie('survey_prompt',updated_count,10);
-                }
-                else {
-                    createCookie('survey_prompt','1',10);
-                    show_modal = true;
-
-                }
-                if(show_modal) {
-                    $.ajax({
-
-                        url : '<%= log_event_url %>',
-                        type : 'GET',
-                        data : {
-                            'model' : 'Resource',
-                            'model_id': '<%= @resource.id.to_s %>',
-                            'event': 'Survey Offered'
-                        },
-                        dataType:'json'
-                    });
-                    $('.bs-survey-modal-sm').modal("show");
-                }
-            });
 
             $('#survey_button').click(function() {
                 $.ajax({

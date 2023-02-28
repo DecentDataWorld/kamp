@@ -80,8 +80,8 @@ Mesp::Application.configure do
       domain: "jordankmportal.com",
       authentication: "login",
       enable_starttls_auto: true,
-      user_name: "AKIASBPD5MQSUEH4VG7N",
-      password: "BH1RDW3F6eLwM9OGT4D/+dTlgA4LhPbLqi2NusYWK/Dz"
+      user_name: ENV['SES_KEY'],
+      password: ENV['SES_SECRET_KEY']
   }
   # ActionMailer Config
   config.action_mailer.default_url_options = { :host => 'jordankmportal.com' }
@@ -97,8 +97,8 @@ Mesp::Application.configure do
       :bucket => "usjkamp",
       :s3_region => "us-east-1",
       :s3_credentials => {
-          access_key_id: "AKIAJNKAKIDZBGBBOKQA",
-          secret_access_key: "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"
+          access_key_id: ENV['AWS_KEY'],
+          secret_access_key: ENV['AWS_SECRET_KEY']
       }
   }
 

@@ -117,4 +117,13 @@ Mesp::Application.routes.draw do
   post 'users/send_invite', to: 'users#send_invite', as: :send_invite
   devise_for :users, :controllers => {:registrations => 'registrations'}, :path => '', :path_names => {:sign_in => 'login', :sign_out => 'logout'}
   resources :users
+
+  #HEALTHCHECK
+  get '/healthcheck', to: 'healthcheck#check_db'
+
+  # Return 404 for any unmatched paths except those bound for Rails-provided actions
+  match '*path', to: redirect('/404'), via: :all, constraints: lambda { |req|
+    req.path !~ %r{^/rails}
+  }
+
 end
