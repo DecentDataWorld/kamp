@@ -4,7 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
   
   def create
     if verify_recaptcha
-      if params[:email] == params[:email_address]
+      if params[:user][:email] == params[:email_address]
         super
         if resource.save
           # notify admins of new user
