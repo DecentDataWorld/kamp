@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
     self.add_role(:member) if self.confirmed? and self.roles.count == 0
   end
 
-  #after_create :send_admin_mail
+  after_create :send_admin_mail
 
   def send_admin_mail
     @user = self

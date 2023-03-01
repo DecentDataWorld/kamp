@@ -48,6 +48,7 @@ gem 'axlsx', '~> 2.0'
 gem "axlsx_rails"
 gem 'clamby'
 gem 'sitemap', :git => 'https://github.com/viseztrance/rails-sitemap.git'
+gem 'aws-sdk-rails'
 gem "aws-sdk-s3", require: false
 gem "bugsnag"
 #gem 'impressionist'

@@ -56,7 +56,6 @@ class RegistrationsController < Devise::RegistrationsController
           end
         end
       else
-        puts "WROOOOOOOOOOOOOOOOOOOOOOOOOOONG!!!!!!!!!"
         flash.now[:error] = "Email address must match invitation email address"
         redirect_to root_path
       end
