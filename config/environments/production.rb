@@ -74,18 +74,9 @@ Mesp::Application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  config.action_mailer.smtp_settings = {
-      address: "email-smtp.us-east-1.amazonaws.com",
-      port: 587,
-      domain: "jordankmportal.com",
-      authentication: "login",
-      enable_starttls_auto: true,
-      user_name: ENV['SES_KEY'],
-      password: ENV['SES_SECRET_KEY']
-  }
   # ActionMailer Config
-  config.action_mailer.default_url_options = { :host => 'jordankmportal.com' }
-  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { :host => 'phase1.jordankmportal.com' }
+  config.action_mailer.delivery_method = :ses
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false
 
@@ -97,8 +88,8 @@ Mesp::Application.configure do
       :bucket => "usjkamp",
       :s3_region => "us-east-1",
       :s3_credentials => {
-          access_key_id: ENV['AWS_KEY'],
-          secret_access_key: ENV['AWS_SECRET_KEY']
+          access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+          secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
       }
   }
 

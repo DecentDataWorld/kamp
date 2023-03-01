@@ -180,8 +180,7 @@ class UsersController < ApplicationController
     digest = OpenSSL::Digest.new('sha1')
     @email_address = params[:invitation_email]
     @verify = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], @email_address)
-    puts @verify
-    UserMailer.invitation_email(@email_address, @verify)
+    UserMailer.invitation_email(@email_address, @verify).deliver
     redirect_to root_path, :notice => "An invitation to register has been sent to #{@email_address}. Please check your email inbox."
   end
 
