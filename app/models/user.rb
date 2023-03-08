@@ -18,10 +18,6 @@ class User < ActiveRecord::Base
   has_many :collections_authored, :class_name => "Collection", :foreign_key => "author_id"
   has_many :collections_maintaining, :class_name => "Collection", :foreign_key => "maintainer_id"
   has_many :organization_applications, :class_name => "OrganizationApplication", :foreign_key => "user_id"
-  # validates :organization_applications, :presence => true#, if: :organization_not_present?
-  # validate :organization_present
-  # validates_presence_of :organization_applications, :if => :organization_not_present?
-
   has_many :organizations, through: :users_organizations
   has_many :users_organizations, :class_name => 'UsersOrganization', dependent: :destroy
 
@@ -30,10 +26,8 @@ class User < ActiveRecord::Base
   has_attached_file :avatar, :styles => { :small => "190x190>", :thumb => "70x70>" }, :default_url => "/images/:style/missing.png"
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
-
   belongs_to :user_type, :class_name => "UserType", :foreign_key => "user_type_id"
 
-  # before_validation :organization_present
   # after_update :assign_default_role
 
   def assign_default_role
@@ -59,31 +53,6 @@ class User < ActiveRecord::Base
 
   def has_org(org)
     return self.users_organizations.where("organization_id = ?", org.id)
-  end
-
-  # private
-
-  def organization_not_present?
-    self.organization_entered.length < 1
-  end
-
-  def organization_present
-    puts "===================================="
-    # puts !self.organization_applications.any?
-    puts organization_applications
-    puts "-"
-    puts self.organization_entered.length < 1
-    puts "-"
-    puts self.organization_applications
-    puts "--"
-    puts self.organization_entered
-    puts "---"
-    puts self.inspect
-    puts "===================================="
-    # if !self.organizations.any? && !self.organization_applications.any?
-    if !self.organization_applications.any? && self.organization_entered.length < 1
-      errors.add(:user, I18n.t("errors.organization_or_application_required"))
-    end
   end
 
 end

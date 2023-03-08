@@ -16,7 +16,7 @@
           <%= f.text_field :name, :autofocus => true, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "name", placeholder: "Your name" %>
 
         <label>Choose Organization</label>
-          <%= select_tag :organization_applications, grouped_options_for_select(OrganizationType.all.map{ |ot| [ot.organization_type, Organization.where("approved=true").where("organization_type_id=#{ot.id}").order("name").collect{|o| [o.name, o.id] }]}),{:prompt => t("please_select"),:class=>"form-control m-b-sm", :id => "organization_select_list", :select => "organization_id"}%><br/>
+          <%= select_tag :organization_applications, grouped_options_for_select(OrganizationType.all.map{ |ot| [ot.organization_type, Organization.where("approved=true").where("organization_type_id=#{ot.id}").order("name").collect{|o| [o.name, o.id] }]}),{:prompt => t("please_select"),:class=>"form-control m-b-sm", :id => "organization_select_list"}%><br/>
 
         <label>Or Apply For A New Organization</label>
           <%= f.text_field :organization_entered, :id => "organization_name", autocomplete: 'off', class: 'form-control margin-bottom-20', placeholder: "Organization Name" %>
@@ -58,7 +58,6 @@
       jQuery(document).ready(function() {
         $('.org_required_message').hide();
         $('#submit_registration').click(function(e){
-          console.log(!$('#organization_select_list').val() && !$('#organization_name').val())
           if (!$('#organization_select_list').val() && !$('#organization_name').val()) {
             e.preventDefault();
             $('.org_required_message').show()
