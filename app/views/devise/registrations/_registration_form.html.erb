@@ -10,15 +10,13 @@
           <%= devise_error_messages! %>
           <%= hidden_field_tag :email_token, params[:email_token].presence %>
           <%= hidden_field_tag :email_address, params[:email_address].presence %>
+          <p class="org_required_message color-red"><%= I18n.t('errors.organization_or_application_required') %></p>
 
         <label>Name</label>
           <%= f.text_field :name, :autofocus => true, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "name", placeholder: "Your name" %>
 
-          <%= simple_fields_for :organization_applications do |o| %>
-            <label>Choose Organization</label>
-              <%= o.input_field :organization_id, :collection => Organization.where("approved = true").order("name"), :id => "organization_select_list", class: "form-control margin-bottom-20", :value_method => "id", :include_blank => true, :label  => false, :label_method => lambda { |organization| "#{organization.name}".html_safe } %>
-                  <%#= o.select :organization_id, :collection => Organization.where("approved = true").order("name").map { |r| [r.name, r.id, { :label => false ,:include_blank => true, class: 'form-control margin-bottom-20' }] } %>
-          <% end %>
+        <label>Choose Organization</label>
+          <%= select_tag :organization_applications, grouped_options_for_select(OrganizationType.all.map{ |ot| [ot.organization_type, Organization.where("approved=true").where("organization_type_id=#{ot.id}").order("name").collect{|o| [o.name, o.id] }]}),{:prompt => t("please_select"),:class=>"form-control m-b-sm", :id => "organization_select_list", :select => "organization_id"}%><br/>
 
         <label>Or Apply For A New Organization</label>
           <%= f.text_field :organization_entered, :id => "organization_name", autocomplete: 'off', class: 'form-control margin-bottom-20', placeholder: "Organization Name" %>
@@ -47,7 +45,7 @@
             &nbsp;
           </div>
           <div class="col-lg-6 text-right">
-            <%= f.submit 'Sign Up', :class => 'btn-u' %>
+            <%= f.submit 'Sign Up', :class => 'btn-u', :id => 'submit_registration' %>
           </div>
         </div>
           <p>Remembered your password? <%= link_to 'Sign In', new_session_path(resource) %></p>
@@ -55,3 +53,19 @@
       <% end %>
     </div>
   </div>
+  <% content_for :page_javascript do %>
+    <script>
+      jQuery(document).ready(function() {
+        $('.org_required_message').hide();
+        $('#submit_registration').click(function(e){
+          console.log(!$('#organization_select_list').val() && !$('#organization_name').val())
+          if (!$('#organization_select_list').val() && !$('#organization_name').val()) {
+            e.preventDefault();
+            $('.org_required_message').show()
+          } else {
+            $('.org_required_message').hide()
+          }
+        })
+      });
+    </script>
+  <% end %>

@@ -1,8 +1,12 @@
 class RegistrationsController < Devise::RegistrationsController
   before_action :update_sanitized_params, if: :devise_controller?
+  # before_action :validate_org_present, only: [:create]
   # prepend_before_action :check_captcha, only: [:create]
   
   def create
+    # if !organization_present
+      # return redirect_to new_user_registration_path, notice: I18n.t("errors.organization_or_application_required")
+    # elsif verify_recaptcha
     if verify_recaptcha
       if params[:user][:email] == params[:email_address]
         super
@@ -30,11 +34,11 @@ class RegistrationsController < Devise::RegistrationsController
           # end
 
           # if user has chosen an existing organization and has not already been added, add organization application record
-          if !params[:organization_applications][:organization_id].nil? and !params[:organization_applications][:organization_id].blank?
+          if !params[:organization_applications].nil? and !params[:organization_applications].blank?
             #unless matching_org_domains.include?(user_domain)
-            org_entered_id = params[:organization_applications][:organization_id]
+            org_entered_id = params[:organization_applications]
             org_being_applied_to = Organization.find(org_entered_id)
-            new_application = OrganizationApplication.new(:user_id => @user.id, :organization_id => params[:organization_applications][:organization_id])
+            new_application = OrganizationApplication.new(:user_id => @user.id, :organization_id => params[:organization_applications])
             new_application.save
             OrganizationMailer.notify_organization_admins_of_new_application(org_being_applied_to, @user).deliver
             #end
@@ -52,7 +56,6 @@ class RegistrationsController < Devise::RegistrationsController
 
             #notify admins of new organization request
             AdminMailer.notify_admins_of_new_organization(new_organization).deliver
-
           end
         end
       else
@@ -71,6 +74,11 @@ class RegistrationsController < Devise::RegistrationsController
     devise_parameter_sanitizer.permit(:account_update) {|u| u.permit(:name, :email, :password, :password_confirmation, :current_password, :avatar, :title, :google, :twitter, :facebook, :linkedin)}
   end
 
+  def validate_org_present
+    puts (params[:organization_applications][:organization_id].blank? && params[:user][:organization_entered].blank?)
+    return false if (params[:organization_applications][:organization_id].blank? && params[:user][:organization_entered].blank?)
+  end
+
   private
 
   def check_captcha
@@ -80,6 +88,13 @@ class RegistrationsController < Devise::RegistrationsController
       set_minimum_password_length
       respond_with resource
     end
+  end
+
+  def organization_present
+    # if user has not selected an organization or entered a new organization, don't let them make the account
+    if params[:organization_applications][:organization_id].blank? && params[:user][:organization_entered].blank?
+      false
+    end # clean this up
   end
 
 end
