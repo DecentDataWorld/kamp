@@ -35,7 +35,7 @@ class UsersController < ApplicationController
 
     @current_user_id = @user.id
     if current_user == @user or can? :approve, Resource or can? :approve, Collection
-      @resources_pending = @user.resources.where("approved = false").page(params[:resources_page]).per_page(10).order("updated_at desc")
+      @resources_pending = @user.resources.where("approved = false").order("updated_at desc")
     end
   end
   
