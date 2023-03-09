@@ -30,11 +30,11 @@ class RegistrationsController < Devise::RegistrationsController
           # end
 
           # if user has chosen an existing organization and has not already been added, add organization application record
-          if !params[:organization_applications][:organization_id].nil? and !params[:organization_applications][:organization_id].blank?
+          if !params[:organization_applications].nil? and !params[:organization_applications].blank?
             #unless matching_org_domains.include?(user_domain)
-            org_entered_id = params[:organization_applications][:organization_id]
+            org_entered_id = params[:organization_applications]
             org_being_applied_to = Organization.find(org_entered_id)
-            new_application = OrganizationApplication.new(:user_id => @user.id, :organization_id => params[:organization_applications][:organization_id])
+            new_application = OrganizationApplication.new(:user_id => @user.id, :organization_id => params[:organization_applications])
             new_application.save
             OrganizationMailer.notify_organization_admins_of_new_application(org_being_applied_to, @user).deliver
             #end
@@ -52,7 +52,6 @@ class RegistrationsController < Devise::RegistrationsController
 
             #notify admins of new organization request
             AdminMailer.notify_admins_of_new_organization(new_organization).deliver
-
           end
         end
       else

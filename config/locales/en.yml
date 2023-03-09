@@ -21,3 +21,5 @@
 
 en:
   hello: "Hello world"
+  errors:
+    organization_or_application_required: You must either choose an Organization or apply for a new one.
