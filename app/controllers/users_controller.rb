@@ -35,19 +35,7 @@ class UsersController < ApplicationController
 
     @current_user_id = @user.id
     if current_user == @user or can? :approve, Resource or can? :approve, Collection
-      @resource_pending_results = Sunspot.search(Resource, Collection) do
-        with(:author_id, @current_user_id)
-        with(:approved, false)
-
-        if current_user.nil? || current_user.mail_chimp_user == false
-          puts "cannot see newsletter stuff"
-          with(:newsletter_only, false)
-        end
-
-        order_by :updated_at, :desc
-        paginate :page => params[:resources_page], :per_page => 10
-      end
-      @resources_pending = @resource_pending_results.results
+      @resources_pending = @user.resources.where("approved = false").order("updated_at desc")
     end
   end
   
