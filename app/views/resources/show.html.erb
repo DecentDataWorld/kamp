@@ -101,7 +101,7 @@
             <% if @resource.tags.count > 0 %>
                 <p class="fsize16"> Tags:
                   <% @resource.tags.each do |tag| %>
-                      <a href="<%= new_search_path(:tags => [tag.name]) %>" class="label label-default light rounded" href="#"><i class="fa fa-tags"></i> <%= tag.name %></a>
+                      <a href="<%= new_search_path(:tags => [tag.id]) %>" class="label label-default light rounded" href="#"><i class="fa fa-tags"></i> <%= tag.name %></a>
                   <% end %>
                 </p>
             <% end %>

@@ -9,7 +9,7 @@ class UsersController < ApplicationController
 
     #authorize! :index, @user, :message => 'Not authorized as an administrator.'
     @admin_role = User.joins(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).includes(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).order(created_at: :desc).with_any_role(:admin, :moderator)
-    @member_role = User.joins(:users_organizations, :organizations, :roles).includes(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).order(created_at: :desc).without_role(:admin)
+    @member_role = User.joins(:users_organizations, :organizations, :roles, :users_roles).includes(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).order(created_at: :desc).without_role(:admin)
   end
 
   def show

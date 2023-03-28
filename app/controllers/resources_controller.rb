@@ -21,7 +21,6 @@ class ResourcesController < ApplicationController
 # GET /resources/1
 # GET /resources/1.json
   def show
-
     check_resource_access
 
     log_view

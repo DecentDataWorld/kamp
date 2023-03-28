@@ -123,7 +123,7 @@
 
         <% if !@collection.tags.empty? %>
             <div class="well well-sm">
-              <%= raw @collection.tag_list.map { |t| link_to raw('<span class=" btn btn-xs btn-primary">' + t + '</span>'), new_search_path(:tags=>[t]) }.join(' ') %>
+              <%= raw @collection.tags.map { |t| link_to raw('<span class=" btn btn-xs btn-primary">' + t.name + '</span>'), new_search_path(:tags=>[t.id]) }.join(' ') %>
             </div>
         <% end %>
 

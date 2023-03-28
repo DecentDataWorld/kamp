@@ -29,7 +29,7 @@
   <h2 class='headline-sm'><% if collection.approved == false %><span class="label label-orange">Pending Approval</span> <% end %><%= link_to raw(str_title), collection_path(collection) %></h2>
   <ul class="list-inline">
     <li>
-      <%= raw collection.tag_list[0..2].map { |t| link_to raw('<i class="fa fa-tag"></i> ' + t), update_search_path(:tags=>[t]), class: 'text-highlights rounded' }.join('</li><li>') %>
+      <%= raw collection.tags[0..2].map { |t| link_to raw('<i class="fa fa-tag"></i> ' + t.name), update_search_path(:tags=>[t.id]), class: 'text-highlights rounded' }.join('</li><li>') %>
       <%= link_to raw('...more</li>'), collection_path(collection) if collection.tag_list.size > 4 %>
       <%= raw('</li>') if collection.tag_list.size <= 4 %>
 

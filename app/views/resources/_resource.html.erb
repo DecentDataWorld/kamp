@@ -44,7 +44,7 @@
 
         </li>
         <li>
-          <%= raw resource.tag_list[0..2].map { |t| link_to raw('<i class="fa fa-tag"></i> ' + t), update_search_path(:tags=>[t]), class: 'text-highlights rounded' }.join('</li><li>') %>
+          <%= raw resource.tags[0..2].map { |t| link_to raw('<i class="fa fa-tag"></i> ' + t.name), update_search_path(:tags=>[t.id]), class: 'text-highlights rounded' }.join('</li><li>') %>
           <%= link_to raw('...more</li>'), resource_path(resource) if resource.tag_list.size > 4 %>
           <%= raw('</li>') if resource.tag_list.size <= 4 %>
 
