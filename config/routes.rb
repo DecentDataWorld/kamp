@@ -1,5 +1,5 @@
-Mesp::Application.routes.draw do
-
+Rails.application.routes.draw do
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   mount Ckeditor::Engine => '/ckeditor'
   resources :banners
 
@@ -35,7 +35,7 @@ Mesp::Application.routes.draw do
 
   resources :organization_types
 
-  mount RailsAdmin::Engine => '/cpanel', as: 'rails_admin'
+  #mount RailsAdmin::Engine => '/cpanel', as: 'rails_admin'
 
   resources :batches
 
@@ -125,5 +125,4 @@ Mesp::Application.routes.draw do
   match '*path', to: redirect('/404'), via: :all, constraints: lambda { |req|
     req.path !~ %r{^/rails}
   }
-
 end
