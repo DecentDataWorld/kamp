@@ -50,7 +50,7 @@ gem 'clamby'
 gem 'aws-sdk-rails'
 gem "aws-sdk-s3", require: false
 #gem "bugsnag"
-#gem 'impressionist'
+gem 'impressionist'
 gem 'gibbon'
 gem 'sanitize'
 gem 'ckeditor'

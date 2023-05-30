@@ -217,6 +217,8 @@ GEM
     humanizer (2.6.4)
     i18n (1.13.0)
       concurrent-ruby (~> 1.0)
+    impressionist (2.0.0)
+      nokogiri (~> 1)
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -456,6 +458,7 @@ DEPENDENCIES
   figaro
   gibbon
   humanizer
+  impressionist
   jbuilder (~> 2.7)
   jquery-datatables-rails
   jquery-rails
