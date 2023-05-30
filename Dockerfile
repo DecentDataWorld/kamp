@@ -1,23 +1,28 @@
-FROM ruby:2.6.3-buster
-RUN apt update -qq \
- && apt install -y libssl1.1 ca-certificates \
- && curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg \
- && echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
- && apt-get update -qq && apt-cache search postgresql | grep postgresql-client \
- && apt-get install -y postgresql-client-12 \
- && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
- && apt install nodejs -y \
- && apt-get clean autoclean \
- && apt-get autoremove -y \
- && rm -rf \
-    /var/lib/apt \
-    /var/lib/dpkg \
-    /var/lib/cache \
-    /var/lib/log
+FROM ruby:3.0.4-alpine3.14
+
+# Minimal requirements to run a Rails app
+RUN apk add --no-cache --virtual --update build-base \
+  linux-headers \
+  git \
+  postgresql-dev \
+  # Rails SQL schema format requires `pg_dump(1)` and `psql(1)`
+  postgresql \
+  # Install same version of pg_dump
+  postgresql-client \
+  nodejs \
+  yarn \
+  # Needed for nodejs / node-gyp
+  python2 \
+  tzdata \
+  shared-mime-info
+
+ENV BUNDLER_VERSION 2.2.33
+
 RUN mkdir /kamp
 WORKDIR /kamp
 COPY Gemfile /kamp/Gemfile
 COPY Gemfile.lock /kamp/Gemfile.lock
+RUN gem install bundler -v $BUNDLER_VERSION
 RUN bundle install
 COPY . /kamp
 

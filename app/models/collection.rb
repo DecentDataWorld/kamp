@@ -7,7 +7,7 @@ class Collection < ActiveRecord::Base
 
   enumerize :status, in: [:active, :inactive], default: :active
 
-  is_impressionable :counter_cache => true, :unique => true
+  #is_impressionable :counter_cache => true, :unique => true
 
   validates_presence_of :title, :message => "Title is required"
   validates_presence_of :description, :message => "A description is required"

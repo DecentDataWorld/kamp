@@ -13,7 +13,7 @@ class Resource < ActiveRecord::Base
 
   enumerize :language, in: [:english, :arabic], default: :english
 
-  is_impressionable :counter_cache => true, :unique => true
+  #is_impressionable :counter_cache => true, :unique => true
 
   validates_presence_of :name, :message => "Name is required"
   validates_presence_of :description, :message => "A description of this resource is required"
