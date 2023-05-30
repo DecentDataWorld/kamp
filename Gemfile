@@ -16,7 +16,8 @@ gem 'figaro'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'rolify'
 gem 'simple_form'
-gem "paperclip", ">= 5.0"
+#gem "paperclip", ">= 5.0"
+gem "kt-paperclip", "~> 6.4", ">= 6.4.1"
 gem 'ed25519'
 gem 'bcrypt_pbkdf'
 #gem 'rbnacl-libsodium'

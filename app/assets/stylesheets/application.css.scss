@@ -9,8 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
-//= depend_on_asset "layers.png"
-//= depend_on_asset "layers-2x.png"
+
 
  *= require plugins/bootstrap/css/bootstrap.min
  *= require style
@@ -38,7 +37,7 @@
 
  *= require dataTables/jquery.dataTables
  *= require social-share-button
- *= require tagmanager
+
  *= require lawyer.style.css
  *= require introjs/introjs.min
  *= require bootstrap-datetimepicker
