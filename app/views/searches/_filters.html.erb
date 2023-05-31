@@ -14,11 +14,11 @@
   @tags.each do |t| 
     if !existing_tag_facets.include? t["id"]
       tag_facets = existing_tag_facets + [t["id"]]
-      @tag_facet_links_off << "<li>(#{t["tag_count"]}) #{link_to t["name"], update_search_path(params.merge(:tags => tag_facets))}</li>"
+      @tag_facet_links_off << "<li>(#{t["tag_count"]}) #{link_to t["name"], update_search_path(request.parameters.merge(:tags => tag_facets))}</li>"
       tag_facet_links_off_counter = tag_facet_links_off_counter + 1
     else
       tag_facets = existing_tag_facets - [t["id"]]
-      updated_params = params.merge(:tags => tag_facets).except(:page)
+      updated_params = request.parameters.merge(:tags => tag_facets).except(:page)
       @tag_facet_links_on << "<li>#{link_to raw("<i class='fa fa-times' rel='tooltip' title='Remove' id='Remove This Filter'></i> " + t["name"]), update_search_path(updated_params)}</li>"
     end
   end

@@ -8,11 +8,6 @@
     <div class="headline"><h2><i class="fa fa-file"></i> <%= @resource.name %></h2></div>
         <!-- Left Sidebar -->
     <div class="col-sm-3">
-      <p><!-- AddToAny BEGIN -->
-          <a class="a2a_dd" href="https://www.addtoany.com/share"><img src="https://static.addtoany.com/buttons/share_save_256_24.png" width="256" height="24" border="0" alt="Share"/></a>
-          <script async src="https://static.addtoany.com/menu/page.js"></script>
-      </p>
-      <!-- AddToAny END -->
       <% if !@resource.collection.nil? %>
 
           <div class="thumbnails thumbnail-style thumbnail-kenburn">
@@ -69,13 +64,6 @@
         <% if @resource.collection.blank? or @resource.collection.resources.count < 2 %>
 
             <div class="well well-xs">
-              <!-- AddToAny BEGIN -->
-              <div class="a2a_kit a2a_kit_size_32 a2a_default_style pull-right margin-left-10">
-                <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-                <a class="a2a_button_email"></a>
-              </div>
-              <script async src="https://static.addtoany.com/menu/page.js"></script>
-              <!-- AddToAny END -->
               <% if !@resource.attachment.blank? %>
                   <div class="button-group">
                     <%= link_to download_resource_path(:id => @resource.url), class: 'btn btn-success pull-right rounded', id: 'download_button', title: "Download This Resource", target: "_blank" do %>
