@@ -59,4 +59,17 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # send files to AWS S3 bucket in IMS Account
+  config.paperclip_defaults = {
+    :storage => :s3,
+    :s3_permissions => :private,
+    :s3_protocol => :https,
+    :bucket => "usjkamp",
+    :s3_region => "us-east-1",
+    :s3_credentials => {
+        access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+        secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+    }
+  }
 end

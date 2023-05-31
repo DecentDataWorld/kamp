@@ -89,6 +89,19 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  # send files to AWS S3 bucket in mesp account
+  config.paperclip_defaults = {
+    :storage => :s3,
+    :s3_permissions => :private,
+    :s3_protocol => :https,
+    :bucket => "usjkamp",
+    :s3_region => "us-east-1",
+    :s3_credentials => {
+        access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+        secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+    }
+  }
+
   # Inserts middleware to perform automatic connection switching.
   # The `database_selector` hash is used to pass options to the DatabaseSelector
   # middleware. The `delay` is used to determine how long to wait after a write
