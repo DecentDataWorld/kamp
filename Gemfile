@@ -56,7 +56,7 @@ gem 'sanitize'
 gem 'ckeditor'
 gem 'negative_captcha'
 gem "recaptcha", require: "recaptcha/rails"
-gem 'puma', '~> 4.1'
+gem 'puma', '~> 5.0'
 
 group :assets do
   #gem "chardinjs-rails"
