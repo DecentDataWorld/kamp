@@ -86,4 +86,6 @@ pickle-email-*.html
 # Ignore application configuration
 /config/application.yml
 
+/node_modules
+
 
