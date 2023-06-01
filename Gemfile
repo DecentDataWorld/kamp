@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 ruby '3.0.4'
-gem 'rails', '~> 6.0.3', '>= 6.0.3.4'
+gem 'rails', '~> 6.1', '>= 6.0.3.4'
 gem 'sass-rails', '>= 6'
 gem 'jquery-rails'
 gem 'turbolinks'
