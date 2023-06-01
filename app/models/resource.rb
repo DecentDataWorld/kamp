@@ -248,7 +248,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
 
     results = ActiveRecord::Base.connection.exec_query(query)
 
-    return results.to_hash
+    return results.to_ary
   end
 
   def self.search_orgs(search_terms=nil, tags=nil, only_approved=true, exclude_private=true)
@@ -294,7 +294,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
 
     results = ActiveRecord::Base.connection.exec_query(query)
 
-    return results.to_hash
+    return results.to_ary
   end
 
 

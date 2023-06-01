@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_06_01_190328) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_06_01_194243) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,8 +18,8 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.string "name", limit: 255
     t.string "url", limit: 255
     t.text "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "banners", id: :serial, force: :cascade do |t|
@@ -33,22 +32,22 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.text "col2_body"
     t.text "footnote"
     t.string "banner_type", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "batches", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.integer "uploader_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "categories", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.text "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "url", limit: 255
   end
 
@@ -60,8 +59,8 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.string "type", limit: 30
     t.integer "width"
     t.integer "height"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["type"], name: "index_ckeditor_assets_on_type"
   end
 
@@ -76,12 +75,12 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.integer "organization_id"
     t.integer "license_id"
     t.text "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "image_file_name", limit: 255
     t.string "image_content_type", limit: 255
     t.integer "image_file_size"
-    t.datetime "image_updated_at"
+    t.datetime "image_updated_at", precision: nil
     t.boolean "private"
     t.integer "view_count"
     t.integer "activity_id"
@@ -112,26 +111,26 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.integer "organization_id"
     t.integer "license_id"
     t.text "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "image_file_name", limit: 255
     t.string "image_content_type", limit: 255
     t.integer "image_file_size"
-    t.datetime "image_updated_at"
+    t.datetime "image_updated_at", precision: nil
   end
 
   create_table "denial_reasons", id: :serial, force: :cascade do |t|
     t.text "reason"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "devresults_grades", id: :serial, force: :cascade do |t|
     t.string "value", limit: 255
     t.text "text"
     t.integer "result_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "impressions", id: :serial, force: :cascade do |t|
@@ -146,8 +145,8 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.string "session_hash", limit: 255
     t.text "message"
     t.text "referrer"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.text "params"
     t.index ["controller_name", "action_name", "ip_address"], name: "controlleraction_ip_index"
     t.index ["controller_name", "action_name", "request_hash"], name: "controlleraction_request_index"
@@ -161,23 +160,23 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
 
   create_table "licenses", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "organization_applications", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "organization_id"
     t.boolean "approved"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.text "comment"
   end
 
   create_table "organization_types", id: :serial, force: :cascade do |t|
     t.string "type", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "organization_type", limit: 255
   end
 
@@ -186,12 +185,12 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.string "name", limit: 255
     t.text "description"
     t.string "status", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "logo_file_name", limit: 255
     t.string "logo_content_type", limit: 255
     t.integer "logo_file_size"
-    t.datetime "logo_updated_at"
+    t.datetime "logo_updated_at", precision: nil
     t.boolean "approved"
     t.string "domain", limit: 255
     t.integer "organization_type_id"
@@ -205,12 +204,12 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.integer "collection_id"
     t.string "status", limit: 255
     t.string "resource_type", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "attachment_file_name", limit: 255
     t.string "attachment_content_type", limit: 255
     t.integer "attachment_file_size"
-    t.datetime "attachment_updated_at"
+    t.datetime "attachment_updated_at", precision: nil
     t.integer "author_id"
     t.integer "organization_id"
     t.integer "license_id"
@@ -244,16 +243,16 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.integer "resource_id"
     t.integer "resourceable_id"
     t.string "resourceable_type", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "roles", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.integer "resource_id"
     t.string "resource_type", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
     t.index ["name"], name: "index_roles_on_name"
   end
@@ -265,8 +264,8 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.integer "license_id"
     t.string "resource_type", limit: 255
     t.string "language", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.boolean "collections_only"
     t.boolean "resources_only"
   end
@@ -276,8 +275,8 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.integer "model_id"
     t.integer "user_id"
     t.string "event", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -287,7 +286,7 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.integer "tagger_id"
     t.string "tagger_type", limit: 255
     t.string "context", limit: 128
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
     t.index ["taggable_id", "taggable_type", "tag_id"], name: "taggable_resources_index"
@@ -301,46 +300,46 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
 
   create_table "types", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "user_subscriptions", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.string "subscribed_to", limit: 255
     t.integer "subscribed_to_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "user_types", id: :serial, force: :cascade do |t|
     t.string "user_type", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "email", limit: 255, default: "", null: false
     t.string "encrypted_password", limit: 255, default: ""
     t.string "reset_password_token", limit: 255
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip", limit: 255
     t.string "last_sign_in_ip", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "name", limit: 255
     t.string "confirmation_token", limit: 255
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email", limit: 255
     t.string "invitation_token", limit: 255
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
+    t.datetime "invitation_created_at", precision: nil
+    t.datetime "invitation_sent_at", precision: nil
+    t.datetime "invitation_accepted_at", precision: nil
     t.integer "invitation_limit"
     t.integer "invited_by_id"
     t.string "invited_by_type", limit: 255
@@ -354,10 +353,10 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
     t.string "avatar_file_name", limit: 255
     t.string "avatar_content_type", limit: 255
     t.integer "avatar_file_size"
-    t.datetime "avatar_updated_at"
-    t.datetime "password_changed_at"
-    t.datetime "expired_at"
-    t.datetime "last_activity_at"
+    t.datetime "avatar_updated_at", precision: nil
+    t.datetime "password_changed_at", precision: nil
+    t.datetime "expired_at", precision: nil
+    t.datetime "last_activity_at", precision: nil
     t.integer "user_type_id"
     t.text "organization_entered"
     t.boolean "mail_chimp_user", default: false
@@ -374,8 +373,8 @@ ActiveRecord::Schema.define(version: 2023_06_01_190328) do
   create_table "users_organizations", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "organization_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.string "role", limit: 255
   end
 

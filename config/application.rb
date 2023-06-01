@@ -1,5 +1,6 @@
+impressionist_dir = Gem::Specification.find_by_name('impressionist').gem_dir
+require File.join(impressionist_dir, '/app/controllers/impressionist_controller.rb')
 require_relative 'boot'
-
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
