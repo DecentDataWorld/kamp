@@ -40,7 +40,7 @@ class Ability
       can :approve, Resource
       can :add_newsletter_resource, Resource
       can :add_newsletter_collection, Collection
-      can :access, :ckeditor
+      #can :access, :ckeditor
     end
 
     if user.has_role? :admin
@@ -71,7 +71,7 @@ class Ability
 
       can :add_newsletter_resource, Resource
       can :add_newsletter_collection, Collection
-      can :access, :ckeditor
+      #can :access, :ckeditor
     end
 
     # Define abilities for the passed in user here. For example:

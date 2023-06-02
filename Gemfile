@@ -58,6 +58,18 @@ gem 'negative_captcha'
 gem "recaptcha", require: "recaptcha/rails"
 gem 'puma', '~> 5.0'
 
+# Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
+gem "jsbundling-rails"
+
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
+
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+
+# Bundle and process CSS [https://github.com/rails/cssbundling-rails]
+gem "cssbundling-rails"
+
 group :assets do
   #gem "chardinjs-rails"
   gem 'momentjs-rails'
@@ -72,6 +84,7 @@ group :development do
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
   gem 'listen'
+  gem 'foreman'
 end
 group :development, :test do
   gem 'factory_bot_rails'
