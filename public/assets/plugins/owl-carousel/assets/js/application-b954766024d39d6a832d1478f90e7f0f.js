@@ -1,1 +1,0 @@
-$((window.jQuery,void(window.prettyPrint&&prettyPrint()))),jQuery(document).ready(function(o){"frontpage"===o("body").data("page")&&o(window).scroll(function(){var n=o(window).scrollTop(),d=o("#top-nav").find(".download");n>=420?d.addClass("download-on"):n<420&&d.removeClass("download-on")}),o("#myTab a").click(function(n){n.preventDefault(),o(this).tab("show")})});

@@ -1,47 +1,32 @@
 source 'https://rubygems.org'
 ruby '3.0.4'
-gem 'rails', '~> 6.0.3', '>= 6.0.3.4'
+gem 'rails', '~> 7.0', '>= 7.0.5'
 gem 'sass-rails', '>= 6'
-gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.7'
-gem 'bootstrap-sass'
 gem 'cancancan'
 gem 'devise'
 gem 'devise_invitable'
-#gem 'devise_security_extension'
-gem 'devise-security' #replacing above
+gem 'devise-security' 
 gem 'devise-i18n'
 gem 'figaro'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'rolify'
 gem 'simple_form'
-#gem "paperclip", ">= 5.0"
 gem "kt-paperclip", "~> 6.4", ">= 6.4.1"
-gem 'ed25519'
-gem 'bcrypt_pbkdf'
-#gem 'rbnacl-libsodium'
-#gem 'rbnacl'
 gem 'kaminari'
-#added blow
 gem 'rexml'
 
 gem 'enumerize'
 gem 'acts-as-taggable-on'
 gem "crummy"
 gem 'will_paginate'
-gem 'datagrid'
-gem 'jquery-datatables-rails'
 gem 'fastercsv'
-gem 'progress_bar'
-gem 'social-share-button'
 gem 'stringex'
 gem 'humanizer'
 gem 'rails_email_validator'
-#gem 'tagmanager-rails'
 gem 'rscribd'
 gem 'rubyzip'
-#gem 'rails_admin', '< 0.7.0'
 gem 'analytics-ruby', '~> 2.0.0', :require => 'segment/analytics'
 gem 'dynamic_form'
 gem 'caxlsx'
@@ -49,14 +34,23 @@ gem "caxlsx_rails"
 gem 'clamby'
 gem 'aws-sdk-rails'
 gem "aws-sdk-s3", require: false
-#gem "bugsnag"
 gem 'impressionist'
-gem 'gibbon'
 gem 'sanitize'
-gem 'ckeditor'
 gem 'negative_captcha'
 gem "recaptcha", require: "recaptcha/rails"
-gem 'puma', '~> 4.1'
+gem 'puma', '~> 5.0'
+
+# Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
+gem "jsbundling-rails"
+
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
+
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+
+# Bundle and process CSS [https://github.com/rails/cssbundling-rails]
+gem "cssbundling-rails"
 
 group :assets do
   #gem "chardinjs-rails"
@@ -72,6 +66,7 @@ group :development do
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
   gem 'listen'
+  gem 'foreman'
 end
 group :development, :test do
   gem 'factory_bot_rails'
