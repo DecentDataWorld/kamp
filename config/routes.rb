@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  mount Ckeditor::Engine => '/ckeditor'
+  #mount Ckeditor::Engine => '/ckeditor'
   resources :banners
 
   get 'survey/index'
