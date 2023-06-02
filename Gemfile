@@ -2,15 +2,15 @@ source 'https://rubygems.org'
 ruby '3.0.4'
 gem 'rails', '~> 7.0', '>= 7.0.5'
 gem 'sass-rails', '>= 6'
-gem 'turbolinks'
-gem 'jbuilder', '~> 2.7'
+#gem 'turbolinks'
+gem 'jbuilder'
 gem 'cancancan'
 gem 'devise'
 gem 'devise_invitable'
 gem 'devise-security' 
 gem 'devise-i18n'
 gem 'figaro'
-gem 'pg', '>= 0.18', '< 2.0'
+gem "pg", "~> 1.1"
 gem 'rolify'
 gem 'simple_form'
 gem "kt-paperclip", "~> 6.4", ">= 6.4.1"
@@ -51,6 +51,12 @@ gem "stimulus-rails"
 
 # Bundle and process CSS [https://github.com/rails/cssbundling-rails]
 gem "cssbundling-rails"
+
+# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem "sprockets-rails"
+
+# Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", require: false
 
 group :assets do
   #gem "chardinjs-rails"
