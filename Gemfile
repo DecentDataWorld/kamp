@@ -13,32 +13,20 @@ gem 'figaro'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'rolify'
 gem 'simple_form'
-#gem "paperclip", ">= 5.0"
 gem "kt-paperclip", "~> 6.4", ">= 6.4.1"
-#gem 'ed25519'
-#gem 'bcrypt_pbkdf'
-#gem 'rbnacl-libsodium'
-#gem 'rbnacl'
 gem 'kaminari'
-#added blow
 gem 'rexml'
 
 gem 'enumerize'
 gem 'acts-as-taggable-on'
 gem "crummy"
 gem 'will_paginate'
-#gem 'datagrid'
-#gem 'jquery-datatables-rails'
 gem 'fastercsv'
-#gem 'progress_bar'
-#gem 'social-share-button'
 gem 'stringex'
 gem 'humanizer'
 gem 'rails_email_validator'
-#gem 'tagmanager-rails'
 gem 'rscribd'
 gem 'rubyzip'
-#gem 'rails_admin', '< 0.7.0'
 gem 'analytics-ruby', '~> 2.0.0', :require => 'segment/analytics'
 gem 'dynamic_form'
 gem 'caxlsx'
@@ -46,11 +34,8 @@ gem "caxlsx_rails"
 gem 'clamby'
 gem 'aws-sdk-rails'
 gem "aws-sdk-s3", require: false
-#gem "bugsnag"
 gem 'impressionist'
-gem 'gibbon'
 gem 'sanitize'
-#gem 'ckeditor'
 gem 'negative_captcha'
 gem "recaptcha", require: "recaptcha/rails"
 gem 'puma', '~> 5.0'
