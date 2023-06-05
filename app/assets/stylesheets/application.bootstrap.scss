@@ -23,7 +23,7 @@ body {
   }
   
   a:hover {
-    color: #205493;
+    color: #651D32;
     text-decoration: none;
   }
   
@@ -179,7 +179,7 @@ body {
     padding: 10px 0 10px 30px;
     font-family: "Poppins", sans-serif;
     font-size: 14px;
-    color: #651D32;
+    color: #205493;
     white-space: nowrap;
     transition: 0.3s;
   }
@@ -195,12 +195,12 @@ body {
   .navbar .active,
   .navbar .active:focus,
   .navbar li:hover>a {
-    color: #205493;
+    color: #651D32;
   }
   
   .navbar .getstarted,
   .navbar .getstarted:focus {
-    background: #205493;
+    background: #651D32;
     padding: 8px 20px;
     margin-left: 30px;
     border-radius: 4px;
@@ -210,7 +210,7 @@ body {
   .navbar .getstarted:hover,
   .navbar .getstarted:focus:hover {
     color: #fff;
-    background: #205493;
+    background: #651D32;
   }
   
   .navbar .dropdown ul {
@@ -236,7 +236,7 @@ body {
     padding: 10px 20px;
     font-size: 14px;
     text-transform: none;
-    color: #651D32;
+    color: #205493;
   }
   
   .navbar .dropdown ul a i {
@@ -246,7 +246,7 @@ body {
   .navbar .dropdown ul a:hover,
   .navbar .dropdown ul .active:hover,
   .navbar .dropdown ul li:hover>a {
-    color: #205493;
+    color: #651D32;
   }
   
   .navbar .dropdown:hover>ul {
