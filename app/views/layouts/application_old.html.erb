@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--[if IE 7]> <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+  <title><%= @page_title + " | " if !@page_title.nil? %><%= content_for?(:title) ? yield(:title) : "Jordan Development KaMP" %></title>
+
+  <!-- Meta -->
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+</head>
+<body>
+<div class="wrapper">
+  <!--=== Header ===-->
+  <div>
+    <!-- Topbar -->
+    <%= render  'layouts/header_bar' %>
+
+    <%= render 'layouts/navigation_links' %>
+
+  </div>
+  <!--=== End Header ===-->
+
+  <div>
+    <% if !@page_title.nil? %>
+        <!--=== Breadcrumbs ===-->
+        <div class="breadcrumbs">
+          <div class="container">
+            <h1 class="pull-left"><%= @page_title %></h1>
+            <%= render_crumbs %>
+          </div><!--/container-->
+        </div><!--/breadcrumbs-->
+        <!--=== End Breadcrumbs ===-->
+    <% end %>
+
+
+    <%= render 'layouts/messages' %>
+    <%= yield %>
+
+    <div class="footer-v1">
+      <%= render 'layouts/footer' %>
+
+      <%= render 'layouts/copyright' %>
+
+    </div>
+
+  </div>
+</div><!--/wrapper-->
+
+
+</body>
+</html>
