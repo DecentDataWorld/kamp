@@ -30,8 +30,7 @@ class AdminController < ApplicationController
     add_crumb 'Administration', admin_index_path
     add_crumb 'Manage Tags', manage_tags_path
     @page_title = "Edit Tag"
-    #@tag = ActsAsTaggableOn::Tag.find_by :name => params[:tag]
-    @tag = Tag.find(params[:tag])
+    @tag = ActsAsTaggableOn::Tag.find_by :name => params[:tag]
   end
 
   def new_tag
