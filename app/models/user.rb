@@ -19,8 +19,9 @@ class User < ActiveRecord::Base
   has_many :collections_maintaining, :class_name => "Collection", :foreign_key => "maintainer_id"
   has_many :organization_applications, :class_name => "OrganizationApplication", :foreign_key => "user_id"
 
-  has_many :organizations, through: :users_organizations
   has_many :users_organizations, :class_name => 'UsersOrganization', dependent: :destroy
+  has_many :organizations, through: :users_organizations
+  
 
   has_many :subscriptions, :class_name => "UserSubscription", :foreign_key => "user_id"
 

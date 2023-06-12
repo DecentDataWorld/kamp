@@ -1,0 +1,33 @@
+<%= form_with model: @tag_type, local: true do |form| %>
+  <% if @tag_type.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@tag_type.errors.count, t('errors.error')) %>
+        <%= t('errors.prohibited') %>
+      </h2>
+      <ul>
+        <% @tag_type.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-12">
+      <%= form.label :name %><span class="text-danger">*</span><br>
+      <%= form.text_field :name, class: "form-control" %>
+    </div>
+    <div class="col-md-12">
+      <% if current_page?(new_tag_type_path) || @tag_type.id == nil %>
+        <%= form.submit t('helpers.submit.create', model: TagType.model_name.human), class: "btn btn-outline-primary" %>
+      <% else %>
+        <%= form.submit t('helpers.submit.update', model: TagType.model_name.human), class: "btn btn-outline-primary" %>
+          <span class="float-end"><%= link_to t('navigation.delete'), tag_type_path(@tag_type),
+            method: :delete,
+            data: { confirm: t('warnings.are_you_sure') }, class: "btn btn-outline-danger" %></span>
+      <% end %>
+      <%= link_to t('navigation.cancel'), tag_types_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+<% end %>

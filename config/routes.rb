@@ -2,27 +2,16 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   #mount Ckeditor::Engine => '/ckeditor'
   resources :banners
-
   get 'survey/index'
-
   get 'survey/done'
-
   get 'service/index'
-
   resources :denial_reasons
-
   get 'moderator/index', to: 'moderator#index', as: :moderate_submissions
-
   get 'moderator/approve', to: 'moderator#approve', as: :approve_submission
-
   get 'moderator/denial', to: 'moderator#denial', as: :denial_submission
-
   post 'moderator/deny', to: 'moderator#deny', as: :deny_submission
-
   get 'moderator/denied', to: 'moderator#denied', as: :denied_submissions
-
   get 'moderator/users', to: 'moderator#users', as: :moderator_users
-
 
   resources :activities
 
@@ -32,14 +21,15 @@ Rails.application.routes.draw do
   get 'resources/download', to: 'resources#download', as: :download_resource
 
   resources :user_types
-
   resources :organization_types
 
   #mount RailsAdmin::Engine => '/cpanel', as: 'rails_admin'
 
   resources :batches
-
   resources :categories
+  resources :tags
+  get 'admin/manage_tags', to: 'tags#index', as: :manage_tags
+  resources :tag_types
 
   get 'faq/index', to: 'faq#index', as: :faq
   resources :users_organizations
@@ -60,11 +50,11 @@ Rails.application.routes.draw do
   get 'admin/survey_report', to: 'admin#survey_report', as: :survey_report
   get 'admin/contest_report', to: 'admin#contest_report', as: :contest_report
   get 'admin/access_report', to: 'admin#access_report', as: :access_report
-  get 'admin/manage_tags', to: 'admin#manage_tags', as: :manage_tags
-  get 'admin/delete_tag', to: 'admin#delete_tag', as: :delete_tag
-  get 'admin/edit_tag', to: 'admin#edit_tag', as: :edit_tag
-  get 'admin/new_tag', to: 'admin#new_tag', as: :new_tag
-  post 'admin/update_tag', to: 'admin#update_tag', as: :update_tag
+  #get 'admin/manage_tags', to: 'admin#manage_tags', as: :manage_tags
+  #get 'admin/delete_tag', to: 'admin#delete_tag', as: :delete_tag
+  #get 'admin/edit_tag', to: 'admin#edit_tag', as: :edit_tag
+  #get 'admin/new_tag', to: 'admin#new_tag', as: :new_tag
+  #post 'admin/update_tag', to: 'admin#update_tag', as: :update_tag
   get 'admin/orgs', to: 'admin#orgs', as: :orgs
   get 'admin/upload_files', to: 'admin#upload_files', as: :upload_files
   get 'admin/private_resources', to: 'admin#private_resources', as: :private_resources
