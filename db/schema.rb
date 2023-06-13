@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_01_194243) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_09_141052) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -279,6 +279,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_01_194243) do
     t.datetime "updated_at", precision: nil
   end
 
+  create_table "tag_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "taggings", id: :serial, force: :cascade do |t|
     t.integer "tag_id"
     t.integer "taggable_id"
@@ -295,7 +301,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_01_194243) do
   create_table "tags", id: :serial, force: :cascade do |t|
     t.string "name", limit: 255
     t.integer "taggings_count", default: 0
+    t.bigint "tag_type_id"
     t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["tag_type_id"], name: "index_tags_on_tag_type_id"
   end
 
   create_table "types", id: :serial, force: :cascade do |t|
@@ -384,4 +392,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_01_194243) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
   end
 
+  add_foreign_key "tags", "tag_types"
 end
