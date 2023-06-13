@@ -12,7 +12,7 @@ class Tag < ActiveRecord::Base
       return values
     end
   
-    def self.grouped_tags(monitoring_request_tags=false)
+    def self.grouped_tags
       tags = "
         SELECT
           t.id,

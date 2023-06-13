@@ -14,12 +14,6 @@ class TagsController < ApplicationController
   
     def grouped_tags
       @tags = Tag.grouped_tags
-      
-      if params[:monitoring_request_tags]
-        @tags = Tag.grouped_tags(monitoring_request_tags=true)
-      else 
-        @tags = Tag.grouped_tags
-      end
       render json: @tags, status: :ok
     end
   
