@@ -33,6 +33,8 @@ class Resource < ActiveRecord::Base
   has_attached_file :attachment
   do_not_validate_attachment_file_type :attachment
 
+  has_and_belongs_to_many :cops
+
   # before_create :scan_for_viruses
 
   def popularity_query

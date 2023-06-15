@@ -100,6 +100,33 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_144801) do
     t.index ["organization_id"], name: "index_collections_on_organization_id"
   end
 
+  create_table "cops", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.bigint "admin_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_cops_on_admin_id"
+  end
+
+  create_table "cops_resources", id: false, force: :cascade do |t|
+    t.bigint "cop_id", null: false
+    t.bigint "resource_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cop_id", "resource_id"], name: "index_cops_resources_on_cop_id_and_resource_id"
+    t.index ["resource_id", "cop_id"], name: "index_cops_resources_on_resource_id_and_cop_id"
+  end
+
+  create_table "cops_users", id: false, force: :cascade do |t|
+    t.bigint "cop_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cop_id", "user_id"], name: "index_cops_users_on_cop_id_and_user_id"
+    t.index ["user_id", "cop_id"], name: "index_cops_users_on_user_id_and_cop_id"
+  end
+
   create_table "datasets", id: :serial, force: :cascade do |t|
     t.string "url", limit: 255
     t.string "title", limit: 255
@@ -398,5 +425,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_144801) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
   end
 
+  add_foreign_key "cops", "users", column: "admin_id"
   add_foreign_key "tags", "tag_types"
 end

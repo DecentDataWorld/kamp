@@ -32,6 +32,8 @@ Rails.application.routes.draw do
   resources :tag_types
   resources :featured_searches
 
+  resources :cops
+
   get 'faq/index', to: 'faq#index', as: :faq
   resources :users_organizations
   get 'data/csv', to: 'data#csv', as: :data_csv
