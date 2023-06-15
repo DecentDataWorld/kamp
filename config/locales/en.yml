@@ -30,4 +30,35 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    models:
+      user: "User"
+      tag: "Tag"
+      tag_type: "Tag Type"
+      resource: "Resource"
+    attributes:
+      user:
+        name: "User"
+        first_name: "First Name"
+        last_name: "Last Name"
+        email: "Email"
+        user_role: "User Role"
+        admin: "Administrator"
+      tag:
+        name: "Name"
+        tag_type_name: "Type Name"
+        abbreviation: "Abbreviation"
+      tag_type:
+        name: "Name"
+      resource:
+        name: "Title"
+        url: "Link"
+        tags: "Tags"
+        file: "File"
+        description: "Description"
+        updated_at: "Last Updated"
+        user: "Uploaded By"
+      cop:
+        name: "Name"
+        description: "Description"
+        admin: "Administrator"

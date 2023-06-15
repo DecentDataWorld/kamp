@@ -31,6 +31,8 @@ Rails.application.routes.draw do
   get 'admin/manage_tags', to: 'tags#index', as: :manage_tags
   resources :tag_types
 
+  resources :cops
+
   get 'faq/index', to: 'faq#index', as: :faq
   resources :users_organizations
   get 'data/csv', to: 'data#csv', as: :data_csv
