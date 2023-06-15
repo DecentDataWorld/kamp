@@ -1,0 +1,58 @@
+en:
+  errors:
+    error: "error"
+    prohibited: " prohibited this entity from being saved:"
+    required_field: "This field is required"
+    required_fields: "Please enter required fields"
+    file_or_url_required: "missing, upload a file or enter a valid file URL"
+    invalid_url: "URL is invalid"
+    access_denied: "You do not have access to this area."
+    invalid_date: " is invalid"
+  helpers:
+    select:
+      prompt: Please select
+      at_least_one: '* (select at least one)'
+    submit:
+      create: Create %{model}
+      submit: Save %{model}
+      update: Update %{model}
+  notices:
+    create_success: " Successfully Created"
+    update_success: " Successfully Updated"
+    delete_success: " Successfully Deleted"
+    delete_failure: "Deletion Failed"
+    failure: "Failed"
+  navigation:
+    add: "Add"
+    back: "Back"
+    show: "Show"
+    edit: "Edit"
+    delete: "Delete"
+    update: "Update"
+    cancel: "Cancel"
+    tag: "Tag"
+    tags: "Tags"
+    new_tag: "New Tag"
+    tag_type: "Tag Type"
+    tag_types: "Tag Types"
+    new_tag_type: "New Tag Type"
+    cop: "Community of Practice"
+    cops: "Communities of Practice"
+    new_cop: "New Community of Practice"
+  headers:
+    tag:
+      new: "Add Tag"
+      edit: "Edit Tag"
+      list: "Tags"
+    tag_type:
+      new: "Add Tag Type"
+      edit: "Edit Tag Type"
+      list: "Tag Types"
+    resource:
+      new: "New Resource"
+      edit: "Edit Resource"
+      list: "Resources"
+    cop:
+      new: "New Community of Practice"
+      edit: "Edit Community of Practice"
+      list: "Communities of Practice"

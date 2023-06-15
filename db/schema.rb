@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_09_141052) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_13_203906) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -93,11 +93,35 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_141052) do
     t.string "positive_users", limit: 255, default: [], array: true
     t.string "negative_users", limit: 255, default: [], array: true
     t.boolean "newsletter_only", default: false
-    t.index "to_tsvector('english'::regconfig, (((title)::text || ' '::text) || description))", name: "idx_fts_collections_concat", using: :gin
-    t.index "to_tsvector('english'::regconfig, (title)::text)", name: "idx_fts_collections_name", using: :gin
-    t.index "to_tsvector('english'::regconfig, description)", name: "idx_fts_collections_description", using: :gin
     t.index ["ci_lower_bound"], name: "index_collections_on_ci_lower_bound"
     t.index ["organization_id"], name: "index_collections_on_organization_id"
+  end
+
+  create_table "cops", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.bigint "admin_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_cops_on_admin_id"
+  end
+
+  create_table "cops_resources", id: false, force: :cascade do |t|
+    t.bigint "cop_id", null: false
+    t.bigint "resource_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cop_id", "resource_id"], name: "index_cops_resources_on_cop_id_and_resource_id"
+    t.index ["resource_id", "cop_id"], name: "index_cops_resources_on_resource_id_and_cop_id"
+  end
+
+  create_table "cops_users", id: false, force: :cascade do |t|
+    t.bigint "cop_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cop_id", "user_id"], name: "index_cops_users_on_cop_id_and_user_id"
+    t.index ["user_id", "cop_id"], name: "index_cops_users_on_user_id_and_cop_id"
   end
 
   create_table "datasets", id: :serial, force: :cascade do |t|
@@ -232,9 +256,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_141052) do
     t.string "positive_users", limit: 255, default: [], array: true
     t.string "negative_users", limit: 255, default: [], array: true
     t.boolean "newsletter_only", default: false
-    t.index "to_tsvector('english'::regconfig, (((name)::text || ' '::text) || description))", name: "idx_fts_resources_concat", using: :gin
-    t.index "to_tsvector('english'::regconfig, (name)::text)", name: "idx_fts_resources_name", using: :gin
-    t.index "to_tsvector('english'::regconfig, description)", name: "idx_fts_resources_description", using: :gin
     t.index ["ci_lower_bound"], name: "index_resources_on_ci_lower_bound"
     t.index ["organization_id"], name: "index_resources_on_organization_id"
   end
@@ -392,5 +413,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_141052) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
   end
 
+  add_foreign_key "cops", "users", column: "admin_id"
   add_foreign_key "tags", "tag_types"
 end
