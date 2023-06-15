@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   resources :tags
   get 'admin/manage_tags', to: 'tags#index', as: :manage_tags
   resources :tag_types
+  resources :featured_searches
 
   get 'faq/index', to: 'faq#index', as: :faq
   resources :users_organizations
