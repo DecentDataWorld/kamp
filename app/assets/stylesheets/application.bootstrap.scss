@@ -3,6 +3,19 @@ $secondary:#6C6463;
 
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
+@import 'swiper/swiper';
+
+.available-tags {
+  font-size: 13px;
+}
+
+.dark-badge-link a  {
+  color: #fff;
+}
+
+.dark-badge-link a:hover  {
+  color: #fff;
+}
 
 
 .toolbar-item {
@@ -26,7 +39,7 @@ $secondary:#6C6463;
 }
 
 .tab-content .tab-pane {
-  min-height: 200px;
+  min-height: 500px;
   height: auto;
 }
 

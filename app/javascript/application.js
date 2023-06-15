@@ -3,6 +3,7 @@ import * as bootstrap from "bootstrap"
 import "@hotwired/turbo-rails"
 import "./controllers"
 import "@fortawesome/fontawesome-free/js/all"
+import Swiper from 'swiper'
 
 
 /**
@@ -244,13 +245,6 @@ import "@fortawesome/fontawesome-free/js/all"
     });
   
     /**
-     * Initiate portfolio lightbox 
-     */
-    const portfolioLightbox = GLightbox({
-      selector: '.portfolio-lightbox'
-    });
-  
-    /**
      * Portfolio details slider
      */
     new Swiper('.portfolio-details-slider', {
@@ -267,9 +261,5 @@ import "@fortawesome/fontawesome-free/js/all"
       }
     });
   
-    /**
-     * Initiate Pure Counter 
-     */
-    new PureCounter();
   
   })()

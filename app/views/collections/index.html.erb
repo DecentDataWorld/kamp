@@ -63,22 +63,6 @@
                 <% end %>
             <% end %>
 
-            <script>
-
-                $(document).ready(function () {
-                    $('#orglist li:gt(4)').hide();
-
-                    $('#orglist .expandOrgsList').live('click',function() {
-                        $('#orglist li:gt(4):visible').animate({height: 'toggle'}, 600, function() {}); // This line MUST come before next line.
-                        $('#orglist li').not(':visible').animate({height: 'toggle'}, 500, function() {});
-                        if(this.innerHTML == '<i class="fa fa-arrow-circle-down"></i> More')
-                            this.innerHTML = '<i class="fa fa-arrow-circle-up"></i> Less';
-                        else
-                            this.innerHTML = '<i class="fa fa-arrow-circle-down"></i> More';
-                    });
-
-                });
-            </script>
 
             <hr>
 
