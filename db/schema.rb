@@ -184,6 +184,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
     t.index ["tag_id", "event_id"], name: "index_events_tags_on_tag_id_and_event_id"
   end
 
+  create_table "featured_searches", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "impressions", id: :serial, force: :cascade do |t|
     t.string "impressionable_type", limit: 255
     t.integer "impressionable_id"

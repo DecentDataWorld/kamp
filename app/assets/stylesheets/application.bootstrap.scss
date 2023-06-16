@@ -1,5 +1,47 @@
+$primary:#205493;
+$secondary:#6C6463;
+
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
+@import 'swiper/swiper';
+
+.available-tags {
+  font-size: 13px;
+}
+
+.dark-badge-link a  {
+  color: #fff;
+}
+
+.dark-badge-link a:hover  {
+  color: #fff;
+}
+
+
+.toolbar-item {
+  border-right: 1px solid #fff;
+  padding-right: 10px;
+}
+
+.nav-tabs .nav-item .nav-link {
+  color: #205493;
+  font-size: 12px;
+}
+
+.nav-tabs .nav-item .nav-link.active {
+  color: #6C6463;
+}
+
+.tab-content {
+  //border: 1px solid #dee2e6;
+  border-top: transparent;
+  padding: 15px;
+}
+
+.tab-content .tab-pane {
+  min-height: 500px;
+  height: auto;
+}
 
 /**
 * Template Name: Eterna
@@ -614,10 +656,10 @@ body {
   # Breadcrumbs
   --------------------------------------------------------------*/
   .breadcrumbs {
-    padding: 20px 0 20px 0;
+    padding: 5px 0 5px 0;
     background: #f7f7f7;
     border-bottom: 1px solid #ededed;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
   
   .breadcrumbs h2 {
@@ -2167,7 +2209,7 @@ body {
   
   #footer .footer-top .footer-links ul i {
     padding-right: 2px;
-    color: #ec7f6d;
+    color: #fff;
     font-size: 18px;
     line-height: 1;
   }
