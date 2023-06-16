@@ -27,7 +27,7 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(event_params)
     @event.tag_list = params[:event][:tags]
-    @event.user_id = 1 if !params[:event][:user_id]
+    @event.user_id = current_user.id
 
     respond_to do |format|
       if @event.save
