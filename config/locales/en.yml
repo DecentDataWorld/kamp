@@ -70,7 +70,7 @@ en:
         location: "Location"
         virtual: "Virtual"
         url: "URL"
-        public: "Public"
+        private: "Private"
         featured: "Featured"
         cop: "Community of Practice"
         tags: "Tags"

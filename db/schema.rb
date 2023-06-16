@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_16_204645) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -163,10 +163,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_204645) do
     t.text "long_description"
     t.datetime "date"
     t.string "location"
-    t.boolean "virtual"
+    t.boolean "is_virtual"
     t.string "url"
-    t.string "public"
-    t.boolean "featured"
+    t.string "is_private"
+    t.boolean "is_featured"
     t.bigint "user_id"
     t.bigint "cop_id"
     t.datetime "created_at", null: false

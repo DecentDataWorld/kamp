@@ -6,11 +6,11 @@ class AddEvents < ActiveRecord::Migration[7.0]
       t.text :long_description
       t.datetime :date
       t.string :location
-      t.boolean :virtual
+      t.boolean :is_virtual
       t.string :url
-      t.string :public
-      t.boolean :featured
-      t.references :creator, index: true, foreign_key: {to_table: :users}
+      t.string :is_private
+      t.boolean :is_featured
+      t.references :user, index: true, foreign_key: true
       t.references :cop, index: true, foreign_key: true
       t.timestamps
     end
