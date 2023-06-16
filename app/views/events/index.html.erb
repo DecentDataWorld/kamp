@@ -9,7 +9,7 @@
             <th><%=t('activerecord.attributes.event.short_description') %></th>
             <th><%=t('activerecord.attributes.event.date') %></th>
             <th><%=t('activerecord.attributes.event.location') %></th>
-            <th><%=t('activerecord.attributes.event.creator') %></th>
+            <th><%=t('activerecord.attributes.event.user') %></th>
             <th>
               <span class="float-end"><%= link_to t('navigation.new_event'), new_event_path, class: "btn btn-outline-primary " %></span>
             </th>
@@ -22,7 +22,7 @@
             <td><%= e.short_description %></td>
             <td><%= e.date %></td>
             <td><%= e.location %></td>
-            <td><%= e.creator.name %></td>
+            <td><%= e.user.name %></td>
             <td>
               <span class="float-end"><%= link_to t('navigation.edit'), edit_event_path(e), class: "btn btn-outline-primary " %></span>
             </td>

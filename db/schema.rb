@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_16_204645) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -167,12 +167,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
     t.string "url"
     t.string "public"
     t.boolean "featured"
-    t.bigint "creator_id"
+    t.bigint "user_id"
     t.bigint "cop_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cop_id"], name: "index_events_on_cop_id"
-    t.index ["creator_id"], name: "index_events_on_creator_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
   end
 
   create_table "events_tags", id: false, force: :cascade do |t|
@@ -448,6 +448,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
 
   add_foreign_key "cops", "users", column: "admin_id"
   add_foreign_key "events", "cops"
-  add_foreign_key "events", "users", column: "creator_id"
+  add_foreign_key "events", "users"
   add_foreign_key "tags", "tag_types"
 end

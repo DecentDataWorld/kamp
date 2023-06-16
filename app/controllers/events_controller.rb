@@ -27,7 +27,7 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(event_params)
     @event.tag_list = params[:event][:tags]
-    @event.creator_id = 1 if !params[:event][:creator_id]
+    @event.user_id = 1 if !params[:event][:user_id]
 
     respond_to do |format|
       if @event.save
@@ -76,7 +76,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:name, :short_description, :long_description, :date, :location, :virtual, :url, :public, :featured, :creator_id, :cop_id, :tag_list)
+      params.require(:event).permit(:name, :short_description, :long_description, :date, :location, :virtual, :url, :public, :featured, :user_id, :cop_id, :tag_list)
     end
   end
   
