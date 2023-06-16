@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   get 'admin/manage_tags', to: 'tags#index', as: :manage_tags
   resources :tag_types
   resources :featured_searches
+  resources :announcements
 
   resources :cops
 

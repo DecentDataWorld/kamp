@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_15_144801) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_15_193030) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_144801) do
     t.text "description"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
+  end
+
+  create_table "announcements", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "short_description"
+    t.text "long_description"
+    t.datetime "expiration_date"
+    t.boolean "is_private", default: false, null: false
+    t.boolean "is_featured", default: false, null: false
+    t.bigint "user_id", null: false
+    t.bigint "cop_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cop_id"], name: "index_announcements_on_cop_id"
+    t.index ["user_id"], name: "index_announcements_on_user_id"
   end
 
   create_table "banners", id: :serial, force: :cascade do |t|
@@ -425,6 +440,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_144801) do
     t.index ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
   end
 
+  add_foreign_key "announcements", "cops"
+  add_foreign_key "announcements", "users"
   add_foreign_key "cops", "users", column: "admin_id"
   add_foreign_key "tags", "tag_types"
 end
