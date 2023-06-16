@@ -5,10 +5,10 @@
         <i class="fa fa-times-circle"></i> reset filter
     <% end %>
 <% else %>
-    <ul id="orglist" class="list-unstyled">
+    <ul id="orglist" class="list-unstyled ps-2">
       <% @orgs.each do |o| %>
-        <li>
-          (<%= o["org_count"] %>) <%= link_to o["name"], update_search_path(request.parameters.merge(:organization_id => o["id"]).except(:page)) %>
+        <li class='available-tags pb-1'>
+          <%= link_to o["name"], update_search_path(request.parameters.merge(:organization_id => o["id"]).except(:page)) %> (<%= o["org_count"] %>) 
         </li>
       <% end %>
     </ul>
@@ -17,25 +17,5 @@
     <% end %>
 <% end %>
 
-<script>
-
-    $(document).ready(function () {
-
-        $('#orglist li:gt(4)').hide();
-
-        $('#expandOrgsList').click(function() {
-
-            if(this.innerHTML == '<i class="fa fa-arrow-circle-down"></i> More Organizations') {
-                $('#orglist li:gt(4)').show();
-                this.innerHTML = '<i class="fa fa-arrow-circle-up"></i> Less Organizations';
-            } else {
-                $('#orglist li:gt(4)').hide();
-                this.innerHTML = '<i class="fa fa-arrow-circle-down"></i> More Organizations';
-            }
-        });
-
-
-    });
-</script>
 
 

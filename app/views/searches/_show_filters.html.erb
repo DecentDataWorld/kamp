@@ -1,11 +1,7 @@
 
-<span class="results-number">
+
   <% if (@tag_facet_links_on.length > 0 or !params[:organization_id].nil?) %>
-    <ul class="list-inline">
-      Filtered By:
       <% if @tag_facet_links_on.length > 0 %>
           <%= raw @tag_facet_links_on %>
       <% end %>
-    </ul>
   <% end %>
-</span>

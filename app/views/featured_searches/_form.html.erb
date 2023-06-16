@@ -1,0 +1,59 @@
+
+<%= simple_form_for(@featured_search, :html => { role: "form", multipart: true, class: "sky-form" }) do |form| %>
+  <% if @featured_search.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@featured_search.errors.count, t('errors.error')) %>
+        <%= t('errors.prohibited') %>
+      </h2>
+      <ul>
+        <% @featured_search.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-12">
+      <%= form.label :name %><span class="text-danger">*</span><br>
+      <%= form.text_field :name, class: "form-control" %>
+    </div>
+
+    <div class="col-md-12">
+      <%
+
+   grouped_tags = {}
+   TagType.all.each do |category|
+     category.tags.each do |tag|
+       grouped_tags[category.name] ||= []
+       grouped_tags[category.name] << tag.name
+     end
+   end
+
+%>
+
+<div class="form-group">
+  <%= form.label :tags %><span class="text-danger">*</span><br>
+  <%= form.input_field :tags,
+                    :label => false,
+                    :id => "tags",
+                    :as => :grouped_select,
+                    :collection => grouped_tags,
+                    :group_method => :last,
+                    :multiple => true,
+                    :class => "col-md-10 form-control multiple-chosen-select" %>
+    </div>
+    <div class="col-md-12">
+      <% if current_page?(new_featured_search_path) || @featured_search.id == nil %>
+        <%= form.submit t('helpers.submit.create', model: FeaturedSearch.model_name.human), class: "btn btn-outline-primary" %>
+      <% else %>
+        <%= form.submit t('helpers.submit.update', model: FeaturedSearch.model_name.human), class: "btn btn-outline-primary" %>
+          <span class="float-end"><%= link_to t('navigation.delete'), featured_search_path(@featured_search),
+            method: :delete,
+            data: { confirm: t('warnings.are_you_sure') }, class: "btn btn-outline-danger" %></span>
+      <% end %>
+      <%= link_to t('navigation.cancel'), featured_searches_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+<% end %>

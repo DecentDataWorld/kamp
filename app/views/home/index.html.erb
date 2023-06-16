@@ -125,7 +125,7 @@
         <blockquote id="tag_cloud">
           <% if !@tags.empty? %>
               <% tag_cloud(@tags, %w(btn-xs btn-sm btn-md btn-lg)) do |tag, css_class| %>
-                  <%= link_to raw(tag.name), update_search_path(:tags=>[tag.name]), :class => css_class + ' ' %>
+                  <%= link_to raw(tag.name), update_search_path(:tags=>[tag.id.to_s]), :class => css_class + ' ' %>
               <% end %>
           <% else %>
               <div class="info-board info-board-red">
