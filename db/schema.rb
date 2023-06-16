@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_13_203906) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -155,6 +155,33 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_13_203906) do
     t.integer "result_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "short_description"
+    t.text "long_description"
+    t.datetime "date"
+    t.string "location"
+    t.boolean "virtual"
+    t.string "url"
+    t.string "public"
+    t.boolean "featured"
+    t.bigint "creator_id"
+    t.bigint "cop_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cop_id"], name: "index_events_on_cop_id"
+    t.index ["creator_id"], name: "index_events_on_creator_id"
+  end
+
+  create_table "events_tags", id: false, force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "tag_id"], name: "index_events_tags_on_event_id_and_tag_id"
+    t.index ["tag_id", "event_id"], name: "index_events_tags_on_tag_id_and_event_id"
   end
 
   create_table "impressions", id: :serial, force: :cascade do |t|
@@ -414,5 +441,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_13_203906) do
   end
 
   add_foreign_key "cops", "users", column: "admin_id"
+  add_foreign_key "events", "cops"
+  add_foreign_key "events", "users", column: "creator_id"
   add_foreign_key "tags", "tag_types"
 end

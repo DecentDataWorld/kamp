@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   resources :tag_types
 
   resources :cops
+  resources :events
 
   get 'faq/index', to: 'faq#index', as: :faq
   resources :users_organizations

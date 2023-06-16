@@ -29,7 +29,6 @@ class CopsController < ApplicationController
 
     respond_to do |format|
       if @cop.save
-        # redirect_to cops_path, :notice => "Community of Practice created."
         flash[:notice] = I18n.t("notices.create_success")
         format.html { redirect_to cops_path }
         format.json { render :show, status: :created, location: @cop }
