@@ -1,0 +1,80 @@
+<%= form_with model: @event, local: true, data: { turbo: false } do |form| %>
+  <% if @event.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@event.errors.count, t('errors.error')) %>
+        <%= t('errors.prohibited') %>
+      </h2>
+      <ul>
+        <% @event.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-4">
+      <%= form.label :name %><span class="text-danger">*</span><br>
+      <%= form.text_field :name, class: "form-control" %>
+    </div>
+    <div class="col-md-8">
+      <%= form.label :short_description %><br>
+      <%= form.text_field :short_description, class: "form-control" %>
+    </div>
+
+    <div class="col-md-12">
+      <%= form.label :long_description %><br>
+      <%= form.text_field :long_description, class: "form-control" %>
+    </div>
+
+    <div class="col-md-4">
+      <%= form.label :date %><br>
+      <%= form.date_select :date, class: "form-control" %>
+    </div>
+    <div class="col-md-8">
+      <%= form.label :location %><br>
+      <%= form.text_field :location, class: "form-control" %>
+    </div>
+
+    <div class="col-md-2">
+      <%= form.label :virtual %><br>
+      <%= form.check_box :is_virtual %>
+    </div>
+    <div class="col-md-2">
+      <%= form.label :private %><br>
+      <%= form.check_box :is_private %>
+    </div>
+    <div class="col-md-2">
+      <%= form.label :featured %><br>
+      <%= form.check_box :is_featured %>
+    </div>
+    <div class="col-md-6">
+      <%= form.label :url %><br>
+      <%= form.text_field :url, class: "form-control" %>
+    </div>
+
+    <div class="col-md-6">
+      <%= form.label :cop %><br>
+      <%= form.collection_select :cop_id, Cop.order(:name), :id, :name, {}, { class: "form-control" } %>
+    </div>
+    <div class="col-md-6">
+      <%= form.label :tags %><br>
+      <%= form.select :tag_ids, options_from_collection_for_select(Tag.order(:name), :id, :name), {}, { class: "form-control multiselect", multiple: true } %>
+    </div>
+
+    <div class="form-group col-md-12">
+      <% if current_page?(new_event_path) || @event.id == nil %>
+        <%= form.submit t('helpers.submit.create', model: Event.model_name.human), class: "btn btn-outline-primary" %>
+      <% else %>
+        <%= form.submit t('helpers.submit.update', model: Event.model_name.human), class: "btn btn-outline-primary" %>
+          <span class="float-end"><%= link_to t('navigation.delete'), event_path(@event),
+            method: :delete,
+            data: { confirm: t('warnings.are_you_sure') }, class: "btn btn-outline-danger" %></span>
+      <% end %>
+      <%= link_to t('navigation.cancel'), events_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+<% end %>
+  

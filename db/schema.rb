@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_15_144801) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -158,6 +158,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_144801) do
     t.integer "result_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "short_description"
+    t.text "long_description"
+    t.datetime "date"
+    t.string "location"
+    t.boolean "is_virtual"
+    t.string "url"
+    t.string "is_private"
+    t.boolean "is_featured"
+    t.bigint "user_id"
+    t.bigint "cop_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cop_id"], name: "index_events_on_cop_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
   end
 
   create_table "featured_searches", force: :cascade do |t|
@@ -426,5 +444,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_15_144801) do
   end
 
   add_foreign_key "cops", "users", column: "admin_id"
+  add_foreign_key "events", "cops"
+  add_foreign_key "events", "users"
   add_foreign_key "tags", "tag_types"
 end

@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   resources :featured_searches
 
   resources :cops
+  resources :events
 
   get 'faq/index', to: 'faq#index', as: :faq
   resources :users_organizations
