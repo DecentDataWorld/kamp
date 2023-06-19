@@ -93,6 +93,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
     t.string "positive_users", limit: 255, default: [], array: true
     t.string "negative_users", limit: 255, default: [], array: true
     t.boolean "newsletter_only", default: false
+    t.index "to_tsvector('english'::regconfig, (((title)::text || ' '::text) || description))", name: "idx_fts_collections_concat", using: :gin
+    t.index "to_tsvector('english'::regconfig, (title)::text)", name: "idx_fts_collections_name", using: :gin
+    t.index "to_tsvector('english'::regconfig, description)", name: "idx_fts_collections_description", using: :gin
     t.index ["ci_lower_bound"], name: "index_collections_on_ci_lower_bound"
     t.index ["organization_id"], name: "index_collections_on_organization_id"
   end
@@ -173,15 +176,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
     t.datetime "updated_at", null: false
     t.index ["cop_id"], name: "index_events_on_cop_id"
     t.index ["user_id"], name: "index_events_on_user_id"
-  end
-
-  create_table "events_tags", id: false, force: :cascade do |t|
-    t.bigint "event_id", null: false
-    t.bigint "tag_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["event_id", "tag_id"], name: "index_events_tags_on_event_id_and_tag_id"
-    t.index ["tag_id", "event_id"], name: "index_events_tags_on_tag_id_and_event_id"
   end
 
   create_table "featured_searches", force: :cascade do |t|
@@ -289,6 +283,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
     t.string "positive_users", limit: 255, default: [], array: true
     t.string "negative_users", limit: 255, default: [], array: true
     t.boolean "newsletter_only", default: false
+    t.index "to_tsvector('english'::regconfig, (((name)::text || ' '::text) || description))", name: "idx_fts_resources_concat", using: :gin
+    t.index "to_tsvector('english'::regconfig, (name)::text)", name: "idx_fts_resources_name", using: :gin
+    t.index "to_tsvector('english'::regconfig, description)", name: "idx_fts_resources_description", using: :gin
     t.index ["ci_lower_bound"], name: "index_resources_on_ci_lower_bound"
     t.index ["organization_id"], name: "index_resources_on_organization_id"
   end

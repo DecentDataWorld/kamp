@@ -14,12 +14,5 @@ class AddEvents < ActiveRecord::Migration[7.0]
       t.references :cop, index: true, foreign_key: true
       t.timestamps
     end
-
-    create_join_table :events, :tags do |t|
-      t.index [:event_id, :tag_id]
-      t.index [:tag_id, :event_id]
-      t.timestamps
-    end
-
   end
 end
