@@ -56,3 +56,7 @@ en:
       new: "New Community of Practice"
       edit: "Edit Community of Practice"
       list: "Communities of Practice"
+    event:
+      new: "New Event"
+      edit: "Edit Event"
+      list: "Events"
