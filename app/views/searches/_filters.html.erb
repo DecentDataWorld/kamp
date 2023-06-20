@@ -11,71 +11,58 @@
   tag_facet_links_off_counter = 1
   @tag_facet_links_on = ''
 
-  @tags.each do |t| 
-    if !existing_tag_facets.include? t["id"].to_s
-      tag_facets = existing_tag_facets + [t["id"].to_s]
-      @tag_facet_links_off << "<li class='available-tags pb-1'>#{link_to t["name"], update_search_path(request.parameters.merge(:tags => tag_facets))} (#{t["tag_count"]}) </li>"
-      tag_facet_links_off_counter = tag_facet_links_off_counter + 1
-    else
-      tag_facets = existing_tag_facets - [t["id"].to_s]
-      updated_params = request.parameters.merge(:tags => tag_facets).except(:page)
-      @tag_facet_links_on << "<span class='badge rounded-pill bg-secondary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(updated_params)}</span> &nbsp;"
-    end
-  end
 
 %>
 
-<div class="border-bottom" id="tags" data-step="1" data-intro="Click 'More Tags' to see all available tags" data-position="top">
-  <% if @tag_facet_links_off.length > 0 %>
-    <div>Available Tags:</div>
-  <% end %>
-
-    <ul class="list-unstyled ps-2">
-      <%= raw @tag_facet_links_off %>
-    </ul>
-
-  <% if tag_facet_links_off_counter > 8 %>
-      <div class="text-center"><a class="expandTagsList"><i class="fa fa-arrow-circle-down"></i> More Tags</a></div>
-  <% end %>
+<ul class="nav nav-tabs" id="tagsTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="tags-tab" data-bs-toggle="tab" data-bs-target="#tags" type="button" role="tab" aria-controls="tags" aria-selected="true">Tags</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="orgs-tab" data-bs-toggle="tab" data-bs-target="#orgs" type="button" role="tab" aria-controls="orgs" aria-selected="false">Organizations</button>
+  </li>
+</ul>
+<div class="tab-content pt-2" id="tagsTabContent">
+  <div class="tab-pane fade show active" id="tags" role="tabpanel" aria-labelledby="tags-tab">
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+      <%  
+        @tags.each_key do |tag_type| 
+        @tags[tag_type].sort_by! { |hsh| hsh["name"] }
+      %>
+        <% if @tags[tag_type].length > 0 %>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-heading<%= tag_type %>">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse<%= tag_type.parameterize(separator: '_') %>" aria-expanded="false" aria-controls="flush-collapse<%= tag_type %>">
+                <%= tag_type %>
+              </button>
+            </h2>
+            <div id="flush-collapse<%= tag_type.parameterize(separator: '_') %>" class="accordion-collapse collapse" aria-labelledby="flush-heading<%= tag_type %>" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body">
+                <ul class="list-unstyled ps-2">
+                  <% @tags[tag_type].each do |t|  %>
+                    <% if !existing_tag_facets.include? t["id"].to_s %>
+                      <li class='available-tags pb-1'><%= link_to t["name"], update_search_path(request.parameters.merge(:tags => existing_tag_facets + [t["id"].to_s])) %> (<%= t["tag_count"] %>) </li>
+                    <% 
+                      else 
+                        @tag_facet_links_on << "<span class='badge rounded-pill bg-secondary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => existing_tag_facets - [t["id"].to_s]))}</span> &nbsp;"
+                    %>
+                      <li class='selected-tags pb-1'><%= link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => existing_tag_facets - [t["id"].to_s])) %></li>
+                    <% end %>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="orgs" role="tabpanel" aria-labelledby="orgs-tab">
+    <div class="pt-3">
+      <%= render partial: 'collections/facet_org' %>
+    </div>
+  </div>
 </div>
 
 
-<div class="pt-3">
-  <div>Uploaded By:</div>
-  <%= render partial: 'collections/facet_org' %>
-</div>
-
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-    var tagsList = document.querySelectorAll('#tags li');
-    
-    for (var i = 15; i < tagsList.length; i++) {
-        tagsList[i].style.display = 'none';
-    }
-  
-    
-    var expandTagsButton = document.querySelector('#tags .expandTagsList');
-    
-    expandTagsButton.addEventListener('click', function() {
-        var moreTagsIcon = '<i class="fa fa-arrow-circle-down"></i> More Tags';
-        var lessTagsIcon = '<i class="fa fa-arrow-circle-up"></i> Less Tags';
-        
-        var hiddenTags = document.querySelectorAll('#tags li:nth-child(n+10)');
-        
-        if (this.innerHTML === moreTagsIcon) {
-            for (var i = 0; i < hiddenTags.length; i++) {
-                hiddenTags[i].style.display = 'block';
-            }
-            
-            this.innerHTML = lessTagsIcon;
-        } else {
-            for (var i = 0; i < hiddenTags.length; i++) {
-                hiddenTags[i].style.display = 'none';
-            }
-            
-            this.innerHTML = moreTagsIcon;
-        }
-    });
-});
-</script>
 
