@@ -101,13 +101,13 @@ class Collection < ActiveRecord::Base
         query = query + "
       )
       SELECT 
-        cs.id,
-        cs.updated_at
+        cs.id
       FROM collections_search cs
       INNER JOIN filtered_collections_tags fct on cs.id = fct.id
       WHERE 0=0 "
       if !search_terms.nil? && search_terms.length > 0
         query = query + " AND cs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+        query = query + " ORDER BY ts_rank(cs.document, to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')) DESC"
       end
   
       results = Collection.find_by_sql(query)

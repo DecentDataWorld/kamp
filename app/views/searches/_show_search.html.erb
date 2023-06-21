@@ -14,14 +14,19 @@
 
    <div class="row">
      <div class="col-3 border-end">
-      <h5 class="border-bottom pb-2">Filter By</h5>
+      <h5 class="border-bottom pb-2">Filter By <%= @search_terms %></h5>
         <%= render partial: 'searches/filters' %>
      </div>
      <div class="col-9">
        <div class="border-bottom pb-2"><%=  render partial: 'searches/show_filters'  %> &nbsp;</div>
        <div class="border-bottom fw-light bg-light bg-gradient p-2">
         <% if @resources.count > 0 %> 
-          <span class="fw-bolder"><%= @resource_count %></span> resources found. Showing most recently updated.
+          <span class="fw-bolder"><%= @resource_count %></span> resources found. 
+          <% if @search_terms.length > 0 %>
+            Showing best matches for "<%= @search_terms %>".
+          <% else %>
+            Showing most recently updated.
+          <% end %>
         <% else %>
           No resources found with that combination.
         <% end %>
@@ -52,7 +57,18 @@
             <% end %>
           </div>
           <div class="tab-pane fade" id="collections" role="tabpanel" aria-labelledby="collections-tab">
-            collections results
+            <% if @collections.count > 0 %> 
+              <% @collections.each do |resource| %>
+                  <%= render resource %>
+              <% end %>
+              <%= will_paginate @collections %>
+            <% else %>
+              <h4>Let Us Know What We're Missing</h4>
+              <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP.</p>
+              <p>
+                <a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a>
+              </p>
+            <% end %>
           </div>
         </div>
        </div>
