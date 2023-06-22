@@ -120,7 +120,10 @@ class SearchesController < ApplicationController
       end
       @tags = Resource.search_tags(params[:query], params[:tags], params[:organization_id])
       @orgs = []
-      if !params[:organization_id]
+      @organization = nil
+      if params[:organization_id].present? and Organization.where(id: params[:organization_id]).exists?
+        @organization =  Organization.find(params[:organization_id])
+      else
         @orgs = Resource.search_orgs(params[:query], params[:tags])
       end
 
