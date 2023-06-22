@@ -49,7 +49,7 @@
                       else 
                         @selected_tags << "<span class='badge rounded-pill bg-secondary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : ""))}</span> &nbsp;"
                     %>
-                      <li class='selected-tags pb-1'><%= link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s])) %></li>
+                      <li class='selected-tags pb-1'><%= link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "")) %></li>
                     <% end %>
                   <% end %>
                 </ul>
@@ -70,7 +70,7 @@
       <% end %>
       <strong><%= link_to @organization.name, organization_path(@organization) %></strong>
       <% if !@organization.organization_type.blank? %>
-          <p>Organization Type:<br>
+          <p><span class="fw-light">Organization Type: </span>
             <%= @organization.organization_type.organization_type %></p>
       <% end %>
         <%= link_to url_for(update_search_path(request.parameters.merge(:organization_id => params[:organization_id] = "").merge(:tags => params[:tags]))), class: 'pull-right' do %>
