@@ -113,11 +113,7 @@ class SearchesController < ApplicationController
     if params[:query] || params[:tags] || params[:organization_id]
       resource_results = Resource.search_kmp(params[:query], params[:tags], params[:organization_id])
       @resource_count = resource_results[:count]
-      if params[:query]
-        @resources = Resource.where(id: resource_results[:ids]).order(Arel.sql("array_position(ARRAY[#{resource_results[:ids].join(',')}], resources.id)")).paginate(page: params[:page], per_page: 10)
-      else
-        @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
-      end
+      @resources = Resource.where(id: resource_results[:ids]).order(Arel.sql("array_position(ARRAY[#{resource_results[:ids].join(',')}], resources.id)")).paginate(page: params[:page], per_page: 10)
       @tags = Resource.search_tags(params[:query], params[:tags], params[:organization_id])
       @orgs = []
       @organization = nil
@@ -129,11 +125,7 @@ class SearchesController < ApplicationController
 
       collection_results = Collection.search_kmp(params[:query], params[:tags], params[:organization_id])
       @collection_count = collection_results[:count]
-      if params[:query]
-        @collections = Collection.where(id: collection_results[:ids]).order(Arel.sql("array_position(ARRAY[#{collection_results[:ids].join(',')}], collections.id)")).paginate(page: params[:collection_page], per_page: 10)
-      else
-       @collections = Collection.where(id: collection_results[:ids]).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
-      end
+      @collections = Collection.where(id: collection_results[:ids]).order(Arel.sql("array_position(ARRAY[#{collection_results[:ids].join(',')}], collections.id)")).paginate(page: params[:collection_page], per_page: 10)
     else
       @resources = Resource.where(:private => false).where(:approved => true).order("updated_at desc").paginate(page: params[:page], per_page: 10)
       @resource_count = Resource.where(:private => false).where(:approved => true).length
