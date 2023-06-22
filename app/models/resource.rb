@@ -171,6 +171,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
     WITH resources_search AS (
       SELECT 
         r.id,
+        r.updated_at,
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
@@ -193,13 +194,16 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
       query = query + "
     )
     SELECT 
-      rs.id
+      rs.id,
+      rs.updated_at
     FROM resources_search rs
     INNER JOIN filtered_resources_tags frt on rs.id = frt.id
     WHERE 0=0 "
     if !search_terms.nil? && search_terms.length > 0
       query = query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
       query = query + " ORDER BY ts_rank(rs.document, to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')) DESC"
+    else
+      query = query + " ORDER BY rs.updated_at DESC"
     end
 
     results = Resource.find_by_sql(query)
