@@ -1,10 +1,10 @@
 
 <% if !resource.private || resource.organization.can_add_collections(current_user) %>
-    <% str_title = resource.name.truncate(55) %>
+    <% str_title = resource.name.truncate(75) %>
     <% if resource.private == true %>
         <% str_title = str_title + ' <i class="fa fa-lock"></i>' %>
     <% end %>
-    <% header_text = ' <i class="fa fa-file"></i>' %>
+    <% header_text = ' <i class="fa fa-file"></i> ' %>
     <%
        header_text = header_text + str_title
 
@@ -12,9 +12,10 @@
          header_text = header_text + " <i class='fa fa-lock'></i>"
        end
 
-       header_text = header_text + ""
+       header_text = header_text
     %>
-    <div class="tag-box tag-box-v2 margin-bottom-20 well well-sm">
+    <div class="card border-top-0 border-end-0 border-bottom-0 border-primary border-4">
+      <div class="card-body">
       <!-- Begin Inner Results -->
       <% if can? :approve, resource and resource.approved != true %>
           <div class="btn-group pull-right">
@@ -30,37 +31,32 @@
             </ul>
           </div>
       <% end %>
-      <h2 class='headline-sm'><% if resource.approved == false %><span class="label label-orange">Pending Approval</span> <% end %><%= link_to raw(header_text), resource_path(resource) %></h2>
+      <h4 class="card-title pb-2"><% if resource.approved == false %><span class="label label-orange">Pending Approval</span> <% end %><%= link_to raw(header_text), resource_path(resource) %></h4>
       <% if !resource.collection.nil? %>
-          <ul class="list-inline up-ul">
-            <li><i class="fa fa-files-o" rel="tooltip" title="This Resource is part of a Collection"></i> <%= link_to resource.collection.title, collection_path(resource.collection) %></li>
-          </ul>
+          <h6 class="card-subtitle mb-2 text-muted">
+            <i class="fa fa-files-o" rel="tooltip" title="This Resource is part of a Collection"></i> <%= link_to resource.collection.title, collection_path(resource.collection) %>
+          </h6>
       <% end %>
-      <ul class="list-inline">
-        <li><%= resource.resource_type %></li>
-        <li>
-          <%= raw('<span class="text-muted"><i class="fa fa-language"></i> English</span>') if resource.language == 'english' %>
-          <%= raw('<span class="text-muted"><i class="fa fa-language"></i> Arabic</span>') if resource.language == 'arabic' %>
-
-        </li>
-        <li>
-          <%= raw resource.tags[0..2].map { |t| link_to raw('<i class="fa fa-tag"></i> ' + t.name), update_search_path(:tags=>[t.id]), class: 'text-highlights rounded' }.join('</li><li>') %>
-          <%= link_to raw('...more</li>'), resource_path(resource) if resource.tag_list.size > 4 %>
-          <%= raw('</li>') if resource.tag_list.size <= 4 %>
-
-      </ul>
+      <h6 class="card-subtitle mb-2 text-muted">
+        <%= resource.resource_type %> | 
+        <%= raw('<span class="text-muted"><i class="fa fa-language"></i> English</span>') if resource.language == 'english' %>
+        <%= raw('<span class="text-muted"><i class="fa fa-language"></i> Arabic</span>') if resource.language == 'arabic' %> |
+        <%= raw resource.tags[0..2].map { |t| link_to raw('<span class="badge rounded-pill bg-secondary dark-badge-link"><i class="fa fa-tag"></i> ' + t.name), update_search_path(:tags=>[t.id]) }.join('</span>&nbsp;') %>
+        <%= link_to raw('...more'), resource_path(resource) if resource.tag_list.size > 4 %>
+      </h6>
       <%= simple_format resource.description.truncate(200) %>
-      <ul class="list-inline down-ul">
+      <div class="text-muted resource-small"><%= link_to resource.organization.name, organization_path(resource.organization) if !resource.organization.nil? %> (<%= link_to resource.author.name, user_path(resource.author) if !resource.author.nil? %>)</div>
+      <div class="row resource-small pt-3">
         <% if resource.collections.count > 0 %>
-            <li>Used by <%= resource.collections.count %> Collection<% if resource.collections.count > 1 %>s<% end %></li>
+            <div class="col text-muted fw-light text-center border-end">Used by <%= resource.collections.count %> Collection<% if resource.collections.count > 1 %>s<% end %></div>
         <% end %>
         <% if !resource.issue_date.nil? and !resource.issue_date.blank? %>
-            <li>Issued on <%= resource.issue_date %>.</li>
+            <div class="col text-muted fw-light text-center border-end">Issued on <%= resource.issue_date %>.</div>
         <% end %>
-        <li>Uploaded <%= time_ago_in_words resource.created_at %> ago</li>
-        <li>Last updated <%= time_ago_in_words resource.updated_at %> ago</li>
-        <li><%= link_to resource.organization.name, organization_path(resource.organization) if !resource.organization.nil? %> (<%= link_to resource.author.name, user_path(resource.author) if !resource.author.nil? %>)</li>
-      </ul>
+        <div class="col text-muted fw-light text-center border-end">Uploaded <%= time_ago_in_words resource.created_at %> ago</div>
+        <div class="col text-muted fw-light text-center">Last updated <%= time_ago_in_words resource.updated_at %> ago</div>
+      </div>
+      </div>
     </div>
 
 <% end %>

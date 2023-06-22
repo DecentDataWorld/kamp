@@ -193,12 +193,13 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
       query = query + "
     )
     SELECT 
-      distinct rs.id
+      rs.id
     FROM resources_search rs
     INNER JOIN filtered_resources_tags frt on rs.id = frt.id
     WHERE 0=0 "
     if !search_terms.nil? && search_terms.length > 0
       query = query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+      query = query + " ORDER BY ts_rank(rs.document, to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')) DESC"
     end
 
     results = Resource.find_by_sql(query)
@@ -254,7 +255,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
     results = ActiveRecord::Base.connection.exec_query(query)
 
     grouped_results = results.group_by { |r| r["tag_type"] }
-    
+
     return grouped_results
   end
 

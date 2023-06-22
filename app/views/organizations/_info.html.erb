@@ -1,6 +1,4 @@
-<% if @organization.logo.blank? %>
-    <img src="/img/placeholder-organization.png" alt="Placeholder Image" class="img-responsive">
-<% else %>
+<% if !@organization.logo.blank? %>
     <%= link_to organization_path(@organization) do %>
         <%= image_tag @organization.logo.expiring_url(10), class: "img-responsive" %>
     <% end %>

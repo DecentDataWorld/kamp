@@ -2,28 +2,31 @@
 
 <%
    # check for existing tags in query string
-  existing_tag_facets = []
-  if params[:tags].present?
-    existing_tag_facets = params[:tags]
+  if !params[:tags].present?
+    params[:tags] = []
   end
 
-  @tag_facet_links_off = ''
-  tag_facet_links_off_counter = 1
-  @tag_facet_links_on = ''
+  @selected_tags = ''
 
+  if params[:query].present?
+    @selected_tags << "<span class='badge rounded-pill bg-danger dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> '" + params[:query] + "'"), update_search_path(request.parameters.merge(:query => "").merge(:tags => params[:tags]).merge(:organization_id => params[:organization_id]))}</span> &nbsp;"
+  end
 
+  if @organization
+    @selected_tags << "<span class='badge rounded-pill bg-primary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @organization.name), update_search_path(request.parameters.merge(:organization_id => "").merge(:tags => params[:tags]))}</span> &nbsp;"
+  end
 %>
 
 <ul class="nav nav-tabs" id="tagsTab" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="tags-tab" data-bs-toggle="tab" data-bs-target="#tags" type="button" role="tab" aria-controls="tags" aria-selected="true">Tags</button>
+    <button class="nav-link <% if !@organization %> active<% end %>" id="tags-tab" data-bs-toggle="tab" data-bs-target="#tags" type="button" role="tab" aria-controls="tags" aria-selected="true">Tags</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="orgs-tab" data-bs-toggle="tab" data-bs-target="#orgs" type="button" role="tab" aria-controls="orgs" aria-selected="false">Organizations</button>
+    <button class="nav-link <% if @organization %> active<% end %>" id="orgs-tab" data-bs-toggle="tab" data-bs-target="#orgs" type="button" role="tab" aria-controls="orgs" aria-selected="false">Organizations</button>
   </li>
 </ul>
 <div class="tab-content pt-2" id="tagsTabContent">
-  <div class="tab-pane fade show active" id="tags" role="tabpanel" aria-labelledby="tags-tab">
+  <div class="tab-pane fade <% if !@organization %> show active<% end %>" id="tags" role="tabpanel" aria-labelledby="tags-tab">
     <div class="accordion accordion-flush" id="accordionFlushExample">
       <%  
         @tags.each_key do |tag_type| 
@@ -37,16 +40,16 @@
               </button>
             </h2>
             <div id="flush-collapse<%= tag_type.parameterize(separator: '_') %>" class="accordion-collapse collapse" aria-labelledby="flush-heading<%= tag_type %>" data-bs-parent="#accordionFlushExample">
-              <div class="accordion-body">
+              <div class="accordion-body pb-0">
                 <ul class="list-unstyled ps-2">
                   <% @tags[tag_type].each do |t|  %>
-                    <% if !existing_tag_facets.include? t["id"].to_s %>
-                      <li class='available-tags pb-1'><%= link_to t["name"], update_search_path(request.parameters.merge(:tags => existing_tag_facets + [t["id"].to_s])) %> (<%= t["tag_count"] %>) </li>
+                    <% if !params[:tags].include? t["id"].to_s %>
+                      <li class='available-tags pb-1'><%= link_to t["name"], update_search_path(request.parameters.merge(:tags => params[:tags] + [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "")) %> (<%= t["tag_count"] %>) </li>
                     <% 
                       else 
-                        @tag_facet_links_on << "<span class='badge rounded-pill bg-secondary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => existing_tag_facets - [t["id"].to_s]))}</span> &nbsp;"
+                        @selected_tags << "<span class='badge rounded-pill bg-secondary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : ""))}</span> &nbsp;"
                     %>
-                      <li class='selected-tags pb-1'><%= link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => existing_tag_facets - [t["id"].to_s])) %></li>
+                      <li class='selected-tags pb-1'><%= link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "")) %></li>
                     <% end %>
                   <% end %>
                 </ul>
@@ -57,9 +60,31 @@
       <% end %>
     </div>
   </div>
-  <div class="tab-pane fade" id="orgs" role="tabpanel" aria-labelledby="orgs-tab">
+  <div class="tab-pane fade <% if @organization %> show active<% end %>" id="orgs" role="tabpanel" aria-labelledby="orgs-tab">
     <div class="pt-3">
-      <%= render partial: 'collections/facet_org' %>
+      <% if @organization %>
+        <% if !@organization.logo.blank? %>
+          <%= link_to organization_path(@organization) do %>
+              <%= image_tag @organization.logo.expiring_url(10), class: "img-responsive" %>
+          <% end %>
+      <% end %>
+      <strong><%= link_to @organization.name, organization_path(@organization) %></strong>
+      <% if !@organization.organization_type.blank? %>
+          <p><span class="fw-light">Organization Type: </span>
+            <%= @organization.organization_type.organization_type %></p>
+      <% end %>
+        <%= link_to url_for(update_search_path(request.parameters.merge(:organization_id => params[:organization_id] = "").merge(:tags => params[:tags]))), class: 'pull-right' do %>
+            <i class="fa fa-times-circle"></i> reset filter
+        <% end %>
+    <% else %>
+        <ul class="list-group list-group-flush">
+          <% @orgs.each do |o| %>
+            <li class="list-group-item available-tags">
+              <%= link_to o["name"], update_search_path(request.parameters.merge(:organization_id => o["id"]).merge(:tags => params[:tags]).except(:page)) %> (<%= o["org_count"] %>) 
+            </li>
+          <% end %>
+        </ul>
+    <% end %>
     </div>
   </div>
 </div>

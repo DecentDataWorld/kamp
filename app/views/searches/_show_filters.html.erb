@@ -1,7 +1,7 @@
 
 
-  <% if (@tag_facet_links_on.length > 0 or !params[:organization_id].nil?) %>
-      <% if @tag_facet_links_on.length > 0 %>
-          <%= raw @tag_facet_links_on %>
+  <% if (@selected_tags.length > 0 or !params[:organization_id].nil?) %>
+      <% if @selected_tags.length > 0 %>
+          <%= raw @selected_tags %>
       <% end %>
   <% end %>
