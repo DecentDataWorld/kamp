@@ -1,6 +1,6 @@
 
 <% if !resource.private || resource.organization.can_add_collections(current_user) %>
-    <% str_title = resource.name.truncate(85) %>
+    <% str_title = resource.name.truncate(75) %>
     <% if resource.private == true %>
         <% str_title = str_title + ' <i class="fa fa-lock"></i>' %>
     <% end %>
