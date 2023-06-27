@@ -73,7 +73,7 @@ class Collection < ActiveRecord::Base
 
   end
 
-  def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exclude_private=true)
+  def self.search_kmp(search_terms=nil, tags=nil, org=nil, days_back=nil, only_approved=true, exclude_private=true)
     query = "
       WITH collections_search AS (
         SELECT 

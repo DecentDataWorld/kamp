@@ -83,6 +83,12 @@ class SearchesController < ApplicationController
       @search.organization_id = nil
     end
 
+    if !params[:language].nil?
+      @search.language = params[:language]
+    else
+      @search.language = nil
+    end
+
     if !params[:tags].nil?
       @search.tags = params[:tags]
     else
@@ -102,6 +108,10 @@ class SearchesController < ApplicationController
       params[:organization_id] = @search.organization_id
     end
 
+    if !@search.language.blank?
+      params[:language] = @search.language
+    end
+
     if !@search.tags.nil?
       params[:tags] = @search.tags
     end
@@ -110,8 +120,12 @@ class SearchesController < ApplicationController
 
   def get_pg_results
     @search_terms = params[:query] || ''
-    if params[:query] || params[:tags] || params[:organization_id]
-      resource_results = Resource.search_kmp(params[:query], params[:tags], params[:organization_id])
+    @language = params[:language] || nil
+    @days_back = params[:days_back] || nil
+    @languages = {:arabic => 'Arabic', :english => 'English'}
+    @days_backs = {7 => 'Less Than a Week Ago', 30 => 'Less Than a Month Ago', 183 => 'Less Than Six Month Ago', 365 => 'Less Than a Year Ago'}
+    if params[:query] || params[:tags] || params[:organization_id] || params[:language] || params[:days_back]
+      resource_results = Resource.search_kmp(params[:query], params[:tags], params[:organization_id], params[:language], params[:days_back])
       @resource_count = resource_results[:count]
       @resources = Resource.where(id: resource_results[:ids]).order(Arel.sql("array_position(ARRAY[#{resource_results[:ids].join(',')}], resources.id)")).paginate(page: params[:page], per_page: 10)
       @tags = Resource.search_tags(params[:query], params[:tags], params[:organization_id])
@@ -120,10 +134,10 @@ class SearchesController < ApplicationController
       if params[:organization_id].present? and Organization.where(id: params[:organization_id]).exists?
         @organization =  Organization.find(params[:organization_id])
       else
-        @orgs = Resource.search_orgs(params[:query], params[:tags])
+        @orgs = Resource.search_orgs(params[:query], params[:tags], params[:language], params[:days_back])
       end
 
-      collection_results = Collection.search_kmp(params[:query], params[:tags], params[:organization_id])
+      collection_results = Collection.search_kmp(params[:query], params[:tags], params[:organization_id], params[:days_back])
       @collection_count = collection_results[:count]
       @collections = Collection.where(id: collection_results[:ids]).order(Arel.sql("array_position(ARRAY[#{collection_results[:ids].join(',')}], collections.id)")).paginate(page: params[:collection_page], per_page: 10)
     else
