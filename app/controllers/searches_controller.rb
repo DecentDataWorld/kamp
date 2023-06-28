@@ -89,6 +89,12 @@ class SearchesController < ApplicationController
       @search.language = nil
     end
 
+    if !params[:days_back].nil?
+      @search.days_back = params[:days_back]
+    else
+      @search.days_back = nil
+    end
+
     if !params[:tags].nil?
       @search.tags = params[:tags]
     else
@@ -112,6 +118,10 @@ class SearchesController < ApplicationController
       params[:language] = @search.language
     end
 
+    if !@search.days_back.blank?
+      params[:days_back] = @search.days_back
+    end
+
     if !@search.tags.nil?
       params[:tags] = @search.tags
     end
@@ -128,7 +138,7 @@ class SearchesController < ApplicationController
       resource_results = Resource.search_kmp(params[:query], params[:tags], params[:organization_id], params[:language], params[:days_back])
       @resource_count = resource_results[:count]
       @resources = Resource.where(id: resource_results[:ids]).order(Arel.sql("array_position(ARRAY[#{resource_results[:ids].join(',')}], resources.id)")).paginate(page: params[:page], per_page: 10)
-      @tags = Resource.search_tags(params[:query], params[:tags], params[:organization_id])
+      @tags = Resource.search_tags(params[:query], params[:tags], params[:organization_id], params[:language], params[:days_back])
       @orgs = []
       @organization = nil
       if params[:organization_id].present? and Organization.where(id: params[:organization_id]).exists?

@@ -9,15 +9,19 @@
   @selected_tags = ''
 
   if params[:query].present?
-    @selected_tags << "<span class='badge rounded-pill bg-danger dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> '" + params[:query] + "'"), update_search_path(request.parameters.merge(:query => "").merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : ""))}</span> &nbsp;"
+    @selected_tags << "<span class='badge rounded-pill bg-danger dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> '" + params[:query] + "'"), update_search_path(request.parameters.merge(:query => "").merge(:days_back => @days_back ? @days_back : "").merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : ""))}</span> &nbsp;"
   end
 
   if @organization
-    @selected_tags << "<span class='badge rounded-pill bg-primary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @organization.name), update_search_path(request.parameters.merge(:organization_id => "").merge(:language => @language ? @language : "").merge(:tags => params[:tags]))}</span> &nbsp;"
+    @selected_tags << "<span class='badge rounded-pill bg-primary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @organization.name), update_search_path(request.parameters.merge(:organization_id => "").merge(:days_back => @days_back ? @days_back : "").merge(:language => @language ? @language : "").merge(:tags => params[:tags]))}</span> &nbsp;"
   end
 
   if @language
-    @selected_tags << "<span class='badge rounded-pill bg-info dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @languages[@language.to_sym]), update_search_path(request.parameters.merge(:language => "").merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]))}</span> &nbsp;"
+    @selected_tags << "<span class='badge rounded-pill bg-dark dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @languages[@language.to_sym]), update_search_path(request.parameters.merge(:language => "").merge(:days_back => @days_back ? @days_back : "").merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]))}</span> &nbsp;"
+  end
+
+  if @days_back
+    @selected_tags << "<span class='badge rounded-pill bg-dark dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @days_backs[@days_back.to_i]), update_search_path(request.parameters.merge(:days_back => "").merge(:language => @language ? @language : "").merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]))}</span> &nbsp;"
   end
 %>
 
@@ -51,12 +55,12 @@
                 <ul class="list-unstyled ps-2">
                   <% @tags[tag_type].each do |t|  %>
                     <% if !params[:tags].include? t["id"].to_s %>
-                      <li class='available-tags pb-1'><%= link_to t["name"], update_search_path(request.parameters.merge(:tags => params[:tags] + [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "")) %> (<%= t["tag_count"] %>) </li>
+                      <li class='available-tags pb-1'><%= link_to t["name"], update_search_path(request.parameters.merge(:tags => params[:tags] + [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "")) %> (<%= t["tag_count"] %>) </li>
                     <% 
                       else 
-                        @selected_tags << "<span class='badge rounded-pill bg-secondary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : ""))}</span> &nbsp;"
+                        @selected_tags << "<span class='badge rounded-pill bg-secondary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : ""))}</span> &nbsp;"
                     %>
-                      <li class='selected-tags pb-1'><%= link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "")) %></li>
+                      <li class='selected-tags pb-1'><%= link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "")) %></li>
                     <% end %>
                   <% end %>
                 </ul>
@@ -80,14 +84,14 @@
           <p><span class="fw-light">Organization Type: </span>
             <%= @organization.organization_type.organization_type %></p>
       <% end %>
-        <%= link_to url_for(update_search_path(request.parameters.merge(:organization_id => params[:organization_id] = "").merge(:tags => params[:tags]).merge(:language => @language ? @language : ""))) do %>
+        <%= link_to url_for(update_search_path(request.parameters.merge(:organization_id => params[:organization_id] = "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : ""))) do %>
             <i class="fa fa-times-circle"></i> reset filter
         <% end %>
     <% else %>
         <ul class="list-group list-group-flush">
           <% @orgs.each do |o| %>
             <li class="list-group-item available-tags">
-              <%= link_to o["name"], update_search_path(request.parameters.merge(:organization_id => o["id"]).merge(:tags => params[:tags]).merge(:language => @language ? @language : "").except(:page)) %> (<%= o["org_count"] %>) 
+              <%= link_to o["name"], update_search_path(request.parameters.merge(:organization_id => o["id"]).merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").except(:page)) %> (<%= o["org_count"] %>) 
             </li>
           <% end %>
         </ul>
@@ -98,22 +102,36 @@
     <div class="pt-3">
       Language:
       <% if @language %> 
-      <p><strong><%= @languages[@language.to_sym] %></strong>
-        <%= link_to url_for(update_search_path(request.parameters.merge(:language => params[:language] = "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : ""))) do %></p>
-            <i class="fa fa-times-circle"></i> reset filter
-        <% end %>
-    <% else %>
-        <ul class="list-group list-group-flush">
-          <% @languages.each_key do |l| %>
-            <li class="list-group-item available-tags">
-              <%= link_to @languages[l], update_search_path(request.parameters.merge(:language => l).merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").except(:page)) %> 
-            </li>
+        <p><strong><%= @languages[@language.to_sym] %></strong>
+          <%= link_to url_for(update_search_path(request.parameters.merge(:language => params[:language] = "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:days_back => @days_back ? @days_back : ""))) do %></p>
+              <i class="fa fa-times-circle"></i> reset filter
           <% end %>
-        </ul>
-    <% end %>
+      <% else %>
+          <ul class="list-group list-group-flush">
+            <% @languages.each_key do |l| %>
+              <li class="list-group-item available-tags">
+                <%= link_to @languages[l], update_search_path(request.parameters.merge(:language => l).merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:days_back => @days_back ? @days_back : "").except(:page)) %> 
+              </li>
+            <% end %>
+          </ul>
+      <% end %>
     </div>
     <div class="pt-3">
       Uploaded/Updated:
+      <% if @days_back %> 
+        <p><strong><%= @days_backs[@days_back.to_i] %></strong>
+          <%= link_to url_for(update_search_path(request.parameters.merge(:days_back => params[:days_back] = "").merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : ""))) do %></p>
+              <i class="fa fa-times-circle"></i> reset filter
+          <% end %>
+      <% else %>
+          <ul class="list-group list-group-flush">
+            <% @days_backs.each_key do |d| %>
+              <li class="list-group-item available-tags">
+                <%= link_to @days_backs[d], update_search_path(request.parameters.merge(:days_back => d).merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").except(:page)) %> 
+              </li>
+            <% end %>
+          </ul>
+      <% end %>
     </div>
   </div>
 </div>

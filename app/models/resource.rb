@@ -167,6 +167,7 @@ class Resource < ActiveRecord::Base
   end
 
 def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true)
+  target_date = Date.today - days_back.to_i if !days_back.nil?
   query = "
     WITH resources_search AS (
       SELECT 
@@ -188,7 +189,8 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
       query = query + "
       WHERE 0=0 "
       query = query + " AND r.organization_id = " + org.to_s if !org.nil? 
-      query = query + " AND r.language = '" + language + "'" if !language.nil? 
+      query = query + " AND r.language = '" + language + "'" if !language.nil? && language.length > 0
+      query = query + " AND r.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
       query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
       query = query + " GROUP BY r.id "
       query = query + " HAVING COUNT( r.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
@@ -215,6 +217,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
   end
 
   def self.search_tags(search_terms=nil, tags=nil, org=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true)
+    target_date = Date.today - days_back.to_i if !days_back.nil?
     query = "
     WITH resources_search AS (
       SELECT 
@@ -235,7 +238,8 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
       query = query + "
       WHERE 0=0 "
       query = query + " AND r.organization_id = " + org.to_s if !org.nil? 
-      query = query + " AND r.language = '" + language + "'" if !language.nil? 
+      query = query + " AND r.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
+      query = query + " AND r.language = '" + language + "'" if !language.nil?  && language.length > 0
       query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
       query = query + " GROUP BY r.id "
       query = query + " HAVING COUNT( r.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
@@ -266,6 +270,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
   end
 
   def self.search_orgs(search_terms=nil, tags=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true)
+    target_date = Date.today - days_back.to_i if !days_back.nil?
     query = "
     WITH resources_search AS (
       SELECT 
@@ -286,7 +291,8 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
       INNER JOIN tags t on tg.tag_id = t.id"
       query = query + "
       WHERE 0=0 "
-      query = query + " AND r.language = '" + language + "'" if !language.nil? 
+      query = query + " AND r.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
+      query = query + " AND r.language = '" + language + "'" if !language.nil?  && language.length > 0
       query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
       query = query + " GROUP BY r.id "
       query = query + " HAVING COUNT( r.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
