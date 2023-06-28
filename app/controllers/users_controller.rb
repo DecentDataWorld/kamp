@@ -4,18 +4,12 @@ class UsersController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
 
   def index
-    add_crumb 'Administration', admin_index_path
-    @page_title = "Manage Users"
-
-    #authorize! :index, @user, :message => 'Not authorized as an administrator.'
-    @users = User.joins(:users_organizations, :organizations, :roles, :organization_applications).includes(:users_organizations, :organizations, :roles, :organization_applications).order(created_at: :desc).paginate(:page => params[:page], :per_page => 30)
-    @admin_role = User.joins(:users_organizations, :organizations, :roles, :organization_applications).includes(:users_organizations, :organizations, :roles, :organization_applications).order(created_at: :desc).with_any_role(:admin, :moderator)
-    @member_role = User.joins(:users_organizations, :organizations, :roles).includes(:users_organizations, :organizations, :roles, :organization_applications).order(created_at: :desc).without_role(:admin)
+    authorize! :index, @user, :message => 'Not authorized as an administrator.'
+    @users = User.joins(:users_organizations, :organizations, :roles, :organization_applications).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30) # this is not an optimized search!
   end
 
   def show
     @user = User.find(params[:id])
-    @page_title = @user.name + " Profile"
     @resources = @user.resources.where("private = false and approved = true and newsletter_only = false").page(params[:resources_page]).per_page(10).order("updated_at desc")
     @collections = @user.collections_authored.where("private = false and approved = true and newsletter_only = false").page(params[:collections_page]).per_page(10).order("updated_at desc")
     @organizations = @user.organizations.page(params[:organizations_page]).per_page(10).order("updated_at desc")
@@ -191,6 +185,6 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:id, :role_ids, :invitation_email)
+    params.require(:user).permit(:id, :role_ids, :invitation_email, :search)
   end
 end
