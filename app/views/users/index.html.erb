@@ -12,14 +12,20 @@
 <section id="about" class="about">
   <div class="container">
     <div class="row">
-      <div class="col-3">
+      <div class="col-3 border-end">
+      <h5 class="border-bottom pb-2">Administration</h5>
         <%= render 'admin/side_nav' %>
         <br/>
       </div>
 
       <div class="col-9">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-          <h1 class="h3"><%= t('headers.users') %></h1>
+        <div class="border-bottom">
+          <div class="row pb-1">
+            <div class="col-10">
+              <%= render 'admin/search' %>
+            </div>
+            <div class="col-2"> Results: <%= @users.count %></div>
+          </div>
         </div>
         <div data-controller="user-list">
           <table class="table table-striped table-hover" data-controller="table-sort">
@@ -40,9 +46,11 @@
               <% end %>
             </tbody>
           </table>
-          <div class="apple_pagination">
-            <%= will_paginate @users %>
-          </div>
+          <% if @users.count > 30 %>
+            <div class="apple_pagination">
+              <%= will_paginate @users %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

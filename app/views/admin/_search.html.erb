@@ -1,0 +1,5 @@
+<%= form_with url: users_path, method: :get do |form| %>
+  <div class="input-group users-search">
+    <%= form.text_field :search, autocomplete: "off", class: "form-control", placeholder: "Search users" %>
+  </div>
+<% end %>

@@ -3,7 +3,7 @@
   <% if !@user.about.nil? %>
     <p class="text-muted"><%= simple_format @user.about %></p>
   <% end %>
-  <ul class="list-unstyled">
+  <ul class="list-group list-group-flush">
     <li><i class="fa fa-angle-right"></i> Member For: <span class="text-muted"><%= time_ago_in_words(@user.created_at) %></span></li>
     <% if can? :manage, :all %>
       <li><i class="fa fa-angle-right"></i> Last login: <span class="text-muted"><%= time_ago_in_words(@user.last_sign_in_at) if !@user.last_sign_in_at.nil? %><%= "Never logged in" if @user.last_sign_in_at.nil? %></span></li>
