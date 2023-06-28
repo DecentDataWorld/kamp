@@ -1,4 +1,14 @@
-<% content_for :title do %><%= @user.name %> Profile<% end %>
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %>Home<% end %></li>
+      <li><%= link_to users_path do %>Administration<% end %></li>
+      <li><%= link_to users_path(:page => params[:page]) do %>Users<% end%></li>
+      <li><%= @user.name %></li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
 <!--=== Content Part ===-->
 <div class="container content">
   <div class="row">

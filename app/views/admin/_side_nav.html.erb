@@ -1,0 +1,17 @@
+<div class="border-end">
+  <h5 class="border-bottom pb-2">Administration</h5>
+  <ul id="sidebar-nav" class="list-unstyled pe-2">
+    <li class="list-group-item list-toggle>
+      <a href="<%= users_url %>" class="<%= 'active' if current_page?(users_url) %>">Users</a>
+    </li>
+    <li class="list-group-item">
+      <a href="<%= organizations_url %>" class="<%= 'active' if current_page?(organizations_url) %>">Organizations</a>
+    </li>
+    <li class="list-group-item">
+      <a href="<%= tags_url %>" class="<%= 'active' if current_page?(tags_url) %>">Tags</a>
+    </li>
+    <li class="list-group-item">
+      <a href="<%= cops_url %>" class="<%= 'active' if current_page?(cops_url) %>">Communities of Practice</a>
+    </li>
+  </ul>
+</div>

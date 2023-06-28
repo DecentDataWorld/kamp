@@ -6,3 +6,9 @@ import { application } from "./application"
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import UserListController from "./user_list_controller"
+application.register("user-list", UserListController)
+
+import { TableSortController } from "stimulus-library"
+application.register("table-sort", TableSortController)
