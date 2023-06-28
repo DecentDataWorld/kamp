@@ -14,7 +14,9 @@ RUN apk add --no-cache --virtual --update build-base \
   # Needed for nodejs / node-gyp
   python2 \
   tzdata \
-  shared-mime-info
+  shared-mime-info \
+  # Needed for nokogiri to run on mac dev
+  gcompat
 
 ENV BUNDLER_VERSION 2.2.33
 

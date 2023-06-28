@@ -171,6 +171,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
     WITH resources_search AS (
       SELECT 
         r.id,
+        r.updated_at,
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
@@ -193,12 +194,16 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
       query = query + "
     )
     SELECT 
-      distinct rs.id
+      rs.id,
+      rs.updated_at
     FROM resources_search rs
     INNER JOIN filtered_resources_tags frt on rs.id = frt.id
     WHERE 0=0 "
     if !search_terms.nil? && search_terms.length > 0
       query = query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+      query = query + " ORDER BY ts_rank(rs.document, to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')) DESC"
+    else
+      query = query + " ORDER BY rs.updated_at DESC"
     end
 
     results = Resource.find_by_sql(query)
@@ -237,20 +242,25 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
     SELECT 
       t.id, 
       t.name,
+      tt.name as tag_type,
+      tt.id as tag_type_id,
       count(t.id) as tag_count
     FROM resources_search rs
     INNER JOIN filtered_resources_tags frt on rs.id = frt.id
     INNER JOIN taggings tg on rs.id = tg.taggable_id and tg.taggable_type = 'Resource'
     INNER JOIN tags t on tg.tag_id = t.id
+    INNER JOIN tag_types tt on t.tag_type_id = tt.id
     WHERE 0=0 "
     if !search_terms.nil? && search_terms.length > 0
       query = query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
     end
-    query = query + " GROUP BY t.name, t.id ORDER BY tag_count desc"
+    query = query + " GROUP BY t.name, t.id, tt.name, tt.id ORDER BY tt.name, t.name desc"
 
     results = ActiveRecord::Base.connection.exec_query(query)
 
-    return results.to_ary
+    grouped_results = results.group_by { |r| r["tag_type"] }
+
+    return grouped_results
   end
 
   def self.search_orgs(search_terms=nil, tags=nil, only_approved=true, exclude_private=true)

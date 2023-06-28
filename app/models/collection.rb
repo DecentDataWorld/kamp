@@ -108,6 +108,9 @@ class Collection < ActiveRecord::Base
       WHERE 0=0 "
       if !search_terms.nil? && search_terms.length > 0
         query = query + " AND cs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+        query = query + " ORDER BY ts_rank(cs.document, to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')) DESC"
+      else
+        query = query + " ORDER BY cs.updated_at DESC"
       end
   
       results = Collection.find_by_sql(query)

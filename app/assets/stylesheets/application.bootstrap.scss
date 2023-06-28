@@ -1,5 +1,6 @@
 $primary:#205493;
 $secondary:#6C6463;
+$danger:#651D32;
 
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
@@ -85,6 +86,15 @@ table[data-controller="table-sort"] th[data-sort="desc"]::after {
     .apple_pagination a:hover, .apple_pagination a:focus {
       text-decoration: underline; }
 
+
+.accordion-button {
+  padding: 5px;
+  font-size: 13px;
+}
+
+.resource-small {
+  font-size: 13px;
+}
 
 /**
 * Template Name: Eterna
