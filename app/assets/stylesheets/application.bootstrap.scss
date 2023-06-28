@@ -88,7 +88,6 @@ table[data-controller="table-sort"] th[data-sort="desc"]::after {
     .apple_pagination a:hover, .apple_pagination a:focus {
       text-decoration: underline; }
 
-
 .accordion-button {
   padding: 5px;
   font-size: 13px;
@@ -100,6 +99,10 @@ table[data-controller="table-sort"] th[data-sort="desc"]::after {
 
 .users-search {
   margin-top: -.6em;
+}
+
+.no-border {
+  border: none !important;
 }
 
 /**

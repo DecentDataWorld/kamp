@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  # before_action :authenticate_user!, except: [:show, :request_invite, :send_invite]
-  # before_action :authorize_user_admin, only: [:index, :get_users]
+  before_action :authenticate_user!, except: [:show, :request_invite, :send_invite]
+  before_action :authorize_user_admin, only: [:index, :get_users]
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
 
   def index
