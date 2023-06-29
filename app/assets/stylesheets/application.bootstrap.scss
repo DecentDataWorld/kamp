@@ -11,10 +11,14 @@ $red: #BA0C2F;
 @import 'bootstrap-icons/font/bootstrap-icons';
 @import 'swiper/swiper';
 
+.home-about-box {
+  background: rgba(255,255,255,.4);
+}
+
 .hero-box {
   margin-right: 30px;
   margin-bottom: 30px;
-  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.15);
+  //box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   background: rgba(255,255,255,.8);
   transition: all ease-in-out 0.3s;
@@ -806,7 +810,7 @@ body {
   
   .featured .icon-box {
     padding: 40px 30px;
-    box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     background: #fff;
     transition: all ease-in-out 0.3s;
