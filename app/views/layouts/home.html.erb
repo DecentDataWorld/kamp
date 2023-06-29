@@ -48,9 +48,9 @@
                 <div class="col-8">
                   <div class="row">
                     <div class="col-6">
-                      <div class="hero-box border-dark card">
+                      <div class="hero-box border-danger card">
                         <div class="card-body">
-                          <h3 class="card-title text-dark">Find Resources</h3>
+                          <h3 class="card-title text-danger">Find Resources</h3>
                           <p class="card-text">
                              <% if @search.nil? %>
                                 <%  search = Search.new %>
@@ -71,9 +71,9 @@
                       </div>
                     </div>
                     <div class="col-6">
-                      <div class="hero-box border-primary card">
+                      <div class="hero-box border-success card">
                       <div class="card-body">
-                        <h3 class="card-title text-primary">Announcements</h3>
+                        <h3 class="card-title text-success">Announcements</h3>
                           <p class="card-text">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
                       </div>
                     </div>
@@ -81,17 +81,17 @@
                   </div>
                    <div class="row">
                     <div class="col-6">
-                      <div class="hero-box border-primary card">
+                      <div class="hero-box border-success card">
                       <div class="card-body">
-                        <h3 class="card-title text-primary">Events</h3>
+                        <h3 class="card-title text-success">Events</h3>
                           <p class="card-text">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
                       </div>
                       </div>
                     </div>
                     <div class="col-6">
-                      <div class="hero-box border-danger card">
+                      <div class="hero-box border-success card">
                         <div class="card-body">
-                          <h3 class="card-title text-danger">Communities of Practice</h3>
+                          <h3 class="card-title text-success">Communities of Practice</h3>
                             <p class="card-text">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
                         </div>
                       </div>
@@ -121,11 +121,12 @@
           <% @featured_searches.each do |fs| %>
             <div class="col">
               <div class="icon-box">
-                <i class="<%= fs.icon_identifier %>"></i>
                 <h3><a href="<%= fs.get_url %>">
+                  <i class="<%= fs.icon_identifier %>"></i>
                   Learn About <br/>
                   <%= fs.name %>
-                </a></h3>
+                </a>
+              </h3>
               </div>
             </div>
           <% end %>
