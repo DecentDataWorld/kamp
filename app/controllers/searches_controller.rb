@@ -133,7 +133,7 @@ class SearchesController < ApplicationController
     @language = params[:language] || nil
     @days_back = params[:days_back] || nil
     @languages = {:arabic => 'Arabic', :english => 'English'}
-    @days_backs = {7 => 'Less Than a Week Ago', 30 => 'Less Than a Month Ago', 183 => 'Less Than Six Month Ago', 365 => 'Less Than a Year Ago'}
+    @days_backs = {7 => 'Less Than a Week Ago', 30 => 'Less Than a Month Ago', 183 => 'Less Than Six Months Ago', 365 => 'Less Than a Year Ago'}
     if params[:query] || params[:tags] || params[:organization_id] || params[:language] || params[:days_back]
       resource_results = Resource.search_kmp(params[:query], params[:tags], params[:organization_id], params[:language], params[:days_back])
       @resource_count = resource_results[:count]
