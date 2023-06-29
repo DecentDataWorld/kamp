@@ -12,6 +12,7 @@ class HomeController < ApplicationController
     @resources_viewed = Resource.where("id in (?)", most_viewed_ids)
     @tags = Resource.tag_counts_on(:tags).limit(15)
     #@search_results = []
+    @featured_searches = FeaturedSearch.order(:name)
 
   end
 
