@@ -21,15 +21,14 @@
 
         <div class="col-9">
           <div class="border-bottom">
+            <span class="new-tag-button"><%= link_to t('navigation.new_tag'), new_tag_path, class: "btn btn-outline-primary " %></span>
             <div class="table-responsive">
               <table class="table table-striped table-sm" data-controller="table-sort">
                 <thead>
                   <tr>
                     <th><%=t('activerecord.attributes.tag.name') %></th>
                     <th><%=t('activerecord.attributes.tag.type_name') %></th>
-                    <th data-sortable="false" class="column-no-sort">
-                      <span class="float-end"><%= link_to t('navigation.new_tag'), new_tag_path, class: "btn btn-outline-primary " %></span>
-                    </th>
+                    <th class="column-no-sort"></th>
                   </tr>
                 </thead>
                 <tbody>

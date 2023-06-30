@@ -106,6 +106,23 @@ table[data-controller="table-sort"] th[data-sort="desc"]::after {
   content: "▼";
 }
 
+th.column-no-sort {
+  font-size: 0px !important;
+  pointer-events: none !important;
+}
+
+.new-tag-button {
+  position: absolute;
+  margin-left: 54.5em;
+  margin-top: -.5em;
+}
+
+.new-tag-type-button {
+  position: absolute;
+  margin-left: 52em;
+  margin-top: -.5em;
+}
+
 .apple_pagination {
   background: #f1f1f1;
   border: 1px solid #e5e5e5;

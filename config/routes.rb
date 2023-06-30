@@ -20,15 +20,15 @@ Rails.application.routes.draw do
   get 'resources/log_event', to: 'resources#log_event', as: :log_event
   get 'resources/download', to: 'resources#download', as: :download_resource
 
-  resources :user_types, to: 'admin/user_types'
-  resources :organization_types, to: 'admin/organization_types'
+  resources :user_types, path: 'admin/user_types'
+  resources :organization_types, path: 'admin/organization_types'
 
   #mount RailsAdmin::Engine => '/cpanel', as: 'rails_admin'
 
   resources :batches
   resources :categories
-  resources :tags, to: 'admin/tags'
-  resources :tag_types, to: 'admin/tag_types'
+  resources :tags, path: 'admin/tags'
+  resources :tag_types, path: 'admin/tag_types'
   resources :featured_searches
   resources :announcements
 
