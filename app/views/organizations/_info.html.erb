@@ -1,15 +1,46 @@
-<% if !@organization.logo.blank? %>
-    <%= link_to organization_path(@organization) do %>
-        <%= image_tag @organization.logo.expiring_url(10), class: "img-responsive" %>
+<h5 class="border-bottom pb-2"><%= link_to @organization.name, organization_path(@organization) %></h5>
+
+<!--- Alert for unapproved organization --->
+<% if !@organization.approved %>
+  <div class="alert alert-warning">
+    <h5><i class="fa fa-warning"></i> Organization Pending</h5>
+    <p>This organization is still pending approval by administrators.</p>
+    <% if can? :approve, @organization %>
+      <div class="right-aligned-content">
+      <%= link_to organization_approve_path(@organization.url), class: 'btn btn-outline-primary' do %>
+        <i class="fa-solid fa-stamp"></i> Approve
+      <% end %>
+      </div>
     <% end %>
+  </div>
 <% end %>
-<h4><%= link_to @organization.name, organization_path(@organization) %></h4>
-<% if !@organization.organization_type.blank? %>
+<!--- End alert --->
+
+<% if !@organization.logo.blank? %>
+  <%= link_to organization_path(@organization) do %>
+    <%= image_tag @organization.logo.expiring_url(10), class: "img-fluid organization-image py-2" %>
+  <% end %>
+<% end %>
+
+<div class="ps-2">
+  <% if !@organization.organization_type.blank? %>
     <p><strong>Organization Type:</strong><br>
-      <%= @organization.organization_type.organization_type %></p>
-<% end %>
-<% if short.nil? or !short %>
-    <p>
-      <%= simple_format @organization.description, class: 'well well-sm' %>
+      <%= @organization.organization_type.organization_type %>
     </p>
+  <% end %>
+  <% if short.nil? or !short %>
+    <p><%= simple_format @organization.description, class: 'well well-sm' %></p>
+  <% end %>
+</div>
+
+<% if @subscribed == true %>
+  <span class="label label-success rounded-2x"><i class="fa fa-flag"></i> You are subscribed to this organization.</span>
+<% elsif @logged_in == true %>
+  <div class="pb-2">
+    <%= link_to user_save_subscriptions_url(id: @current_user.id.to_s, user_id: @current_user.id.to_s, subscribed_to: 'organization', subscribed_to_id: @organization.id.to_s, destination: '/organizations/'+@organization.url, organization: @organization.name), method: "post", class: "btn-u btn-u-sea" do %>
+      Subscribe to Updates
+    <% end %>
+  </div>
 <% end %>
+
+<%= link_to organizations_path(:page => params[:page]) do %>Back to Organizations<% end %>

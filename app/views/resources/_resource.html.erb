@@ -4,7 +4,7 @@
     <% if resource.private == true %>
         <% str_title = str_title + ' <i class="fa fa-lock"></i>' %>
     <% end %>
-    <% header_text = ' <i class="fa fa-file"></i> ' %>
+    <% header_text = ' <i class="fa-solid fa-file"></i> ' %>
     <%
        header_text = header_text + str_title
 
@@ -18,7 +18,7 @@
       <div class="card-body">
       <!-- Begin Inner Results -->
       <% if can? :approve, resource and resource.approved != true %>
-          <div class="btn-group pull-right">
+          <!---<div class="btn-group pull-right">
             <button type="button" class="btn btn-success"><i class="fa fa-cog"></i></button>
             <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-angle-down"></i>
@@ -29,12 +29,12 @@
               <li class="divider"></li>
               <li><a href="<%= denial_submission_path(:submission_id => resource.id, :submission_type => "resource") %>">Deny Submission</a></li>
             </ul>
-          </div>
+          </div>--->
       <% end %>
       <h4 class="card-title pb-2"><% if resource.approved == false %><span class="label label-orange">Pending Approval</span> <% end %><%= link_to raw(header_text), resource_path(resource) %></h4>
       <% if !resource.collection.nil? %>
           <h6 class="card-subtitle mb-2 text-muted">
-            <i class="fa fa-files-o" rel="tooltip" title="This Resource is part of a Collection"></i> <%= link_to resource.collection.title, collection_path(resource.collection) %>
+          <i class="fa-solid fa-file"> rel="tooltip" title="This Resource is part of a Collection"></i> <%= link_to resource.collection.title, collection_path(resource.collection) %>
           </h6>
       <% end %>
       <h6 class="card-subtitle mb-2 text-muted">

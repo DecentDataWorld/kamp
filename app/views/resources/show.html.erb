@@ -56,51 +56,46 @@
       <div class="blog margin-bottom-30">
 
         <% if !@resource.approved %>
-            <div class="alert alert-warning fade in">
-              <strong>Pending Approval</strong> Our moderators have not yet approved this resource. It will not show up in searches or to members outside your organization
-            </div>
+          <div class="alert alert-warning fade in">
+            <strong>Pending Approval</strong> Our moderators have not yet approved this resource. It will not show up in searches or to members outside your organization
+          </div>
         <% end %>
 
         <% if @resource.collection.blank? or @resource.collection.resources.count < 2 %>
+          <div class="well well-xs">
+            <% if !@resource.attachment.blank? %>
+              <div class="button-group">
+                <%= link_to download_resource_path(:id => @resource.url), class: 'btn btn-success pull-right rounded', id: 'download_button', title: "Download This Resource", target: "_blank" do %>
+                  <i class="fa fa-download"></i> Download
+                <% end %>
+                <% if @resource.resource_type != "other" and @resource.resource_type != "Document" and !@resource.attachment.blank? and @resource.resource_type != "GeoJSON" %>
+                  <a class="btn btn-primary pull-right rounded margin-right-10" id="jumptopreview" data-toggle="modal" data-target=".bs-example-modal-sm"> <i class="fa fa-eye" data-toggle="tooltip" data-placement="bottom" title="Jump to Preview"></i> Preview</a>
+                <% elsif @resource.resource_type == "geojson" || @resource.resource_type == "GeoJSON" %>
+                  <a class="btn-u btn-primary pull-right rounded margin-right-10" id="showmap" href="<%= resource_preview_path(@resource) %>" target="_blank"><i class="fa fa-eye"></i> Preview</a>
+                <% end %>
+              </div>
+              <h4><i class="fa fa-file"></i> <%= link_to @resource.attachment_file_name.truncate(120), download_resource_path(:id => @resource.url), title: "Filename of resource", target: "_blank" %></h4>
+            <% end %>
 
-            <div class="well well-xs">
-              <% if !@resource.attachment.blank? %>
-                  <div class="button-group">
-                    <%= link_to download_resource_path(:id => @resource.url), class: 'btn btn-success pull-right rounded', id: 'download_button', title: "Download This Resource", target: "_blank" do %>
-                        <i class="fa fa-download"></i> Download
-                    <% end %>
-                    <% if @resource.resource_type != "other" and @resource.resource_type != "Document" and !@resource.attachment.blank? and @resource.resource_type != "GeoJSON" %>
-
-                        <a class="btn btn-primary pull-right rounded margin-right-10" id="jumptopreview" data-toggle="modal" data-target=".bs-example-modal-sm"> <i class="fa fa-eye" data-toggle="tooltip" data-placement="bottom" title="Jump to Preview"></i> Preview</a>
-
-                    <% elsif @resource.resource_type == "geojson" || @resource.resource_type == "GeoJSON" %>
-                        <a class="btn-u btn-primary pull-right rounded margin-right-10" id="showmap" href="<%= resource_preview_path(@resource) %>" target="_blank"><i class="fa fa-eye"></i> Preview</a>
-
-                    <% end %>
-                   </div>
-                  <h4><i class="fa fa-file"></i> <%= link_to @resource.attachment_file_name.truncate(120), download_resource_path(:id => @resource.url), title: "Filename of resource", target: "_blank" %></h4>
+            <% if !@resource.source.blank? %>
+              <strong>Source URL:</strong>
+              <%= link_to @resource.source, target: "_blank" do %><i class="fa fa-link"></i> <%= @resource.source %><% end %>
+            <% end %>
+          </div>
+          <% if @resource.tags.count > 0 %>
+            <p class="fsize16"> Tags:
+              <% @resource.tags.each do |tag| %>
+                <a href="<%= new_search_path(:tags => [tag.id]) %>" class="label label-default light rounded" href="#"><i class="fa fa-tags"></i> <%= tag.name %></a>
               <% end %>
-
-              <% if !@resource.source.blank? %>
-                  <strong>Source URL:</strong>
-                  <%= link_to @resource.source, target: "_blank" do %><i class="fa fa-link"></i> <%= @resource.source %><% end %>
-              <% end %>
+            </p>
+          <% end %>
+          <% if !@resource.description.blank? %>
+            <div class="row-fluid panel panel-default">
+              <div class="panel-body">
+                <%= simple_format @resource.description %>
+              </div>
             </div>
-            <% if @resource.tags.count > 0 %>
-                <p class="fsize16"> Tags:
-                  <% @resource.tags.each do |tag| %>
-                      <a href="<%= new_search_path(:tags => [tag.id]) %>" class="label label-default light rounded" href="#"><i class="fa fa-tags"></i> <%= tag.name %></a>
-                  <% end %>
-                </p>
-            <% end %>
-                <% if !@resource.description.blank? %>
-                <div class="row-fluid panel panel-default">
-                  <div class="panel-body">
-                    <%= simple_format @resource.description %>
-                  </div>
-                </div>
-            <% end %>
-
+          <% end %>
         <% end %>
 
         <% if @show_feedback %>

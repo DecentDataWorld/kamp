@@ -1,249 +1,243 @@
-<% content_for :title do %><%= @page_title %><% end %>
-<!--=== Content Part ===-->
-<div class="container content">
-  <% if !@organization.approved %>
-      <div class="row">
-        <div class="alert alert-warning fade in">
-        <% if can? :approve, @organization %>
-              <%= link_to organization_approve_path(@organization.url), class: 'btn-u btn-u-sea pull-right' do %>
-                  <i class="fa fa-check"></i>
-                  Approve
-              <% end %>
-          <% end %>
-          <h4><i class="fa fa-warning"></i> Organization Pending</h4>
-          <p>This organization is still pending approval by administrators.</p>
-        </div>
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %>Home<% end %></li>
+      <li><%= link_to users_path do %>Administration<% end %></li>
+      <li><%= link_to organizations_path(:page => params[:page]) do %>Organizations<% end%></li>
+      <li><%= @organization.name %></li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
+
+<!--=== About Section ===-->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <%= render partial: 'organizations/info', locals: { :short=>false } %>
       </div>
-  <% end %>
-  <div class="row">
-    <div class="col-sm-3">
-      <%= render partial: 'organizations/info', locals: { :short=>false } %>
 
-      <% if @subscribed == true %>
-          <span class="label label-success rounded-2x"><i class="fa fa-flag"></i> You are Subscribed To This Organization</span>
-      <% elsif @logged_in == true %>
-          <div class="btn-group">
-            <%= link_to user_save_subscriptions_url(id: @current_user.id.to_s, user_id: @current_user.id.to_s, subscribed_to: 'organization', subscribed_to_id: @organization.id.to_s, destination: '/organizations/'+@organization.url, organization: @organization.name), method: "post", class: "btn-u btn-u-sea" do %>
-                Subscribe To Updates <i class="fa fa-flag"></i>
-            <% end %>
-          </div>
-      <% end %>
-
-    </div>
-    <div class="col-sm-9">
-      <!-- Tab v1 -->
-      <div class="tab-v1">
-      <ul class="nav nav-tabs">
-        <li class="active"><a href="#resources" data-toggle="tab"><i class="fa fa-files-o"></i> Uploaded <span class="badge badge-yellow"><%= @resource_count %></span></a></li>
-        <% if (!@resources_pending.nil? and @resources_pending.count > 0) || (!@collections_pending.nil? and @collections_pending.count > 0) %>
-            <li><a href="#resources_pending" data-toggle="tab"><i class="fa fa-spinner"></i> Pending Approval</a></li>
-        <% end %>
-
-        <li><a href="#members" data-toggle="tab"><i class="fa fa-users"></i> Members</a></li>
-        <% if (user_signed_in? and @organization.can_edit_organization(current_user)) or can? :manage, :all %>
-            <li class="dropdown">
-              <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> Manage <b class="caret"></b></a>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
-                <li><%= link_to org_private_resources_path(@organization) do %><i class="fa fa-lock"></i> Private Resources<% end %></li>
-                <li><%= link_to edit_organization_path(@organization) do %>
-                      <i class="fa fa-edit"></i>
-                      Edit
-                  <% end %>
-                </li>
-                <% if can? :delete, @organization %>
-                    <li class="divider"></li>
-                    <li>
-                      <%= link_to @organization, method: :delete, data: { confirm: 'Are you sure?' } do %>
-                          <span class="glyphicon glyphicon-remove"></span>
-                          Delete
+      <div class="col-9">
+        <div class="row pb-1">
+          <!-- Tab v1 -->
+          <div class="tab-v1">
+            <nav>
+              <ul class="nav nav-tabs pb-2">
+                <li><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources"><i class="fa-solid fa-file-arrow-up"></i> Uploaded <span class="badge badge-yellow"><%= @resource_count %></span></a></li>
+                <% if (!@resources_pending.nil? and @resources_pending.count > 0) || (!@collections_pending.nil? and @collections_pending.count > 0) %>
+                  <li class="pe-4"><a href="#resources_pending" data-bs-toggle="tab" data-bs-target="#resources_pending"><i class="fa fa-spinner"></i> Pending Approval</a></li>
+                <% end %>
+                <li><a href="#members" data-bs-toggle="tab" data-bs-target="#members"><i class="fa fa-users"></i> Members</a></li>
+                <% if (user_signed_in? and @organization.can_edit_organization(current_user)) or can? :manage, :all %>
+                  <li class="dropdown ps-4">
+                    <a href="#" id="myTabDrop1" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-target="#manage"><i class="fa fa-cog"></i> Manage <b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                      <li><%= link_to org_private_resources_path(@organization) do %><i class="fa fa-lock"></i> Private Resources<% end %></li>
+                      <li><%= link_to edit_organization_path(@organization) do %><i class="fa fa-edit"></i> Edit<% end %></li>
+                      <% if can? :delete, @organization %>
+                        <li class="divider"></li>
+                        <li>
+                          <%= link_to @organization, method: :delete, data: { confirm: 'Are you sure?' } do %>
+                            <span class="glyphicon glyphicon-remove"></span> Delete
+                          <% end %>
+                        </li>
                       <% end %>
-                    </li>
+                    </ul>
+                  </li>
                 <% end %>
               </ul>
-            </li>
-        <% end %>
-      </ul>
+            </nav>
 
-      <div class="tab-content">
-        <div class="tab-pane active" id="resources">
-          <div class="row-fluid">
-            <%= form_for @organization, method: 'get', role: 'form', class: 'form-inline text-center' do %>
-                <div class="col-sm-6">
-                  <label class="sr-only" for="shop-search">Search</label>
-                  <%= text_field_tag :resource_query, params[:resource_query], class: 'form-control border-color', placeholder: 'Search ' + @organization.name + '\'s Resources', id: 'shop-search' %>
+            <div class="tab-content">
+              <!--- RESOURCES TAB --->
+              <div class="tab-pane fade show active pb-2" id="resources">
+                <!--- Resource search and add (if permitted) within organization --->
+                <div class="row pb-2">
+                  <div class="<%= @organization.approved and @organization.users.exists?(current_user.id) ? 'col-11' : 'col-12' %>">
+                    <%= form_for @organization, method: 'get', role: 'form', class: 'form-inline text-center pb-2' do %>
+                      <div class="input-group">
+                        <%= text_field_tag :resource_query, params[:resource_query], class: 'form-control', placeholder: 'Search ' + @organization.name + '\'s Resources', id: 'shop-search' %>
+                        <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+                        <% if !params[:resource_query].nil? %>
+                          <%= link_to organization_path(@organization), class: 'btn btn-outline-primary', role: "button" do %><i class="fa fa-refresh"></i><% end %>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <% if @organization.approved and @organization.users.exists?(current_user.id) %>
+                    <div class="col-1">
+                      <%= link_to new_resource_path, class: 'btn btn-primary' do  %><i class="fa-solid fa-file-circle-plus"></i><% end %>
+                    </div>
+                  <% end %>
+                  <h5 class="pt-2 ps-3"><% if !params[:resource_query].nil? %> <%= @resource_count %> resources <%= 'found with "' + params[:resource_query] + '"' %><% else %>&nbsp; <% end %> </h6>
+                  <!--- End resource search and add --->
+
+                  <!--- Resource and collections content --->
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="tab-v1">
+                        <ul class="nav nav-tabs">
+                          <li class="nav-item <%= !@show_collections ? 'active' : ''%>"><a href="#inner_resources" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#inner_resources">Resources</a></li>
+                          <li class="nav-item <%= @show_collections ? 'active' : ''%>"><a href="#inner_collections" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#inner_collections">Collections</a></li>
+                        </ul>
+                        <div class="tab-content">
+                          <div id="inner_resources" class="tab-pane show fade <%= !@show_collections ? 'active' : ''%>">
+                            <% if @resources.count > 0 %>
+                              <% @resources.each do |resource| %>
+                                <%= render resource %>
+                              <% end %>
+                              <%= will_paginate @resources %>
+                            <% else %>
+                              <blockquote><i class="fa fa-thumbs-down"></i> No resources found with that combination</blockquote>
+                              <div class="alert alert-info fade">
+                                <h4>Let Us Know What We're Missing</h4>
+                                <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
+                                <p><a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a></p>
+                              </div>
+                            <% end %>
+                          </div>
+                          <div id="inner_collections" class="tab-pane show fade <%= @show_collections ? 'active' : ''%>">
+                            <% if @collections.count > 0 %>
+                              <% @collections.each do |resource| %>
+                                  <%= render resource %>
+                              <% end %>
+                              <%= will_paginate @collections, :param_name => 'collection_page' %>
+                            <% else %>
+                              <blockquote><i class="fa fa-thumbs-down"></i> No collections found with that combination</blockquote>
+                              <div class="alert alert-info fade">
+                                <h4>Let Us Know What We're Missing</h4>
+                                <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
+                                <p><a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a></p>
+                              </div>
+                            <% end %>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!--- End resource and collections content --->
                 </div>
-                <div class="col-sm-4">
-                  <button type="submit" class="btn btn-u btn-primary"><i class="fa fa-search"></i> Search</button>
-                  <%= link_to 'Reset', @organization, class: "btn btn-u btn-danger" if !params[:resource_query].nil? %>
+              </div><!--- END RESOURCES TAB --->
+
+              <!--- PENDING TAB --->
+              <% if (!@resources_pending.nil? and @resources_pending.count > 0)  || (!@collections_pending.nil? and @collections_pending.count > 0) %>
+                <div class="tab-pane fade" id="resources_pending">
+                  <div class="row-fluid">
+                    <div class="col-sm-12">
+                      <h4>Resources</h4>
+                      <% if @resources_pending.count > 0 %>
+                        <p><%= @resources_pending.count %> resource(s) pending approval</p>
+                        <div class="card">
+                          <div class="card-body">
+                            <% @resources_pending.each do |resource| %>
+                              <%= render resource %>
+                            <% end %>
+                          </div>
+                        </div>
+                      <% else %>
+                        <p>No pending resources found.</p>
+                      <% end %>
+                    </div>
+                    <div class="col-sm-12">
+                      <h4>Collections</h4>
+                      <% if @collections_pending.count > 0 %>
+                        <p><%= @collections_pending.count %> collection(s) pending approval</p>
+                        <div class="card">
+                          <div class="card-body">
+                            <% @collections_pending.each do |resource| %>
+                              <%= render resource %>
+                            <% end %>
+                          </div>
+                        </div>
+                      <% else %>
+                        <p>No pending collections found.</p>
+                      <% end %>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-sm-2">
-                  <% if @organization.approved and @organization.users.exists?(current_user) %>
-                      <%= link_to new_resource_path, class: 'btn btn-u btn-u-green' do  %>
-                          <i class="fa fa-plus-square"></i>
-                          Add Resource
+              <% end %><!--- END PENDING TAB --->
+
+              <!--- MEMBERS TAB --->
+              <div class="tab-pane fade" id="members">
+                <div class="row-fluid">
+                <% if @organization.can_manage_users(current_user) or can? :manage, :all %>
+                  <%= link_to organization_add_user_path(@organization), class: 'btn btn-u btn-u-green pull-right' do %>
+                    <i class="fa fa-plus-square"></i> Add Member
+                  <% end %>
+                <% end %>
+                  <% if (@organization.can_manage_users(current_user) or can? :manage, :all) and @pending_applications.count > 0 %>
+                      <h4 class="text-color">Pending Member Applications</h4>
+                      <% @pending_applications.each do |pendingapplication| %>
+                          <% unless pendingapplication.user.nil? %>
+                            <!-- Bordered Funny Boxes -->
+                            <div class="funny-boxes funny-boxes-left-green">
+                              <div class="row">
+                                <!-- Begin Inner Results -->
+                                <div class="inner-results">
+
+                                  <div class="pull-right">
+                                    <%= link_to("Approve", organization_process_application_path(:id=> pendingapplication.id, :result => "approve"), :data => { :confirm => "You are about to accept this membership application\n\nAre you sure?" }, :class => 'btn btn-u btn-u-green btn-sm') %>
+                                    <%= link_to("Deny", organization_process_application_path(:id=> pendingapplication.id, :result => "deny"), :data => { :confirm => "Are you sure you would like to deny this application?" }, :class => 'btn btn-u btn-u-red btn-sm') %>
+                                  </div>
+
+                                  <% link_str = '<h4 class="primary-font pad-left">' + pendingapplication.user.name + '</h4>' %>
+                                  <%= link_to raw(link_str), pendingapplication.user %>
+                                  <p class="text-muted">
+                                    <%= simple_format pendingapplication.user.about.truncate(80) if !pendingapplication.user.about.nil? %>
+                                  </p>
+
+                                </div>
+                              </div>
+                            </div>
+
+                          <% end %>
                       <% end %>
                   <% end %>
-                </div>
-            <% end %>
-          </div>
-          <div class="row-fluid">
-            <div class="col-sm-12">
-              <% if !params[:resource_query].nil? %>
-                <h4 class="text-color"><%= @resource_count %> resources <%= 'found with "' + params[:resource_query] + '"'  %></h4>
-              <% else %>
-                <br>
-              <% end %>
-              <div class="tab-v1">
-                <ul class="nav nav-tabs">
-                  <li class="<%= !@show_collections ? 'active' : ''%>"><a data-toggle="tab" href="#inner_resources">Resources</a></li>
-                  <li class="<%= @show_collections ? 'active' : ''%>"><a data-toggle="tab" href="#inner_collections">Collections</a></li>
-                </ul>
-                <div class="tab-content">
-                  <div id="inner_resources" class="tab-pane fade in <%= !@show_collections ? 'active' : ''%>">
-                    <% if @resources.count > 0 %>
-                        <% @resources.each do |resource| %>
-                            <%= render resource %>
+                <h4 class="text-color">Current Members</h4>
+                <p>Users that register with a <b>verified <%= @organization.domain if !@organization.domain.nil?  %></b> email address will automatically become members of this organization.</p>
+                <% if @organization.users_organizations.count > 0 %>
+                    <% @organization.users_organizations.each do |userorg| %>
+                        <% if !userorg.user.nil? %>
+
+                            <!-- Bordered Funny Boxes -->
+                            <div class="funny-boxes funny-boxes-left-orange">
+                              <div class="row">
+                                <!-- Begin Inner Results -->
+                                <div class="inner-results">
+
+                                  <div class="pull-right">
+                                    <% if (can? :edit, @organization and @organization.can_manage_users(current_user)) or can? :manage, :all %>
+                                        <%= link_to users_organizations_edit_role_path(userorg), class: "btn btn-u btn-sm" do %>
+                                            <i class="fa fa-edit"></i> Edit Role
+                                        <% end %>
+                                        <%= link_to("Remove User", users_organization_path(userorg), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-u btn-sm') %>
+
+                                    <% end %>
+                                  </div>
+                                  <% link_str = '<span class="label label-success pull-left rounded margin-right">' + userorg.role + '</span> '  %>
+                                  <% link_str = link_str + '<h4 class="primary-font pad-left">' %>
+                                  <% link_str = link_str + userorg.user.name + '</h4>' %>
+                                  <%= link_to raw(link_str), userorg.user %>
+                                  <p class="text-muted">
+                                    <%= simple_format userorg.user.about.truncate(80) if !userorg.user.about.nil? %>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
                         <% end %>
-                        <%= will_paginate @resources %>
-                    <% else %>
-                        <blockquote><i class="fa fa-thumbs-down"></i> No resources found with that combination</blockquote>
-                        <div class="alert alert-info fade in">
-                          <h4>Let Us Know What We're Missing</h4>
-                          <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
-                          <p>
-                            <a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a>
-                          </p>
-                        </div>
                     <% end %>
-                  </div>
-                  <div id="inner_collections" class="tab-pane fade in <%= @show_collections ? 'active' : ''%>">
-                    <% if @collections.count > 0 %>
-                        <% @collections.each do |resource| %>
-                            <%= render resource %>
-                        <% end %>
-                        <%= will_paginate @collections, :param_name => 'collection_page' %>
-                    <% else %>
-                        <blockquote><i class="fa fa-thumbs-down"></i> No collections found with that combination</blockquote>
-                        <div class="alert alert-info fade in">
-                          <h4>Let Us Know What We're Missing</h4>
-                          <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
-                          <p>
-                            <a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a>
-                          </p>
-                        </div>
-                    <% end %>
-                  </div>
+                <% else %>
+                    <p>There are no members of this organization yet.</p>
+                <% end %>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <% if (!@resources_pending.nil? and @resources_pending.count > 0)  || (!@collections_pending.nil? and @collections_pending.count > 0) %>
-          <div class="tab-pane" id="resources_pending">
-          <div class="row-fluid">
-            <div class="col-sm-12">
-              <h2>Resources</h2>
-              <% if @resources_pending.count > 0 %>
-                <h4 class="text-color"><%= @resources_pending.count %> Resources Pending Approval</h4>
-                <% @resources_pending.each do |resource| %>
-                  <%= render resource %>
-                <% end %>
-              <% else %>
-                <p>No pending resources found.</p>
-              <% end %>
-            </div>
-            <div class="col-sm-12">
-              <h2>Collections</h2>
-              <% if @collections_pending.count > 0 %>
-                <h4 class="text-color"><%= @collections_pending.count %> Collections Pending Approval</h4>
-                <% @collections_pending.each do |resource| %>
-                  <%= render resource %>
-                <% end %>
-              <% else %>
-                <p>No pending collections found.</p>
-              <% end %>
-            </div>
-          </div>
-        </div>
-        <% end %>
-        <div class="tab-pane" id="members">
-          <div class="row-fluid">
-          <% if @organization.can_manage_users(current_user) or can? :manage, :all %>
-              <%= link_to organization_add_user_path(@organization), class: 'btn btn-u btn-u-green pull-right' do %>
-                  <i class="fa fa-plus-square"></i> Add Member
-              <% end %>
-          <% end %>
-            <% if (@organization.can_manage_users(current_user) or can? :manage, :all) and @pending_applications.count > 0 %>
-                <h4 class="text-color">Pending Member Applications</h4>
-                <% @pending_applications.each do |pendingapplication| %>
-                    <% unless pendingapplication.user.nil? %>
-                      <!-- Bordered Funny Boxes -->
-                      <div class="funny-boxes funny-boxes-left-green">
-                        <div class="row">
-                          <!-- Begin Inner Results -->
-                          <div class="inner-results">
+        <!-- End Tab v1 -->
 
-                            <div class="pull-right">
-                              <%= link_to("Approve", organization_process_application_path(:id=> pendingapplication.id, :result => "approve"), :data => { :confirm => "You are about to accept this membership application\n\nAre you sure?" }, :class => 'btn btn-u btn-u-green btn-sm') %>
-                              <%= link_to("Deny", organization_process_application_path(:id=> pendingapplication.id, :result => "deny"), :data => { :confirm => "Are you sure you would like to deny this application?" }, :class => 'btn btn-u btn-u-red btn-sm') %>
-                            </div>
 
-                            <% link_str = '<h4 class="primary-font pad-left">' + pendingapplication.user.name + '</h4>' %>
-                            <%= link_to raw(link_str), pendingapplication.user %>
-                            <p class="text-muted">
-                              <%= simple_format pendingapplication.user.about.truncate(80) if !pendingapplication.user.about.nil? %>
-                            </p>
-
-                          </div>
-                        </div>
-                      </div>
-
-                    <% end %>
-                <% end %>
-            <% end %>
-          <h4 class="text-color">Current Members</h4>
-          <p>Users that register with a <b>verified <%= @organization.domain if !@organization.domain.nil?  %></b> email address will automatically become members of this organization.</p>
-          <% if @organization.users_organizations.count > 0 %>
-              <% @organization.users_organizations.each do |userorg| %>
-                  <% if !userorg.user.nil? %>
-
-                      <!-- Bordered Funny Boxes -->
-                      <div class="funny-boxes funny-boxes-left-orange">
-                        <div class="row">
-                          <!-- Begin Inner Results -->
-                          <div class="inner-results">
-
-                            <div class="pull-right">
-                              <% if (can? :edit, @organization and @organization.can_manage_users(current_user)) or can? :manage, :all %>
-                                  <%= link_to users_organizations_edit_role_path(userorg), class: "btn btn-u btn-sm" do %>
-                                      <i class="fa fa-edit"></i> Edit Role
-                                  <% end %>
-                                  <%= link_to("Remove User", users_organization_path(userorg), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-u btn-sm') %>
-
-                              <% end %>
-                            </div>
-                            <% link_str = '<span class="label label-success pull-left rounded margin-right">' + userorg.role + '</span> '  %>
-                            <% link_str = link_str + '<h4 class="primary-font pad-left">' %>
-                            <% link_str = link_str + userorg.user.name + '</h4>' %>
-                            <%= link_to raw(link_str), userorg.user %>
-                            <p class="text-muted">
-                              <%= simple_format userorg.user.about.truncate(80) if !userorg.user.about.nil? %>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                  <% end %>
-              <% end %>
-          <% else %>
-              <p>There are no members of this organization yet.</p>
-          <% end %>
-          </div>
-        </div>
       </div>
-      </div>
-      <!-- End Tab v1 -->
-
-
     </div>
   </div>
-</div>
+</section>

@@ -8,13 +8,12 @@
   <% end %>
   <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> <%= @user.resources.count %> Resources Contributed</li>
   <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> <%= @user.collections_authored.count %> Collections Contributed</li>
+</ul>
+<ul class="list-group list-group-flush pt-2">
+  <% if current_user == @user %>
+    <li class="list-group-item available-tags ps-1"><%= link_to 'My Profile', user_path(current_user), class: 'active' if current_page?(user_url(@user)) %></li>
+    <li class="list-group-item available-tags ps-1"><%= link_to 'Edit Profile', edit_user_registration_path %></li>
+    <li class="list-group-item available-tags ps-1"><%= link_to 'Sign Out', destroy_user_session_path, :method=>'delete' %></li>
+  <% end %>
   <%= link_to users_path(:page => params[:page]), :class => "pt-2" do %>Back to Users<% end %>
 </ul>
-
-<% if current_user == @user %>
-  <ul class="nav nav-pills nav-stacked">
-    <li class="active"><%= link_to 'My Profile', user_path(current_user) %></li>
-    <li><%= link_to 'Edit Profile', edit_user_registration_path %></li>
-    <li><%= link_to 'Sign Out', destroy_user_session_path, :method=>'delete' %></li>
-  </ul>
-<% end %>
