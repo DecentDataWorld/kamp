@@ -74,7 +74,7 @@ class FeaturedSearchesController < ApplicationController
   
       # Only allow a list of trusted parameters through.
       def featured_search_params
-        params.require(:featured_search).permit(:name, :tag_list)
+        params.require(:featured_search).permit(:name, :icon_identifier, :tag_list)
       end
   end
   
