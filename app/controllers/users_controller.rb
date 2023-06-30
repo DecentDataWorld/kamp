@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 
   def index
     authorize! :index, @user, :message => 'Not authorized as an administrator.'
-    @users = User.joins(:users_organizations, :organizations, :roles, :organization_applications).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30) # this is not an optimized search!
+    @users = User.joins(:users_organizations, :organizations, :roles, :organization_applications).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30)
   end
 
   def show

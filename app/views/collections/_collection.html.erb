@@ -1,5 +1,5 @@
 
-<% str_title = ' <i class="fa fa-files-o"></i>' %>
+<% str_title = ' <i class="fa-regular fa-folder-open"></i> ' %>
 <% str_title = str_title + collection.title.truncate(55) %>
 <% if collection.private == true %>
     <% str_title = str_title + ' <i class="fa fa-eye-slash"></i>' %>
@@ -9,7 +9,7 @@
   <!-- Begin Inner Results -->
 
   <% if can? :approve, collection and !collection.approved %>
-      <div class="btn-group pull-right">
+  <!---<div class="btn-group pull-right">
         <button type="button" class="btn btn-success"><i class="fa fa-cog"></i></button>
         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
           <i class="fa fa-angle-down"></i>
@@ -20,16 +20,16 @@
           <li class="divider"></li>
           <li><a href="<%= denial_submission_path(:submission_id => collection.id, :submission_type => "collection") %>">Deny Submission</a></li>
         </ul>
-      </div>
+      </div>--->
   <% end %>
 
   <% if !collection.image.blank? %>
       <p><%= image_tag collection.image.expiring_url(10), class: "author pull-left pad-right"  %></p>
   <% end %>
-  <h2 class='headline-sm'><% if collection.approved == false %><span class="label label-orange">Pending Approval</span> <% end %><%= link_to raw(str_title), collection_path(collection) %></h2>
+  <h6 class><% if collection.approved == false %> <button class="btn btn-sm btn-outline-warning"> <i class="fa-solid fa-stamp"></i> </button><% end %> <%= link_to raw(str_title), collection_path(collection) %></h6>
   <ul class="list-inline">
     <li>
-      <%= raw collection.tags[0..2].map { |t| link_to raw('<i class="fa fa-tag"></i> ' + t.name), update_search_path(:tags=>[t.id]), class: 'text-highlights rounded' }.join('</li><li>') %>
+      <%= raw collection.tags[0..2].map { |t| link_to raw('<i class="fa fa-tag"></i> ' + t.name), update_search_path(:tags=>[t.id]), class: 'badge rounded-pill bg-secondary' }.join('</li><li>') %>
       <%= link_to raw('...more</li>'), collection_path(collection) if collection.tag_list.size > 4 %>
       <%= raw('</li>') if collection.tag_list.size <= 4 %>
 

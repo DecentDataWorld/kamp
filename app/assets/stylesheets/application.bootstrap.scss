@@ -105,6 +105,38 @@ table[data-controller="table-sort"] th[data-sort="desc"]::after {
   border: none !important;
 }
 
+.centered-content {
+  text-align: center;
+}
+
+.right-aligned-content {
+  text-align: right;
+}
+
+.green {
+  color: green;
+}
+
+.warning-yellow {
+  color: #FFC107;
+}
+
+.nav-link-large {
+  font-size: 1em !important;
+}
+
+.organization-image {
+  max-width: 15em;
+}
+
+a.active {
+  color: $secondary !important;
+}
+
+.approve:hover {
+  color: black;
+}
+
 /**
 * Template Name: Eterna
 * Updated: May 30 2023 with Bootstrap v5.3.0

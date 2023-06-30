@@ -26,9 +26,9 @@
             <div class="tab-v1">
               <ul class="nav nav-tabs pb-2">
                 <% if @current_user == @user %>
-                  <li class="active"><a href="#subscriptions" data-toggle="tab">Subscriptions</a></li>
+                  <li class="active pe-4"><a href="#subscriptions" data-toggle="tab">Subscriptions</a></li>
                 <% end %>
-                <li <%= 'class=active' if @current_user != @user %>><a href="#resources" data-toggle="tab">Resources Uploaded <span class="badge badge-yellow"><%= @resources.count %></span></a></li>
+                <li <%= 'class="active"' if @current_user != @user %>><a href="#resources" data-toggle="tab">Resources Uploaded <span class="badge badge-yellow"><%= @resources.count %></span></a></li>
                 <li><a href="#collections" data-toggle="tab">Collections Uploaded <span class="badge badge-yellow"><%= @collections.count %></span></a></li>
                 <% if !@resources_pending.nil? and @resources_pending.count > 0 %>
                     <li><a href="#pending" data-toggle="tab">Pending Submissions <span class="badge badge-yellow"><%= @resources_pending.count %></span></a></li>

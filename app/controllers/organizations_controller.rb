@@ -3,22 +3,9 @@ class OrganizationsController < ApplicationController
   load_and_authorize_resource :only => [:edit, :update, :destroy], :find_by => :url
   before_action :set_organization, only: [:show, :edit, :update, :destroy, :private_resources]
 
-  add_crumb("View All Organizations") { |instance| instance.send :organizations_path }
-
   # GET /organizations
   def index
-    if !params[:query].nil?
-      add_crumb("Find Organization(s)")
-      @page_title = 'Find Organization(s)'
-    else
-      add_crumb("Recent Organizations")
-      @page_title = "Recent Organizations"
-    end
-    if can? :manage, :all
-      add_crumb "Administration", admin_index_path
-    end
-
-    @organizations = Organization.where(approved: true).page(params[:page]).per_page(5).order("created_at asc")
+    @organizations = Organization.where("organizations.name ILIKE ?", "%#{params[:search]}%").order(name: :asc).paginate(:page => params[:page], :per_page => 30)
   end
 
   # GET /organizations/1
@@ -283,7 +270,7 @@ class OrganizationsController < ApplicationController
 
     AdminMailer.notify_organization_admins_of_org_approval(@organization).deliver
 
-    redirect_to admin_index_path, notice: 'Organization was successfully approved.'
+    redirect_to organizations_path, notice: 'Organization was successfully approved.'
 
   end
 
