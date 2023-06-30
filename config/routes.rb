@@ -98,7 +98,7 @@ Rails.application.routes.draw do
   match 'organizations/add_user/:organization' => 'organizations#process_new_user', :as => :organizations_process_user, :via => 'post'
   post 'organizations/invite_user', to: 'organizations#invite_user', as: :org_invite_user
   get 'organizations/private_resources/:id', to: 'organizations#private_resources', as: :org_private_resources
-  resources :organizations
+  resources :organizations, path: '/admin/organizations'
 
   root :to => 'home#index'
   get 'home/error', to: 'home#error', as: :error_page
@@ -111,7 +111,7 @@ Rails.application.routes.draw do
   get 'request_invite', to: 'users#request_invite', as: :request_invite
   post 'users/send_invite', to: 'users#send_invite', as: :send_invite
   devise_for :users, :controllers => {:registrations => 'registrations'}, :path => '', :path_names => {:sign_in => 'login', :sign_out => 'logout'}
-  resources :users
+  resources :users, path: 'admin/users'
 
   #HEALTHCHECK
   get '/healthcheck', to: 'healthcheck#check_db'
