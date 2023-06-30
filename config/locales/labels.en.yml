@@ -39,6 +39,12 @@ en:
     cop: "Community of Practice"
     cops: "Communities of Practice"
     new_cop: "New Community of Practice"
+    administration: "Administration"
+    home: "Home"
+    users: "Users"
+    organizations: "Organizations"
+    tags: "Tags"
+    tag_types: "Tag Types"
   headers:
     tag:
       new: "Add Tag"
