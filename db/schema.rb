@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_28_162607) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -334,6 +334,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_16_135519) do
     t.datetime "updated_at", precision: nil
     t.boolean "collections_only"
     t.boolean "resources_only"
+    t.integer "days_back"
   end
 
   create_table "survey_logs", id: :serial, force: :cascade do |t|
