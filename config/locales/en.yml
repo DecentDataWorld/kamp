@@ -34,9 +34,11 @@ en:
     models:
       user: "User"
       organization: "Organization"
+      organization_type: "Organization Type"
       tag: "Tag"
       tag_type: "Tag Type"
       resource: "Resource"
+      cop: "Community of Practice"
     attributes:
       user:
         user: "User"
@@ -56,6 +58,8 @@ en:
         members: "Members"
         approved: "Approved"
         results: "Results"
+      organization_type:
+        name: "Name"
       tag:
         name: "Name"
         tag_type_name: "Type Name"
