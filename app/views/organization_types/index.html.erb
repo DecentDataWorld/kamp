@@ -1,34 +1,45 @@
-
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-md-9">
-    <%= link_to 'New Organization type', new_organization_type_path, class: 'pull-right btn btn-primary' %>
-    <table class="table table-bordered">
-      <thead>
-      <tr>
-        <th width="50"></th>
-        <th>Org Type</th>
-        <th width="150"></th>
-      </tr>
-      </thead>
-
-      <tbody>
-      <% @organization_types.each do |organization_type| %>
-          <tr>
-            <td><%= link_to 'Edit', edit_organization_type_path(organization_type), class: 'btn btn-xs btn-primary' %></td>
-            <td><%= organization_type.organization_type %></td>
-            <td><%= link_to 'Destroy', organization_type, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-xs btn-primary' %></td>
-          </tr>
-      <% end %>
-      </tbody>
-    </table>
-
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+      <li><%= link_to users_path do %><%=t('navigation.administration')%><% end %></li>
+      <li><%= t('navigation.organization_types')%></li>
+    </ol>
   </div>
-  <div class="col-md-3">
+</section><!-- End Breadcrumbs -->
 
-    <%= render 'admin/sidebar' %>
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <h5 class="border-bottom pb-2"><%=t('navigation.administration')%></h5>
+        <%= render 'admin/side_nav' %>
+        <br/>
+      </div>
 
+      <div class="col-9">
+        <div class="border-bottom">
+          <div class="text-end border-bottom"><%= link_to t('navigation.new_organization_type'), new_organization_type_path, class: "btn btn-outline-primary admin-top-action mb-1" %></div>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover" data-controller="table-sort">
+              <thead>
+                <tr>
+                  <th><%=t('activerecord.attributes.organization_type.name') %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @organization_types.each do |ot| %>
+                  <tr>
+                    <td><%= link_to ot.organization_type, edit_organization_type_path(ot) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  </div>
-</div>
+</section>

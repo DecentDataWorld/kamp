@@ -6,6 +6,9 @@
     <a href="<%= organizations_url %>" class="<%= 'active' if current_page?(organizations_url) %>"><%=t('navigation.organizations')%></a>
   </li>
   <li class="list-group-item available-tags ps-1">
+    <a href="<%= organization_types_url %>" class="<%= 'active' if current_page?(organization_types_url) %>"><%=t('navigation.organization_types')%></a>
+  </li>
+  <li class="list-group-item available-tags ps-1">
     <a href="<%= tags_url %>" class="<%= 'active' if current_page?(tags_url) %>"><%=t('navigation.tags')%></a>
   </li>
   <li class="list-group-item available-tags ps-1">

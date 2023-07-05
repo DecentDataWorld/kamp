@@ -21,26 +21,22 @@
 
         <div class="col-9">
           <div class="border-bottom">
-            <span class="new-tag-button"><%= link_to t('navigation.new_tag'), new_tag_path, class: "btn btn-outline-primary " %></span>
+            <div class="text-end border-bottom"><%= link_to t('navigation.new_tag'), new_tag_path, class: "btn btn-outline-primary admin-top-action mb-1" %></div>
             <div class="table-responsive">
-              <table class="table table-striped table-sm" data-controller="table-sort">
+              <table class="table table-striped table-hover" data-controller="table-sort">
                 <thead>
                   <tr>
                     <th><%=t('activerecord.attributes.tag.name') %></th>
                     <th><%=t('activerecord.attributes.tag.type_name') %></th>
-                    <th class="column-no-sort"></th>
                   </tr>
                 </thead>
                 <tbody>
-                <% @tags.each do |t| %>
-                  <tr>
-                    <td><%= t.name %></td>
-                    <td><%= t.tag_type ? t.tag_type.name : ""%></td>
-                    <td>
-                      <span class="float-end"><%= link_to t('navigation.edit'), edit_tag_path(t), class: "btn btn-outline-primary " %></span>
-                    </td>
-                  </tr>
-                <% end %>
+                  <% @tags.each do |t| %>
+                    <tr>
+                      <td><%= link_to t.name, edit_tag_path(t) %></td>
+                      <td><%= t.tag_type ? t.tag_type.name : ""%></td>
+                    </tr>
+                  <% end %>
                 </tbody>
               </table>
             </div>
