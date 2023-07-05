@@ -111,31 +111,6 @@ th.column-no-sort {
   pointer-events: none !important;
 }
 
-.new-tag-button {
-  position: absolute;
-  margin-left: 54.5em;
-  margin-top: -.5em;
-}
-
-.new-tag-type-button {
-  position: absolute;
-  margin-left: 52em;
-  margin-top: -.5em;
-}
-
-.new-org-type-button {
-  position: absolute;
-  margin-left: 47.7em;
-  margin-top: -.5em;
-}
-
-.new-cop-button {
-  position: absolute;
-  margin-left: 45.6em;
-  margin-top: -.5em;
-}
-
-
 .apple_pagination {
   background: #f1f1f1;
   border: 1px solid #e5e5e5;
@@ -172,7 +147,7 @@ th.column-no-sort {
   font-size: 13px;
 }
 
-.users-search {
+.admin-top-action {
   margin-top: -.6em;
 }
 

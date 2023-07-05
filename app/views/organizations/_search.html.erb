@@ -1,5 +1,5 @@
 <%= form_with url: organizations_path, method: :get do |form| %>
-  <div class="input-group users-search">
+  <div class="input-group admin-top-action">
     <%= text_field_tag :search, params[:search], autocomplete: "off", class: "form-control", placeholder: "Search organizations" %>
     <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
     <% if params[:search] && params[:search].length > 0 %>
