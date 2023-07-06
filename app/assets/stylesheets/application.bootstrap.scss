@@ -6,6 +6,7 @@ $danger:#651D32;
 $info: #A7C6ED;
 $dark: #6C6463;
 $red: #BA0C2F;
+$enable-negative-margins: true;
 
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
@@ -145,10 +146,6 @@ th.column-no-sort {
 
 .resource-small {
   font-size: 13px;
-}
-
-.admin-top-action {
-  margin-top: -.6em;
 }
 
 .no-border {

@@ -1,9 +1,9 @@
 <%= form_with url: users_path, method: :get do |form| %>
-  <div class="input-group admin-top-action">
-    <%= text_field_tag :search, params[:search], autocomplete: "off", class: "form-control", placeholder: "Search users" %>
-    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+  <div class="input-group mt-n3 m-0 p-0">
+    <%= text_field_tag :search, params[:search], autocomplete: "off", class: "form-control mt-1 pt-2", placeholder: "Search users" %>
+    <button type="submit" class="btn btn-outline-primary mt-1 pt-2"><i class="fa fa-search"></i></button>
     <% if params[:search] && params[:search].length > 0 %>
-      <%= link_to users_path, class: 'btn btn-outline-primary', role: "button" do %><i class="fa fa-refresh"></i><% end %>
+      <%= link_to users_path, class: 'btn btn-outline-primary mt-1 pt-2', role: "button" do %><i class="fa fa-refresh"></i><% end %>
     <% end %>
   </div>
 <% end %>
