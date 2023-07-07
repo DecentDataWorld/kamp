@@ -33,17 +33,33 @@ en:
   activerecord:
     models:
       user: "User"
+      organization: "Organization"
+      organization_type: "Organization Type"
       tag: "Tag"
       tag_type: "Tag Type"
       resource: "Resource"
+      cop: "Community of Practice"
     attributes:
       user:
-        name: "User"
+        user: "User"
+        name: "Name"
         first_name: "First Name"
         last_name: "Last Name"
         email: "Email"
         user_role: "User Role"
         admin: "Administrator"
+        roles: "Roles"
+        organizations: "Organizations"
+        results: "Results"
+      organization:
+        name: "Organization"
+        email_domain: "Email Domain"
+        admins: "Admins"
+        members: "Members"
+        approved: "Approved"
+        results: "Results"
+      organization_type:
+        name: "Name"
       tag:
         name: "Name"
         tag_type_name: "Type Name"

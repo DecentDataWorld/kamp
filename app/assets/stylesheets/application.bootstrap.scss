@@ -6,6 +6,7 @@ $danger:#651D32;
 $info: #A7C6ED;
 $dark: #6C6463;
 $red: #BA0C2F;
+$enable-negative-margins: true;
 
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
@@ -106,6 +107,11 @@ table[data-controller="table-sort"] th[data-sort="desc"]::after {
   content: "▼";
 }
 
+th.column-no-sort {
+  font-size: 0px !important;
+  pointer-events: none !important;
+}
+
 .apple_pagination {
   background: #f1f1f1;
   border: 1px solid #e5e5e5;
@@ -140,10 +146,6 @@ table[data-controller="table-sort"] th[data-sort="desc"]::after {
 
 .resource-small {
   font-size: 13px;
-}
-
-.users-search {
-  margin-top: -.6em;
 }
 
 .no-border {

@@ -78,8 +78,8 @@
                     <div class="col-sm-12">
                       <div class="tab-v1">
                         <ul class="nav nav-tabs">
-                          <li class="nav-item <%= !@show_collections ? 'active' : ''%>"><a href="#inner_resources" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#inner_resources">Resources</a></li>
-                          <li class="nav-item <%= @show_collections ? 'active' : ''%>"><a href="#inner_collections" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#inner_collections">Collections</a></li>
+                          <li class="nav-item"><a href="#inner_resources" class="nav-link nav-link-large <%= !@show_collections ? 'active' : ''%>" data-bs-toggle="tab" data-bs-target="#inner_resources">Resources</a></li>
+                          <li class="nav-item"><a href="#inner_collections" class="nav-link nav-link-large  <%= @show_collections ? 'active' : ''%>" data-bs-toggle="tab" data-bs-target="#inner_collections">Collections</a></li>
                         </ul>
                         <div class="tab-content">
                           <div id="inner_resources" class="tab-pane show fade <%= !@show_collections ? 'active' : ''%>">

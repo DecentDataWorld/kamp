@@ -2,8 +2,8 @@
 <section id="breadcrumbs" class="breadcrumbs">
     <div class="container">
       <ol>
-        <li><%= link_to root_path do %>Home<% end %></li>
-        <li><%= link_to users_path do %>Administration<% end %></li>
+        <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+        <li><%= link_to users_path do %><%=t('navigation.administration')%><% end %></li>
         <li>Organizations</li>
       </ol>
     </div>
@@ -14,7 +14,7 @@
   <div class="container">
     <div class="row">
       <div class="col-3 border-end">
-      <h5 class="border-bottom pb-2">Administration</h5>
+      <h5 class="border-bottom pb-2"><%=t('navigation.administration')%></h5>
         <%= render 'admin/side_nav' %>
         <br/>
       </div>
@@ -25,17 +25,17 @@
             <div class="col-10">
               <%= render 'search' %>
             </div>
-            <div class="col-2"> Results: <%= @organizations.count %></div>
+            <div class="col-2"><%=t('activerecord.attributes.organization.results')%>: <%= @organizations.count %></div>
           </div>
         </div>
         <div data-controller="organization-list">
           <table class="table table-striped table-hover" data-controller="table-sort">
             <thead>
-              <th>Name</th>
-              <th>Email Domain</th>
-              <th>Admins</th>
-              <th>Members</th>
-              <th>Approved</th>
+              <th><%=t('activerecord.attributes.organization.name')%></th>
+              <th><%=t('activerecord.attributes.organization.email_domain')%></th>
+              <th><%=t('activerecord.attributes.organization.admins')%></th>
+              <th><%=t('activerecord.attributes.organization.members')%></th>
+              <th><%=t('activerecord.attributes.organization.approved')%></th>
             </thead>
             <tbody>
               <% @organizations.each do |o| %>
