@@ -4,8 +4,10 @@ class AdminController < ApplicationController
 
   def index
     @page_title = "Administration"
-    @users = User.all.page(params[:page]).per_page(5).order("created_at desc")
-    @organizations = Organization.where(approved: [false, nil]).page(params[:page]).per_page(5).order("created_at asc")
+    no_role_ids = User.no_role_ids
+    @show_orgs = params[:org_page].to_i > params[:page].to_i
+    @users = User.where(id: no_role_ids).page(params[:page]).per_page(5).order("created_at desc")
+    @organizations = Organization.where(approved: [false, nil]).page(params[:org_page]).per_page(5).order("created_at asc")
 
     handle_pending_resources
 
@@ -285,7 +287,7 @@ class AdminController < ApplicationController
   def handle_pending_resources
 
     if can? :approve, Resource or can? :approve, Collection
-      @pending_submissions = Resource.where(:approved => false).paginate(page: params[:page], per_page: 10)
+      @pending_submissions = Resource.where(:approved => false)
     end
 
   end

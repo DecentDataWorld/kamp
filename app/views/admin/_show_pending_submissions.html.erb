@@ -1,23 +1,17 @@
 
 <% if pending_submissions.count > 0 %>
-    <div class="row">
-      <div class="col-sm-12">
-        <span class="results-number"><strong><%= pending_submissions.count %></strong> pending submissions found</span>
-      </div>
-    </div>
     <% pending_submissions.each do |submission| %>
         <div class="row">
           <div class="col-sm-12">
             <% if submission.class.name == "Collection" %>
-                <%= render partial: "collections/collection_moderators", locals: { collection: submission } %>
+                <%= render partial: "collections/collection", locals: { collection: submission } %>
             <% else %>
-                <%= render partial: "resources/resource_moderators", locals: { resource: submission } %>
+                <%= render partial: "resources/resource", locals: { resource: submission } %>
             <% end %>
 
           </div>
         </div>
     <% end %>
-    <%= will_paginate pending_submissions %>
 <% else %>
-    <p>There are no submissions pending approval right now</p>
+    <p>There are no submissions pending approval right now.</p>
 <% end %>
