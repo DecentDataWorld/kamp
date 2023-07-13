@@ -57,4 +57,11 @@ class User < ActiveRecord::Base
     return self.users_organizations.where("organization_id = ?", org.id)
   end
 
+  def self.no_role_ids
+    query = "select id from users where id not in (select user_id from users_roles)"
+    results = ActiveRecord::Base.connection.exec_query(query)
+    ids = results.map { |r| r["id"] }
+    return ids
+  end
+
 end

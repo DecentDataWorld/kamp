@@ -1,0 +1,39 @@
+<table class="table table-sm table-striped">
+  <thead>
+  <tr>
+    <th>User</th>
+    <th>Organization(s)</th>
+    <th>Registered</th>
+    <th>Last Accessed</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% users.each do |user| %>
+    <%= render user %>
+      <tr>
+        <td>
+          <strong><%= link_to user.name, user %></strong>
+          <small>(<%= user.email %>)<br>
+            <%= raw("<strong>Logged In:</strong> " + user.last_sign_in_at.strftime("%m/%d/%Y")) if !user.last_sign_in_at.nil? %>
+          </small>
+        </td>
+        <td>
+          <% if !user.organizations.nil? %>
+            <% user.users_organizations.each do |userorganization| %>
+              <%= link_to userorganization.organization.name, organization_path(userorganization.organization) %> (<%= userorganization.role %>)<br>
+            <% end %>
+          <% end %>
+          <% if !user.organization_applications.nil? %>
+            <% user.organization_applications.each do |userapplication| %>
+              <% if userapplication.approved == false || userapplication.approved.nil? %>
+                <%= link_to userapplication.organization.name, organization_path(userapplication.organization) %> (applied to join)<br>
+              <% end %>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= user.created_at.to_date %></td>
+        <td><%= user.last_sign_in_at.to_date if !user.last_sign_in_at.nil? %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

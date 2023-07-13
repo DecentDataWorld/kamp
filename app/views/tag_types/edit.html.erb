@@ -3,7 +3,7 @@
     <div class="container">
       <ol>
         <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
-        <li><%= link_to users_path do %><%=t('navigation.administration')%><% end %></li>
+        <li><%= link_to admin_index_path do %><%=t('navigation.administration')%><% end %></li>
         <li><%= link_to tag_types_path do %><%=t('navigation.tag_types')%><% end %></li>
         <li><%= @tag_type.name %></li>
       </ol>

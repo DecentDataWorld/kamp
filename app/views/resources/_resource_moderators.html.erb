@@ -17,17 +17,16 @@ header_text = header_text + ""
 <div class="tag-box tag-box-v2 margin-bottom-20 well well-sm">
     <!-- Begin Inner Results -->
     <% if can? :approve, resource and resource.approved != true %>
-    <div class="btn-group pull-right">
-        <button type="button" class="btn btn-success"><i class="fa fa-cog"></i></button>
-        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-angle-down"></i>
-            <span class="sr-only">Toggle Dropdown</span>
+    <div class="pull-right">
+        <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-cog"></i>
         </button>
-        <ul class="dropdown-menu" role="menu">
-            <li><%= link_to "Approve Resource", approve_submission_path(:submission_id => resource.id, :submission_type => "resource") %></li>
-            <li class="divider"></li>
-            <li><a href="<%= denial_submission_path(:submission_id => resource.id, :submission_type => "resource") %>">Deny Submission</a></li>
+        <ul class="dropdown-menu">
+          <li><%= link_to "Approve Resource", approve_submission_path(:submission_id => resource.id, :submission_type => "resource", :class => "dropdown-item") %></li>
+          <li><a class="dropdown-item" href="<%= denial_submission_path(:submission_id => resource.id, :submission_type => "resource") %>">Deny Submission</a></li>
         </ul>
+        </div>
     </div>
     <% end %>
     <h2 class='headline-sm'><% if resource.approved == false %><span class="label label-orange">Pending Approval</span> <% end %><%= link_to raw(header_text), resource_path(resource) %></h2>
