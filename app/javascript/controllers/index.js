@@ -9,3 +9,6 @@ application.register("hello", HelloController)
 
 import { TableSortController } from "stimulus-library"
 application.register("table-sort", TableSortController)
+
+import MultiselectController from "./multiselect_controller.js"
+application.register("multiselect", MultiselectController)
