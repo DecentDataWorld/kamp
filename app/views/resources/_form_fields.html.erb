@@ -1,36 +1,46 @@
 <%= f.input :author_id, :as => "hidden" %>
 
-<div class="form-group">
-  <label for="name">Name</label>
-  <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter Name', maxlength: 250 %>
+<div class="row p-2">
+  <div class="col-md-12">
+    <%= f.label :name %><br>
+    <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter Name', maxlength: 250 %>
+  </div>
 </div>
 
 <% if !resource.attachment.blank? %>
-    <div class="pull-left">
+  <div class="row p-2">
+    <div class="col-md-12">
       <b>Current File</b><br>
       <%= link_to raw('<i class="fa fa-save"></i> ' + resource.attachment_file_name.truncate(20)), resource.attachment.url %>
     </div>
-    <div class="form-group col-lg-offset-3">
-      <label for="title">Replace File</label>
-      <%= f.input_field :attachment, id: 'attachment', label: false,  data: { :"show-upload" => "false" } %>
+  </div>
+  <div class="row p-2">
+    <div class="col-md-12">
+      <%= f.label :replace_file %><br>
+      <%= f.input_field :attachment, class: "form-control", id: 'attachment', label: false,  data: { :"show-upload" => "false" } %>
     </div>
+  </div>
 <% else %>
-    <div class="form-group">
-      <label for="attachment">Attach File</label>
+  <div class="row p-2">
+    <div class="col-md-12">
+      <%= f.label :attachment %><br>
       <%= f.input_field :attachment, id: 'attachment', label: false,  data: { :"show-upload" => "false" } %>
     </div>
+  </div>
 <% end %>
 
-<div class="form-group">
-  <label for="source">Source URL</label>
-  <%= f.url_field :source, class: "form-control", id: 'source', placeholder: 'Enter Source URL' %>
+<div class="row p-2">
+  <div class="col-md-12">
+    <%= f.label :source %><br>
+    <%= f.url_field :source, class: "form-control", id: 'source', placeholder: 'Enter Source URL' %>
+  </div>
 </div>
 
 <%
 
    grouped_tags = {}
-   Category.all.each do |category|
-     category.tags.each do |tag|
+   TagType.all.order(:name).each do |category|
+     category.tags.order(:name).each do |tag|
        grouped_tags[category.name] ||= []
        grouped_tags[category.name] << tag.name
      end
@@ -38,125 +48,68 @@
 
 %>
 
-<div class="form-group">
-  <label for="tags">Tag(s)</label>
-  <%= f.input_field :tags,
-                    :label => false,
-                    :id => "tags",
-                    :as => :grouped_select,
-                    :collection => grouped_tags,
-                    :group_method => :last,
-                    :multiple => true,
-                    :class => "col-md-10 form-control multiple-chosen-select" %>
+<div class="row p-2">
+  <div class="col-md-12">
+    <%= f.label :tags %><br>
+    <%= f.input_field :tags,
+                          :label => false,
+                          :id => "multiselect",
+                          :as => :grouped_select,
+                          :collection => grouped_tags,
+                          :group_method => :last,
+                          :multiple => true,
+                          :class => "form-control",
+                          data: {controller: "multiselect", placeholder: "Begin typing to search for tags"} %>
 
 </div>
+</div>  
 
-<div class="form-group">
-  <label for="description">Description</label>
-  <%= f.input_field :description, class: "form-control", id: 'description', label: false, placeholder: 'Give it a description' %>
+<div class="row p-2">
+  <div class="col-md-12">
+    <%= f.label :description %><br>
+    <%= f.input_field :description, class: "form-control", id: 'description', label: false, placeholder: 'Give it a description' %>
+  </div>
 </div>
 
-<div class="form-group">
-  <label for="corporate_authorship">Corporate Authorship</label>
-  <%= f.input_field :corporate_authorship, class: "form-control", label: false, placeholder: 'Authors/producers of this resource' %>
+<div class="row p-2">
+  <div class="col-md-12">
+    <%= f.label :corporate_authorship %><br>
+    <%= f.input_field :corporate_authorship, class: "form-control", label: false, placeholder: 'Authors/producers of this resource' %>
+  </div>
 </div>
 
-<div class="form-group">
-  <label for="issue_date">Issue Date</label>
-  <%= f.input :issue_date, collection: (Date.today.year - 90..Date.today.year+2), include_blank: true, class: "form-control", label: false, placeholder: 'Date Document was issued/published', include_blank: true  %>
+<div class="row p-2">
+  <div class="col-md-12">
+    <%= f.label :issue_date %><br>
+    <%= f.input :issue_date, collection: (Date.today.year - 40..Date.today.year+2), include_blank: true, class: "form-control", label: false, placeholder: 'Date Document was issued/published', include_blank: true  %>
+  </div>
 </div>
 
-<div class="form-group">
-  <label for="activity_id">Activity</label>
-
-  <%= f.select :activity_id, Activity.all.collect {|x| [x.name, x.id]}, class: 'form-control', label: false, placeholder: 'Choose an Actvitity', :include_blank => true %><br>
-  <small>If this resource relates to one of the listed activities, select it above</small>
-</div>
-
-<div class="form-group">
-  <label for="language">Language</label>
-  <%= f.input_field :language, class: "form-control", label: false, placeholder: 'Choose a language', include_blank: false %>
+<div class="row p-2">
+  <div class="col-md-12">
+    <%= f.label :language %><br>
+    <%= f.input_field :language, class: "form-control", label: false, placeholder: 'Choose a language', include_blank: false %>
+  </div>
 </div>
 
 <% if current_user.organizations.count > 1 && resource.id.nil? %>
-    <div class="form-group">
-      <label for="attachment">Organization</label>
+  <div class="row p-2">
+    <div class="col-md-12">
+      <%= f.label :organization %><br>
       <%= f.select :organization_id, current_user.organizations.all.collect {|x| [x.name, x.id]}, label: false %>
     </div>
+  </div>
 <% elsif current_user.organizations.count == 1 && resource.id.nil? %>
     <%= f.input_field :organization_id, :value => current_user.organizations.first.id, :as => "hidden" %>
 <% end %>
 
-<div class="checkbox">
+<div class="row p-2">
+  <div class="col-md-12">
   <%=
       f.input :private, label: false, as: :boolean do
         f.check_box :private, {}, "true", "false"
       end
   %> Mark as a private resource that can only be accessed by users in my organization
+  </div>
 </div>
 
-<% if can? :add_newsletter_resource, @resource %>
-    <div class="checkbox">
-      <%=
-        f.input :newsletter_only, label: false, as: :boolean do
-          f.check_box :newsletter_only, {}, "true", "false"
-        end
-      %> Limit access to newsletter subscribers only
-    </div>
-<% end %>
-
-<script>
-    var substringMatcher = function(strs) {
-        return function findMatches(q, cb) {
-            var matches, substringRegex;
-
-// an array that will be populated with substring matches
-            matches = [];
-
-// regex used to determine if a string contains the substring `q`
-            substrRegex = new RegExp(q, 'i');
-
-// iterate through the pool of strings and for any string that
-// contains the substring `q`, add it to the `matches` array
-            $.each(strs, function(i, str) {
-                if (substrRegex.test(str)) {
-// the typeahead jQuery plugin expects suggestions to a
-// JavaScript object, refer to typeahead docs for more info
-                    matches.push({ value: str });
-                }
-            });
-
-            cb(matches);
-        };
-    };
-
-    $(function(){
-
-        $(".multiple-chosen-select").chosen();
-
-        $('.collectiontoggle').hide();
-
-        $('.collectionshow').bind('change',function(){
-
-            $('.collectiontoggle').slideToggle( "slow", function() {
-
-                if($('input[name=collection_radios]:checked').val() == "0") {
-                    $(".col-chosen-select").val('').trigger("chosen:updated");
-                    $(".newtitle").val('');
-                }
-                else {
-                }
-            });
-
-
-        });
-
-        $('.newtitle').keyup(function () {
-            if($('.newtitle').length > 0) {
-                $(".col-chosen-select").val('').trigger("chosen:updated");
-            }
-        });
-
-    });
-
-</script>
