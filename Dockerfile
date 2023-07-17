@@ -16,7 +16,10 @@ RUN apk add --no-cache --virtual --update build-base \
   tzdata \
   shared-mime-info \
   # Needed for nokogiri to run on mac dev
-  gcompat
+  gcompat \
+  # needed for paperclip/image processing
+  file \
+  imagemagick
 
 ENV BUNDLER_VERSION 2.2.33
 
