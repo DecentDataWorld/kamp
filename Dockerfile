@@ -19,9 +19,11 @@ RUN apk add --no-cache --virtual --update build-base \
   gcompat \
   # needed for paperclip/image processing
   file \
-  imagemagick
+  php8-pecl-imagick
 
 ENV BUNDLER_VERSION 2.2.33
+ENV RAILS_ENV=development
+ENV RACK_ENV=development
 
 RUN mkdir /kamp
 WORKDIR /kamp
