@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get 'survey/index'
   get 'survey/done'
   get 'service/index'
-  resources :denial_reasons
+  resources :denial_reasons, path: 'admin/denial_reasons'
   get 'moderator/index', to: 'moderator#index', as: :moderate_submissions
   get 'moderator/approve', to: 'moderator#approve', as: :approve_submission
   get 'moderator/denial', to: 'moderator#denial', as: :denial_submission
