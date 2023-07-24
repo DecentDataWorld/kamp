@@ -5,7 +5,23 @@ class UsersController < ApplicationController
 
   def index
     authorize! :index, @user, :message => 'Not authorized as an administrator.'
-    @users = User.joins(:users_organizations, :organizations, :roles, :organization_applications).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30)
+    @users = User.where(deactivated_at: nil).joins(:users_organizations, :organizations, :roles, :organization_applications).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30)
+
+    if params[:organization_id]
+      @users = @users.filter{|u| u.users_organizations.pluck(:organization_id).include?(params[:organization_id].to_i)}
+    end
+
+    if params[:role_id]
+      @users = @users.filter{|u| u.roles.pluck(:role_id).include?(params[:role_id].to_i)}
+    end
+
+    if params[:usage_id]
+      if params[:usage_id] == 'ninety'
+        @users = @users.where('users.created_at > ? ', Time.now - 90.days)
+      elsif params[:usage_id] == 'year'
+        @users = @users.where('last_sign_in_at < ?', Time.now - 1.year)
+      end
+    end
   end
 
   def show
@@ -13,6 +29,7 @@ class UsersController < ApplicationController
     @resources = @user.resources.where("private = false and approved = true and newsletter_only = false").page(params[:resources_page]).per_page(10).order("updated_at desc")
     @collections = @user.collections_authored.where("private = false and approved = true and newsletter_only = false").page(params[:collections_page]).per_page(10).order("updated_at desc")
     @organizations = @user.organizations.page(params[:organizations_page]).per_page(10).order("updated_at desc")
+    @cops = @user.cops.page(params[:cops_page]).per_page(10).order('updated_at desc')
 
     # if user is current user can view pending submissions, query for them
     @current_user = current_user
@@ -33,15 +50,27 @@ class UsersController < ApplicationController
       @resources_pending = @user.resources.where("approved = false").order("updated_at desc")
     end
   end
+
+  def edit
+    @user = User.find(params[:id])
+  end
   
   def update
     authorize! :update, @user, :message => 'Not authorized as an administrator.'
     @user = User.find(params[:id])
 
-    if @user.update_attributes(user_params)
-      redirect_to users_path, :notice => "User updated."
-    else
-      redirect_to users_path, :alert => "Unable to update user."
+    respond_to do |format|
+      if @user.update(user_params)
+        flash[:notice] = I18n.t("notices.update_success")
+        format.html { redirect_to users_path }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        # updating role is always erroring, as below. i don't know why it's submitting a (blank?) email address when the form doesn't have that field at all..
+        # <ActiveModel::Errors [#<ActiveModel::Error attribute=email, type=invalid, options={}>]>
+        puts @user.errors.inspect
+        format.html { render :edit }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
     end
   end
     
@@ -57,19 +86,23 @@ class UsersController < ApplicationController
     end
   end
 
-  def unlock_user
-
+  def deactivate
     authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
-
     @user = User.find(params[:id])
+    unless @user == current_user
+      @user.deactivate
+      redirect_to users_path, :notice => "User deactivated."
+    else
+      redirect_to users_path, :notice => "Can't deactivate yourself."
+    end
+  end
 
+  def unlock_user
+    authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
+    @user = User.find(params[:id])
     @user.expired_at = nil?
-
     @user.save
-
     redirect_to users_path, :notice => "User unlocked."
-
-
   end
 
   def get_users
@@ -176,7 +209,7 @@ class UsersController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_user
-      @user = User.find(id: params[:id])
+    @user = User.find(id: params[:id])
   end
 
   def handle_record_not_found
@@ -185,6 +218,6 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:id, :role_ids, :invitation_email, :search)
+    params.require(:user).permit(:id, :role_ids, :invitation_email, :search, :role_id)
   end
 end

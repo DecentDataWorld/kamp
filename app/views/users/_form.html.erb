@@ -1,0 +1,30 @@
+<%= form_with model: @user, local: true do |form| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@user.errors.count, t('errors.error')) %>
+        <%= t('errors.prohibited') %>
+      </h2>
+      <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="form-group">
+      <%= form.label :role %><br>
+      <%= form.collection_select :role_ids, Role.order(:name), :id, :name, {}, { class: "form-control" } %>
+    </div>
+
+    <div class="form-group">
+      <%= form.submit t('helpers.submit.update', model: User.model_name.human), class: "btn btn-outline-primary" %>
+      <%= link_to t('navigation.cancel'), user_path(@user), class: "btn btn-outline-secondary" %>
+      <span class="float-end"><%= link_to "Deactivate", deactivate_user_path(@user),
+        data: { turbo_confirm: "Are you sure you want to deactivate this user?", turbo_method: :put }, class: "btn btn-outline-danger" %></span>
+    </div>
+  </div>
+
+<% end %>

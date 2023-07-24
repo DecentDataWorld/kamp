@@ -111,6 +111,8 @@ Rails.application.routes.draw do
   post 'users/send_invite', to: 'users#send_invite', as: :send_invite
   devise_for :users, :controllers => {:registrations => 'registrations'}, :path => '', :path_names => {:sign_in => 'login', :sign_out => 'logout'}
   resources :users, path: 'admin/users'
+  put 'deactivate/:id', to: 'users#deactivate', as: 'deactivate_user'
+  put 'reactivate/:id', to: 'users#reactivate', as: 'reactivate_user'
 
   #HEALTHCHECK
   get '/healthcheck', to: 'healthcheck#check_db'

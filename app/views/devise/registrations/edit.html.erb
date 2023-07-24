@@ -1,61 +1,81 @@
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %>Home<% end %></li>
+      <li><%= link_to admin_index_path do %>Administration<% end %></li>
+      <li><%= link_to users_path(:page => params[:page]) do %>Users<% end%></li>
+      <li><%= link_to user_path(@user) do %><%= @user.name %><% end %></li>
+      <li>Edit</li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
 
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-      <div class="sign-form">
-        <h3>Edit <%= resource_name.to_s.humanize %></h3>
-        <%= devise_error_messages! %>
-        <%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :role => 'form'}) do |f| %>
-            <%= devise_error_messages! %>
-            <div class="form-group">
-              <%= f.label :name %>
-              <%= f.text_field :name, :autofocus => true, class: 'form-control' %>
-            </div>
-            <div class="form-group">
-              <%= f.label :email %>
-              <%= resource.email %>
-              <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-                  <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-              <% end %>
-            </div>
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <h5 class="border-bottom pb-2"><%= @user.name.titleize %> Profile</h5>
+        <%= render 'users/profile_navigation' %>
+      </div>
 
-            <div class="clear"></div>
-
-            <div class="form-group">
-              <%= f.label :title %>
-              <%= f.input_field :title, class: 'form-control' %>
-            </div>
-
-            <fieldset>
-            <h4>Update Password</h4>
-            <p>Leave these fields blank if you don't want to change your password.</p>
-            <div class="form-group">
-              <%= f.label :password %>
-              <%= f.password_field :password, autocomplete: "off", class: 'form-control' %>
-            </div>
-            <div class="form-group">
-              <%= f.label :password_confirmation %>
-              <%= f.password_field :password_confirmation, class: 'form-control', autocomplete: "off" %>
-            </div>
-            </fieldset>
-            <fieldset>
-              <h4>Confirm Password</h4>
-              <p>You must enter your current password to make changes to your profile.</p>
-              <div class="form-group">
-                <%= f.label :current_password %>
-                <%= f.password_field :current_password, class: 'form-control', autocomplete: "off" %>
+      <div class="col-9">
+        <div class="row">
+          <div class="col-md-9">
+            <%= render "devise/shared/error_messages", resource: resource %>
+            <h5>Edit <%= resource_name.to_s.humanize %></h5>
+            <%= render "devise/shared/error_messages", resource: resource %>
+            <%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :role => 'form'}) do |f| %>
+              <%= render "devise/shared/error_messages", resource: resource %>
+              <div class="form-group pb-3">
+                <%= f.label :name %>
+                <%= f.text_field :name, :autofocus => true, class: 'form-control pb-2' %>
               </div>
-            </fieldset>
-            <%= f.submit 'Update', :class => 'button right' %>
-        <% end %>
 
+              <div class="form-group">
+                <%= f.label 'Email (cannot be changed)' %>
+                <p class="form-control disabled"><%= resource.email %></p>
+                <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                  <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+                <% end %>
+              </div>
 
-        <h3>Cancel Account</h3>
-        <p>Unhappy? We'll be sad to see you go.</p>
-        <%= button_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'button right' %>
+              <div class="form-group pb-4">
+                <%= f.label :title %>
+                <%= f.input_field :title, class: 'form-control pb-2' %>
+              </div>
+
+              <fieldset>
+                <h6><strong>Update Password</strong></h6>
+                <p>Leave these fields blank if you don't want to change your password.</p>
+                <div class="form-group pb-3">
+                  <%= f.label :password %>
+                  <%= f.password_field :password, autocomplete: "off", class: 'form-control' %>
+                </div>
+                <div class="form-group pb-4">
+                  <%= f.label :password_confirmation %>
+                  <%= f.password_field :password_confirmation, class: 'form-control', autocomplete: "off" %>
+                </div>
+              </fieldset>
+              <fieldset>
+                <h6><strong>Confirm Password</strong></h6>
+                <p>You must enter your current password to make changes to your profile.</p>
+                <div class="form-group pb-4">
+                  <%= f.label :current_password %>
+                  <%= f.password_field :current_password, class: 'form-control', autocomplete: "off" %>
+                </div>
+              </fieldset>
+              <%= f.submit 'Update', :class => 'btn btn-outline-primary mb-4' %>
+            <% end %>
+
+            <h6><strong>Cancel Account</strong></h6>
+            <p>Unhappy? We'll be sad to see you go.</p>
+            <%= button_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-outline-danger' %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 

@@ -47,7 +47,6 @@ class TagsController < ApplicationController
     # PATCH/PUT /tags/1
     # PATCH/PUT /tags/1.json
     def update
-  
       respond_to do |format|
         if @tag.update(tag_params)
           flash[:notice] = I18n.t("notices.update_success")
@@ -63,12 +62,15 @@ class TagsController < ApplicationController
     # DELETE /tags/1
     # DELETE /tags/1.json
     def destroy
-  
-      @tag.destroy
-      flash[:notice] = I18n.t("notices.delete_success")
       respond_to do |format|
-        format.html { redirect_to tags_path }
-        format.json { head :no_content }
+        if @tag.destroy
+          flash[:notice] = I18n.t("notices.delete_success")
+          format.html { redirect_to tags_path }
+          format.json { head :no_content }
+        else
+          format.html { render :edit }
+          format.json { render json: @tag.errors, status: :unprocessable_entity }
+        end
       end
     end
   
