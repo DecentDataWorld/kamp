@@ -16,9 +16,14 @@ RUN apk add --no-cache --virtual --update build-base \
   tzdata \
   shared-mime-info \
   # Needed for nokogiri to run on mac dev
-  gcompat
+  gcompat \
+  # needed for paperclip/image processing
+  file \
+  php8-pecl-imagick
 
 ENV BUNDLER_VERSION 2.2.33
+ENV RAILS_ENV=development
+ENV RACK_ENV=development
 
 RUN mkdir /kamp
 WORKDIR /kamp

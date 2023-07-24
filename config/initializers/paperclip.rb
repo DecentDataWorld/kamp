@@ -1,10 +1,13 @@
-require 'paperclip/media_type_spoof_detector'
+require 'paperclip/io_adapters/uri_adapter'
 module Paperclip
+  class UriAdapter < AbstractAdapter
 
-  Paperclip::Attachment.default_options[:path] = "prod_uploads/system/:class/:attachment/:id_partition/:style/:filename"
-  class MediaTypeSpoofDetector
-    def spoofed?
-      false
+    def content_type_from_content
+      content_type = @content.meta["content-type"]
+      return nil if content_type.blank?
+
+      content_type.split(/[:;\s]+/).first
     end
+
   end
 end

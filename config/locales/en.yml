@@ -68,8 +68,22 @@ en:
         abbreviation: "Abbreviation"
       tag_type:
         name: "Name"
+      collection:
+        title: "Title"
+        description: "Description"
+        tags: "Tags"
+        private: "Private"
+        notes: "Notes"
       resource:
-        name: "Title"
+        name: "Name"
+        resource_name: "Resource Name"
+        replace_file: "Replace File"
+        attachment: "Attach File"
+        source: "Source URL"
+        corporate_authorship: "Corporate Authorship"
+        issue_date: "Issue Year"
+        language: "Language"
+        organization: "Organization"
         url: "Link"
         tags: "Tags"
         file: "File"

@@ -23,12 +23,12 @@ class Resource < ActiveRecord::Base
 
   has_many :resourcings
   has_many :collections, :through => :resourcings, :source => :resourceable, :source_type => 'Collection'
-  belongs_to :activity, :class_name => "Activity", :foreign_key => "activity_id"
-  belongs_to :collection, :class_name => "Collection", :foreign_key => "collection_id"
+  belongs_to :activity, :class_name => "Activity", :foreign_key => "activity_id", :optional => true
+  belongs_to :collection, :class_name => "Collection", :foreign_key => "collection_id", :optional => true
   belongs_to :author, :class_name => "User", :foreign_key => "author_id"
   belongs_to :organization, :class_name => "Organization", :foreign_key => "organization_id"
-  belongs_to :license, :class_name => "License", :foreign_key => "license_id"
-  belongs_to :batch, :class_name => "Batch", :foreign_key => "batch_id"
+  belongs_to :license, :class_name => "License", :foreign_key => "license_id", :optional => true
+  belongs_to :batch, :class_name => "Batch", :foreign_key => "batch_id",  :optional => true
 
   has_attached_file :attachment
   do_not_validate_attachment_file_type :attachment

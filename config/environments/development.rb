@@ -1,5 +1,7 @@
 require "active_support/core_ext/integer/time"
 
+Paperclip.options[:command_path] = "/usr/bin/"
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -73,7 +75,7 @@ Rails.application.configure do
     :storage => :s3,
     :s3_permissions => :private,
     :s3_protocol => :https,
-    :bucket => "usjkamp",
+    :bucket => "kamp-test",
     :s3_region => "us-east-1",
     :s3_credentials => {
         access_key_id: ENV['AWS_ACCESS_KEY_ID'],
