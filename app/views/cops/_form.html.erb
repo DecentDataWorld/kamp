@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 
 <%= simple_form_for(@cop, :html => { role: "form", multipart: true }) do |form| %>
-=======
-<%= form_with model: @cop, local: true do |form| %>
->>>>>>> integration/railsupgrade
   <% if @cop.errors.any? %>
     <div id="error_explanation">
       <h2>
