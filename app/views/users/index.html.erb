@@ -22,7 +22,10 @@
       <div class="col-9">
         <div class="border-bottom">
           <div class="row pb-1">
-            <div class="col-10">
+            <div class="col-7">
+              <%= render 'filters' %>
+            </div>
+            <div class="col-3">
               <%= render 'search' %>
             </div>
             <div class="col-2"><%=t('activerecord.attributes.user.results')%>: <%= @users.count %></div>
@@ -33,7 +36,7 @@
             <thead>
               <th><%=t('activerecord.attributes.user.name')%></th>
               <th><%=t('activerecord.attributes.user.email')%></th>
-              <th><%=t('activerecord.attributes.user.roles')%></th>
+              <th><%=t('activerecord.attributes.user.kamp_role')%></th>
               <th><%=t('activerecord.attributes.user.organizations')%></th>
             </thead>
             <tbody>
@@ -42,7 +45,12 @@
                   <td><%= link_to u.name, user_path(u, :page => params[:page]) %></td>
                   <td><%= u.email %></td>
                   <td><%= u.roles.pluck(:name).join(', ').titleize %></td>
-                  <td><%= u.organizations.pluck(:name).join(', ') %></td>
+                  <td><% if !u.organizations.nil? %>
+                    <% u.users_organizations.each do |userorganization| %>
+                      <%= link_to userorganization.organization.name, organization_path(userorganization.organization) %> (<%= userorganization.role %>)<br>
+                    <% end %>
+                  <% end %></td>
+                  <td class="text-center"><%= button_to deactivate_user_path(u), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deactivate<% end %></td>
                 </tr>
               <% end %>
             </tbody>

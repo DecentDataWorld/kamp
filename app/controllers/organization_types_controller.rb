@@ -41,9 +41,9 @@ class OrganizationTypesController < ApplicationController
     respond_to do |format|
       if @organization_type.save
         format.html { redirect_to organization_types_path, notice: 'Organization type was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @organization_type }
+        format.json { render :show, status: :created, location: @organization_type }
       else
-        format.html { render action: 'new' }
+        format.html { render :new }
         format.json { render json: @organization_type.errors, status: :unprocessable_entity }
       end
     end

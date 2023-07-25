@@ -2,18 +2,23 @@
   <p class="text-muted"><%= simple_format @user.about %></p>
 <% end %>
 <ul class="list-group list-group-flush">
+  <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> Title: <span class="text-muted"><%= @user.title ? @user.title : 'None' %></span></li>
+  <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> Portal Role: <span class="text-muted"><%= @user.roles.pluck(:name).join(', ') %></span></li>
   <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> Member For: <span class="text-muted"><%= time_ago_in_words(@user.created_at) %></span></li>
   <% if can? :manage, :all %>
-    <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> Last Login: <span class="text-muted"><%= time_ago_in_words(@user.last_sign_in_at) if !@user.last_sign_in_at.nil? %><%= "Never logged in" if @user.last_sign_in_at.nil? %></span></li>
+    <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> Last Login: <span class="text-muted"><%= time_ago_in_words(@user.last_sign_in_at) + ' ago' if !@user.last_sign_in_at.nil? %><%= "Never logged in" if @user.last_sign_in_at.nil? %></span></li>
   <% end %>
   <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> <%= @user.resources.count %> Resources Contributed</li>
   <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> <%= @user.collections_authored.count %> Collections Contributed</li>
+  
 </ul>
 <ul class="list-group list-group-flush pt-2">
-  <% if current_user == @user %>
-    <li class="list-group-item available-tags ps-1"><%= link_to 'My Profile', user_path(current_user), class: 'active' if current_page?(user_url(@user)) %></li>
-    <li class="list-group-item available-tags ps-1"><%= link_to 'Edit Profile', edit_user_registration_path %></li>
-    <li class="list-group-item available-tags ps-1"><%= link_to 'Sign Out', destroy_user_session_path, :method=>'delete' %></li>
+  <% if !current_page?(edit_user_registration_path) %>
+    <% if current_user == @user %>
+      <%= link_to 'Edit Profile', edit_user_registration_path %>
+    <% elsif can? :manage, :all %>
+      <%= link_to 'Edit Profile', edit_user_path(@user) %>
+    <% end %>
   <% end %>
   <%= link_to users_path(:page => params[:page]), :class => "pt-2" do %>Back to Users<% end %>
 </ul>

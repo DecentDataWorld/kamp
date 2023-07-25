@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema[7.0].define(version: 2023_07_25_133953) do
+=======
+ActiveRecord::Schema[7.0].define(version: 2023_07_17_181318) do
+>>>>>>> integration/railsupgrade
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -438,6 +442,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_133953) do
     t.integer "user_type_id"
     t.text "organization_entered"
     t.boolean "mail_chimp_user", default: false
+    t.datetime "deactivated_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

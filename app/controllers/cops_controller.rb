@@ -57,11 +57,15 @@ class CopsController < ApplicationController
   # DELETE /cops/1
   # DELETE /cops/1.json
   def destroy
-    @cop.destroy
-    flash[:notice] = I18n.t("notices.delete_success")
     respond_to do |format|
-      format.html { redirect_to cops_path }
-      format.json { head :no_content }
+      if @cop.destroy
+        flash[:notice] = I18n.t("notices.delete_success")
+        format.html { redirect_to cops_path }
+        format.json { head :no_content }
+      else
+        format.html { render :edit }
+        format.json { render json: @cop.errors, status: :unprocessable_entity }
+      end
     end
   end
 

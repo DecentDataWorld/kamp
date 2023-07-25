@@ -41,7 +41,6 @@ class TagTypesController < ApplicationController
     # PATCH/PUT /tag_types/1
     # PATCH/PUT /tag_types/1.json
     def update
-  
       respond_to do |format|
         if @tag_type.update(tag_type_params)
           flash[:notice] = I18n.t("notices.update_success")
@@ -57,17 +56,20 @@ class TagTypesController < ApplicationController
     # DELETE /tag_types/1
     # DELETE /tag_types/1.json
     def destroy
-      
       respond_to do |format|
         if @tag_type.tags.count > 0
           flash[:error] = I18n.t("warnings.tag_type_has_tags")
           format.html { render :edit }
           format.json { render json: @tag_type.errors, status: :unprocessable_entity}
         else
-          @tag_type.destroy
-          flash[:notice] = I18n.t("notices.delete_success")
-          format.html { redirect_to tag_types_path }
-          format.json { head :no_content }
+          if @tag_type.destroy
+            flash[:notice] = I18n.t("notices.delete_success")
+            format.html { redirect_to tag_types_path }
+            format.json { head :no_content }
+          else
+            format.html { render :edit }
+            format.json { render json: @tag_type.errors, status: :unprocessable_entity }
+          end
         end
       end
     end
