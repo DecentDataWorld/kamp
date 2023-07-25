@@ -20,159 +20,94 @@
       </div>
 
       <div class="col-9">
-        <div class="border-bottom">
-          <div class="row pb-1">
-            <!-- Tab v1 -->
-            <div class="tab-v1">
+        <div class="row pb-1">
+          <!-- Tab v1 -->
+          <div class="tab-v1">
+            <nav>
               <ul class="nav nav-tabs pb-2">
-                <% if @current_user == @user %>
-                  <li class="active pe-4"><a href="#subscriptions" data-toggle="tab">Subscriptions</a></li>
-                <% end %>
-                <li <%= 'class="active"' if @current_user != @user %>><a href="#resources" data-toggle="tab">Resources Uploaded <span class="badge badge-yellow"><%= @resources.count %></span></a></li>
-                <li><a href="#collections" data-toggle="tab">Collections Uploaded <span class="badge badge-yellow"><%= @collections.count %></span></a></li>
-                <% if !@resources_pending.nil? and @resources_pending.count > 0 %>
-                    <li><a href="#pending" data-toggle="tab">Pending Submissions <span class="badge badge-yellow"><%= @resources_pending.count %></span></a></li>
-                <% end %>
-                <li><a href="#organizations" data-toggle="tab">Member Of</a></li>
+                <li class="pe-4"><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources">Contributions</a></li>
+                <li class="pe-4"><a href="#organizations" data-bs-toggle="tab" data-bs-target="#organizations">Memberships</a></li>
               </ul>
+            </nav>
 
-              <div class="tab-content">
-                <% if @current_user == @user %>
-                  <div class="tab-pane active" id="subscriptions">
-                    <h3>Manage Subscriptions</h3>
+            <div class="tab-content">
+              <!--- CONTRIBUTIONS TAB --->
+              <div class="tab-pane fade show active pb-2" id="resources">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="tab-v1">
+                      <ul class="nav nav-tabs">
+                        <li class="nav-item"><a href="#inner_resources" class="nav-link nav-link-large active" data-bs-toggle="tab" data-bs-target="#inner_resources">Resources</a><li>
+                        <li class="nav-item"><a href="#inner_collections" class="nav-link nav-link-large  <%= @show_collections ? 'active' : ''%>" data-bs-toggle="tab" data-bs-target="#inner_collections">Collections</a></li>
+                      </ul>
+                      <div class="tab-content">
+                        <div id="inner_resources" class="tab-pane show fade active">
+                          <% @resources.each do |resource| %>
+                            <% if !resource.private || resource.organization.can_add_collections(current_user) %>
+                              <%= render resource %>
+                            <% end %>
+                          <% end %>
 
-                    <h4>Topics</h4>
+                          <%= will_paginate @resources, :param_name => 'resources_page' %>
+                          <% if @resources.empty? %>
+                            <% if @user == @current_user %> You have <% else %> This user has <% end %> no resources.
+                          <% end %>
+                        </div>
 
-                    <% if @tag_subs.count == 0 %>
-                        <p>You are not currently subscribed to any topics</p>
-                    <% else %>
-                      <p>You are currently subscribed to the following:</p>
-                        <% @tag_subs.each do |tag| %>
-                            <a href="<%= user_remove_subscription_url(id: @user.id.to_s, subscribed_to: 'tag', subscribed_to_id: tag.id) %>" class="label label-danger light rounded delete_confirm" data-toggle="tooltip" data-placement="bottom" title="Remove subscription"><i class="fa fa-remove"></i></a>
-                            &nbsp;&nbsp;
-                            <a href="<%= new_search_path(:tags => [tag.name]) %>" class="label label-default light rounded"><i class="fa fa-tags"></i> <%= tag.name %></a><br>
-                        <% end %>
-                    <% end %>
+                        <div id="inner_collections" class="tab-pane show fade">
+                          <% @collections.each do |collection| %>
+                            <% if !collection.private || collection.organization.can_add_collections(current_user) %>
+                              <%= render collection %>
+                            <% end %>
+                          <% end %>
 
-                    <%= form_for @user_subscription, url: { controller: 'users', action: 'save_subscriptions' }, role: 'form', class: 'sky-form', html: { method: "post" } do %>
-                        <input type="hidden" name="user_id" value="<%= @current_user.id.to_s %>">
-                        <input type="hidden" name="subscribed_to" value="tag">
-
-                        <fieldset>
-                            <p>Subscribe to a topic:
-                              <input type="text" name="tag" id="tag" list="list" placeholder="Enter tag" size="30">
-                              <datalist id="list">
-                                <% @tags.each do |tag| %>
-                                    <option value="<%= tag.name %>"></option>
-                                <% end %>
-                              </datalist>
-                            <button type="submit" class="btn-u btn-u-default btn-xs">Subscribe</button>
-                            </p>
-                        </fieldset>
-                    <% end %>
-
-
-                    <h4>Organizations</h4>
-
-                    <% if @org_subs.count == 0 %>
-                        <p>You are not currently subscribed to any organizations</p>
-                    <% else %>
-                        <p>You are currently subscribed to the following:</p>
-                        <% @org_subs.each do |org| %>
-                            <a href="<%= user_remove_subscription_url(id: @user.id.to_s, subscribed_to: 'organization', subscribed_to_id: org.id.to_s) %>" class="label label-danger light rounded delete_confirm" data-toggle="tooltip" data-placement="bottom" title="Remove subscription"><i class="fa fa-remove"></i></a>
-                            &nbsp;&nbsp;
-                            <a href="<%= organization_url(org) %>"><i class="fa fa-building"></i> <%= org.name %></a><br>
-                        <% end %>
-                    <% end %>
-
-                    <%= form_for @user_subscription, url: { controller: 'users', action: 'save_subscriptions' }, role: 'form', class: 'sky-form', html: { method: "post" } do %>
-                        <input type="hidden" name="user_id" value="<%= @current_user.id.to_s %>">
-                        <input type="hidden" name="subscribed_to" value="organization">
-
-                        <fieldset>
-                          <p>Subscribe to an Organization:
-                            <input type="text" name="organization" id="organization" list="orglist" placeholder="Enter Name of Organization" size="50">
-                            <datalist id="orglist">
-                              <% @orgs.each do |organization| %>
-                                  <option value="<%= organization.name %>"></option>
-                              <% end %>
-                            </datalist>
-                            <button type="submit" class="btn-u btn-u-default btn-xs">Subscribe</button>
-                          </p>
-                        </fieldset>
-                    <% end %>
-
+                          <%= will_paginate @collections, :param_name => 'collections_page' %>
+                          <% if @collections.empty? %>
+                            <% if @user == @current_user %> You have <% else %> This user has <% end %> no collections.
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                <% end %>
-                <div class="tab-pane <%= 'active' if @current_user != @user %>" id="resources">
-                  <% @resources.each do |resource| %>
-                      <% if !resource.private || resource.organization.can_add_collections(current_user) %>
-                          <%= render resource %>
-                      <% end %>
-                  <% end %>
-                  <%= will_paginate @resources, :param_name => 'resources_page' %>
-                  <% if @resources.empty? %>
-                      <% if @user == @current_user %>
-                          You have
-                      <% else %>
-                          This user
-                      <% end %>
-                      has no resources
-                  <% end %>
                 </div>
-                <div class="tab-pane" id="collections">
-                  <% @collections.each do |collection| %>
-                      <% if !collection.private || collection.organization.can_add_collections(current_user) %>
-                          <%= render collection %>
-                      <% end %>
-                  <% end %>
-                  <%= will_paginate @collections, :param_name => 'collections_page' %>
-                  <% if @collections.empty? %>
-                      <% if @user == @current_user %>
-                          You have
-                      <% else %>
-                          This user
-                      <% end %>
-                      has no collections
-                  <% end %>
+              </div><!--- END CONTRIBUTIONS TAB --->
+            
+              <!--- MEMBERSHIPS TAB --->
+              <div class="tab-pane fade" id="organizations">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="tab-v1">
+                      <ul class="nav nav-tabs">
+                        <li class="nav-item"><a href="#inner_organizations" class="nav-link nav-link-large active" data-bs-toggle="tab" data-bs-target="#inner_organizations">Organizations</a><li>
+                        <li class="nav-item"><a href="#inner_cops" class="nav-link nav-link-large  <%= @show_collections ? 'active' : ''%>" data-bs-toggle="tab" data-bs-target="#inner_cops">Communities of Practice</a></li>
+                      </ul>
+                      <div class="tab-content">
+                        <div id="inner_organizations" class="tab-pane show fade active">
+                          <%= link_to "New Organization", new_organization_path, class: 'btn btn-outline-primary float-end' %>
+                          <%= render partial: 'organizations/boxes', :param_name => 'organizations_page' %>
+                          <% if @organizations.empty? %>
+                            <% if @user == @current_user %> You are <% else %> This user is <% end %> not part of any organizations.
+                          <% end %>
+                        </div>
+
+                        <div id="inner_cops" class="tab-pane show fade">
+                          <% @cops.each do |cop| %>
+                            <%= render cop %>
+                          <% end %>
+                          <% if @cops.empty? %>
+                            <% if @user == @current_user %> You are <% else %> This user is <% end %> not part of any Communities of Practice.
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <% if !@resources_pending.nil? and @resources_pending.count > 0 %>
-                <div class="tab-pane" id="pending">
-                  <% @resources_pending.each do |submission| %>
-                      <%= render submission %>
-                  <% end %>
-                  <%= will_paginate @resources_pending, :param_name => 'pending_page' %>
-                </div>
-                <% end %>
-                <div class="tab-pane" id="organizations">
-                  <%= link_to new_organization_path, class: 'btn btn-color pull-right' do %>
-                      <i class="fa fa-plus-circle"></i>  New Organization
-                  <% end %>
-                  <%= render partial: 'organizations/boxes', :param_name => 'organizations_page' %>
-                  <% if @organizations.empty? %>
-                      <% if @user == @current_user %>
-                          You are
-                      <% else %>
-                          This user is
-                      <% end %>
-                      not part of any organizations
-                  <% end %>
-                </div>
-              </div>
+              </div><!--- END MEMBERSHIPS TAB --->
             </div>
           </div>
         </div>
+        <!-- End Tab v1 -->
       </div>
-    </div> <!-- / .row -->
+    </div>
   </div>
 </section><!-- End About Section -->
-
-<script>
-    $(document).ready(function() {
-        $('.delete_confirm').click(function() {
-            if (!confirm('Are you sure you want to remove this subscription?')) {
-                return false;
-            }
-        });
-    });
-</script>

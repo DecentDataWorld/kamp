@@ -1,0 +1,30 @@
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %>Home<% end %></li>
+      <li><%= link_to admin_index_path do %>Administration<% end %></li>
+      <li><%= link_to users_path(:page => params[:page]) do %>Users<% end%></li>
+      <li><%= link_to user_path(@user) do %><%= @user.name %><% end %></li>
+      <li>Edit</li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
+
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <h5 class="border-bottom pb-2"><%= @user.name.titleize %> Profile</h5>
+        <%= render 'users/profile_navigation' %>
+      </div>
+
+      <div class="col-9">
+        <h5><%= t('headers.user.edit') %></h5>
+        <%= render 'form' %>
+      </div>
+    </div>
+  </div>
+</section>
+

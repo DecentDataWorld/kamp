@@ -15,7 +15,7 @@
 
   <div class="row g-3">
     <div class="col-md-12">
-      <%= form.label  :name %><span class="text-danger">*</span><br>
+      <%= form.label :name %><span class="text-danger">*</span><br>
       <%= form.text_field :name, class: "form-control" %>
     </div>
 
@@ -29,9 +29,8 @@
         <%= form.submit t('helpers.submit.create', model: Tag.model_name.human), class: "btn btn-outline-primary" %>
       <% else %>
         <%= form.submit t('helpers.submit.update', model: Tag.model_name.human), class: "btn btn-outline-primary" %>
-          <span  class="float-end"><%= link_to t('navigation.delete'), tag_path(@tag),
-                    method: :delete,
-                    data: { confirm: t('warnings.are_you_sure') }, class: "btn btn-outline-danger" %></span>
+        <span class="float-end"><%= link_to t('navigation.delete'), tag_path(@tag),
+          data: { turbo_confirm: "Are you sure you want to delete this tag?", turbo_method: :delete }, class: "btn btn-outline-danger" %></span>
       <% end %>
       <%= link_to t('navigation.cancel'), tags_path, class: "btn btn-outline-secondary" %>
     </div>

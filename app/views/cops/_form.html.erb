@@ -1,4 +1,4 @@
-<%= form_with model: @cop, local: true, data: { turbo: false } do |form| %>
+<%= form_with model: @cop, local: true do |form| %>
   <% if @cop.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -28,18 +28,13 @@
       <%= form.text_field :description, class: "form-control" %>
     </div>
 
-
-
-
-
     <div class="form-group col-md-12">
       <% if current_page?(new_cop_path) || @cop.id == nil %>
         <%= form.submit t('helpers.submit.create', model: Cop.model_name.human), class: "btn btn-outline-primary" %>
       <% else %>
         <%= form.submit t('helpers.submit.update', model: Cop.model_name.human), class: "btn btn-outline-primary" %>
-          <span class="float-end"><%= link_to t('navigation.delete'), cop_path(@cop),
-            method: :delete,
-            data: { confirm: t('warnings.are_you_sure') }, class: "btn btn-outline-danger" %></span>
+        <span class="float-end"><%= link_to t('navigation.delete'), cop_path(@cop),
+          data: { turbo_confirm: "Are you sure you want to delete this COP?", turbo_method: :delete }, class: "btn btn-outline-danger" %></span>
       <% end %>
       <%= link_to t('navigation.cancel'), cops_path, class: "btn btn-outline-secondary" %>
     </div>

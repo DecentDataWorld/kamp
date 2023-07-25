@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   has_attached_file :avatar, :styles => { :small => "190x190>", :thumb => "70x70>" }, :default_url => "/images/:style/missing.png"
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
 
-  belongs_to :user_type, :class_name => "UserType", :foreign_key => "user_type_id"
+  # belongs_to :user_type, :class_name => "UserType", :foreign_key => "user_type_id"
 
   # after_update :assign_default_role
 
@@ -62,6 +62,14 @@ class User < ActiveRecord::Base
     results = ActiveRecord::Base.connection.exec_query(query)
     ids = results.map { |r| r["id"] }
     return ids
+  end
+
+  def deactivate
+    update_attribute(:deactivated_at, Time.current)
+  end
+
+  def reactivate
+    update_attribute(:deactivated_at, nil)
   end
 
 end
