@@ -1,36 +1,55 @@
 
-
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-sm-9">
-
-
-      <table class="table table-bordered">
-        <thead>
-        <tr>
-          <th>Reason</th>
-          <th colspan="2"><%= link_to 'New Denial reason', new_denial_reason_path, class: 'btn-u btn-u-blue rounded pull-right' %></th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <% @denial_reasons.each do |denial_reason| %>
-            <tr>
-              <td><%= denial_reason.reason %></td>
-              <td><%= link_to 'Edit', edit_denial_reason_path(denial_reason), class: "btn-u btn-u-blue btn-u-xs rounded" %></td>
-              <td><%= link_to 'Destroy', denial_reason, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn-u btn-u-red btn-u-xs rounded" %></td>
-            </tr>
-        <% end %>
-        </tbody>
-      </table>
-
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+        <li><%= link_to admin_index_path do %><%=t('navigation.administration')%><% end %></li>
+        <li>Denial Reasons</li>
+      </ol>
     </div>
-    <div class="col-md-3">
+</section><!-- End Breadcrumbs -->
 
-      <%= render 'moderator/sidebar' %>
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <h5 class="border-bottom pb-2"><%=t('navigation.administration')%></h5>
+        <%= render 'admin/side_nav' %>
+        <br/>
+      </div>
 
+      <div class="col-9">
+        <div class="h5 border-bottom text-end mt-n3 mb-0 pb-1"><%= link_to 'New Denial reason', new_denial_reason_path, class: "btn btn-outline-primary mt-1 pt-2" %></div>
+        <table class="table table-striped table-hover" data-controller="table-sort">
+          <thead>
+          <tr>
+            <th>Reason</th>
+            <th colspan="2"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <% @denial_reasons.each do |denial_reason| %>
+              <tr>
+                <td><%= denial_reason.reason %></td>
+                <td><%= link_to 'Edit', edit_denial_reason_path(denial_reason), class: "btn btn-outline-primary btn-sm" %></td>
+                <td><%= link_to 'Destroy', denial_reason, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure?"  }, class: "btn btn-outline-danger btn-sm" %></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
+</section><!-- End About Section -->
+
+
+
+
+
+
+
+
 
