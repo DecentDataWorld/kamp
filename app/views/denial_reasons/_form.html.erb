@@ -1,13 +1,17 @@
 <%= simple_form_for(@denial_reason) do |f| %>
   <%= f.error_notification %>
 
-
-    <div class="form-group">
-      <label for="exampleInputEmail1">Reason for Denial</label>
+  <div class="row p-2">
+    <div class="col-md-12">
+      <%= f.label "Reason for Denial" %><br>
       <%= f.input_field :reason, label: false, class: 'form-control' %>
     </div>
+  </div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
+
+  <div class="row p-2">
+    <div class="col-md-12">
+      <%= f.button :submit, class: 'btn btn-outline-primary btn-sm' %>
+    </div>
   </div>
 <% end %>
