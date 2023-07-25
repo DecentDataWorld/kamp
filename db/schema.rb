@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_29_203938) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_133953) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -198,6 +198,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_29_203938) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "icon_identifier"
+    t.bigint "cop_id"
+    t.index ["cop_id"], name: "index_featured_searches_on_cop_id"
   end
 
   create_table "impressions", id: :serial, force: :cascade do |t|
@@ -465,5 +467,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_29_203938) do
   add_foreign_key "cops", "users", column: "admin_id"
   add_foreign_key "events", "cops"
   add_foreign_key "events", "users"
+  add_foreign_key "featured_searches", "cops"
   add_foreign_key "tags", "tag_types"
 end

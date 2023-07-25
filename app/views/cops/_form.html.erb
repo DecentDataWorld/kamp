@@ -1,4 +1,5 @@
-<%= form_with model: @cop, local: true, data: { turbo: false } do |form| %>
+
+<%= simple_form_for(@cop, :html => { role: "form", multipart: true }) do |form| %>
   <% if @cop.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -21,6 +22,18 @@
     <div class="col-md-4">
       <%= form.label :admin %><span class="text-danger">*</span><br>
       <%= form.collection_select :admin_id, User.order(:name), :id, :name, {}, { class: "form-control" } %>
+    </div>
+
+    <div  class="col-md-12 pb-2">
+      <%= form.label :members %><br>
+      <%= form.input_field :user_ids,
+                          :label => false,
+                          :id => "multiselect",
+                          :as => :select,
+                          :collection => User.all.order(:name).collect {|u| [u.name, u.id]},
+                          :multiple => true,
+                          :class => "form-control",
+                          data: {controller: "multiselect", placeholder: "Begin typing to search for tags"} %>
     </div>
 
     <div class="col-md-12">
