@@ -1,11 +1,11 @@
 class OrganizationsController < ApplicationController
   before_action :authenticate_user!, :except => [:index, :show, :not_found]
   load_and_authorize_resource :only => [:edit, :update, :destroy], :find_by => :url
-  before_action :set_organization, only: [:show, :edit, :update, :destroy, :private_resources]
+  before_action :set_organization, only: [:show, :edit, :update, :destroy, :deactivate, :private_resources]
 
   # GET /organizations
   def index
-    @organizations = Organization.where("organizations.name ILIKE ?", "%#{params[:search]}%").order(name: :asc).paginate(:page => params[:page], :per_page => 30)
+    @organizations = Organization.where(deactivated_at: nil).where("organizations.name ILIKE ?", "%#{params[:search]}%").order(name: :asc).paginate(:page => params[:page], :per_page => 30)
   end
 
   # GET /organizations/1
@@ -141,7 +141,6 @@ class OrganizationsController < ApplicationController
   # DELETE /organizations/1
   # DELETE /organizations/1.json
   def destroy
-
     if !@organization.admins and !@organization.admins.first.nil
       OrganizationMailer.deny_organization_application(@organization, @organization.admins.first.user).deliver
     end
@@ -154,8 +153,14 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def process_application
+  def deactivate
+    authorize! :destroy, @organization, :message => 'Not authorized as an administrator.'
+    if @organization.deactivate
+      redirect_to organizations_path, :notice => "Organization deactivated."
+    end
+  end
 
+  def process_application
     @get_application = OrganizationApplication.find(params[:id])
 
     if @get_application.nil?
@@ -188,8 +193,6 @@ class OrganizationsController < ApplicationController
     end
 
     @organization = @get_application.organization
-
-
   end
 
   def process_application_denial
@@ -211,9 +214,6 @@ class OrganizationsController < ApplicationController
     OrganizationMailer.deny_membership_to_user(@get_application.organization, @get_application.user, @get_application.comment).deliver
 
     return redirect_to organization_path(@get_application.organization_id), notice: 'User application denied'
-
-
-
   end
 
   def add_user
@@ -258,7 +258,6 @@ class OrganizationsController < ApplicationController
   end
 
   def approve_organization
-
     @organization = Organization.find_by_url(params[:organization])
 
     if cannot? :approve, @organization
@@ -271,7 +270,6 @@ class OrganizationsController < ApplicationController
     AdminMailer.notify_organization_admins_of_org_approval(@organization).deliver
 
     redirect_to organizations_path, notice: 'Organization was successfully approved.'
-
   end
 
   def apply
@@ -283,7 +281,6 @@ class OrganizationsController < ApplicationController
     else
       @has_pending = false
     end
-
   end
 
   def not_found
@@ -308,6 +305,7 @@ class OrganizationsController < ApplicationController
     @user = User.invite!(:email => params[:user][:email], :name => params[:user][:name])
     redirect_to organizations_process_user_path(params[:organization_id]), notice: 'Invitation was successfully sent.'
   end
+
 
   private
 

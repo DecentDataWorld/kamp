@@ -55,6 +55,7 @@
                       <% end %>
                     <% end %>
                   </td>
+                  <td class="text-center"><%= button_to deactivate_organization_path(o.id), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deactivate<% end %></td>
                 </tr>
               <% end %>
             </tbody>

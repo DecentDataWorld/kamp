@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_17_181318) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_25_224833) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -261,6 +261,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_17_181318) do
     t.boolean "approved"
     t.string "domain", limit: 255
     t.integer "organization_type_id"
+    t.datetime "deactivated_at"
   end
 
   create_table "resources", id: :serial, force: :cascade do |t|
