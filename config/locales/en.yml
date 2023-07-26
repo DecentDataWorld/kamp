@@ -50,7 +50,7 @@ en:
         admin: "Administrator"
         roles: "Roles"
         portal_roles: "Portal Roles"
-        kamp_role: "KaMP Role"
+        kamp_role: "Role"
         organizations: "Organizations"
         results: "Results"
       organization:

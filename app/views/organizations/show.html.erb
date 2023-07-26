@@ -24,14 +24,14 @@
           <div class="tab-v1">
             <nav>
               <ul class="nav nav-tabs pb-2">
-                <li><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources"><i class="fa-solid fa-file-arrow-up"></i> Uploaded <span class="badge badge-yellow"><%= @resource_count %></span></a></li>
+                <li class="pe-4"><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources">Uploads<span class="badge badge-yellow"><%= @resource_count %></span></a></li>
                 <% if (!@resources_pending.nil? and @resources_pending.count > 0) || (!@collections_pending.nil? and @collections_pending.count > 0) %>
-                  <li class="pe-4"><a href="#resources_pending" data-bs-toggle="tab" data-bs-target="#resources_pending"><i class="fa fa-spinner"></i> Pending Approval</a></li>
+                  <li class="pe-4"><a href="#resources_pending" data-bs-toggle="tab" data-bs-target="#resources_pending">Pending Approval</a></li>
                 <% end %>
-                <li><a href="#members" data-bs-toggle="tab" data-bs-target="#members"><i class="fa fa-users"></i> Members</a></li>
+                <li class="pe-4"><a href="#members" data-bs-toggle="tab" data-bs-target="#members">Members</a></li>
                 <% if (user_signed_in? and @organization.can_edit_organization(current_user)) or can? :manage, :all %>
-                  <li class="dropdown ps-4">
-                    <a href="#" id="myTabDrop1" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-target="#manage"><i class="fa fa-cog"></i> Manage <b class="caret"></b></a>
+                  <li class="dropdown pe-4 ps-4">
+                    <a href="#" id="myTabDrop1" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-target="#manage">Manage <b class="caret"></b></a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
                       <li><%= link_to org_private_resources_path(@organization) do %><i class="fa fa-lock"></i> Private Resources<% end %></li>
                       <li><%= link_to edit_organization_path(@organization) do %><i class="fa fa-edit"></i> Edit<% end %></li>
@@ -97,10 +97,11 @@
                               </div>
                             <% end %>
                           </div>
+                      
                           <div id="inner_collections" class="tab-pane show fade <%= @show_collections ? 'active' : ''%>">
                             <% if @collections.count > 0 %>
                               <% @collections.each do |resource| %>
-                                  <%= render resource %>
+                                <%= render resource %>
                               <% end %>
                               <%= will_paginate @collections, :param_name => 'collection_page' %>
                             <% else %>
@@ -159,78 +160,85 @@
 
               <!--- MEMBERS TAB --->
               <div class="tab-pane fade" id="members">
-                <div class="row-fluid">
-                <% if @organization.can_manage_users(current_user) or can? :manage, :all %>
-                  <%= link_to organization_add_user_path(@organization), class: 'btn btn-u btn-u-green pull-right' do %>
-                    <i class="fa fa-plus-square"></i> Add Member
-                  <% end %>
-                <% end %>
-                  <% if (@organization.can_manage_users(current_user) or can? :manage, :all) and @pending_applications.count > 0 %>
-                      <h4 class="text-color">Pending Member Applications</h4>
-                      <% @pending_applications.each do |pendingapplication| %>
-                          <% unless pendingapplication.user.nil? %>
-                            <!-- Bordered Funny Boxes -->
-                            <div class="funny-boxes funny-boxes-left-green">
-                              <div class="row">
-                                <!-- Begin Inner Results -->
-                                <div class="inner-results">
-
-                                  <div class="pull-right">
-                                    <%= link_to("Approve", organization_process_application_path(:id=> pendingapplication.id, :result => "approve"), :data => { :confirm => "You are about to accept this membership application\n\nAre you sure?" }, :class => 'btn btn-u btn-u-green btn-sm') %>
-                                    <%= link_to("Deny", organization_process_application_path(:id=> pendingapplication.id, :result => "deny"), :data => { :confirm => "Are you sure you would like to deny this application?" }, :class => 'btn btn-u btn-u-red btn-sm') %>
-                                  </div>
-
-                                  <% link_str = '<h4 class="primary-font pad-left">' + pendingapplication.user.name + '</h4>' %>
-                                  <%= link_to raw(link_str), pendingapplication.user %>
-                                  <p class="text-muted">
-                                    <%= simple_format pendingapplication.user.about.truncate(80) if !pendingapplication.user.about.nil? %>
-                                  </p>
-
-                                </div>
-                              </div>
-                            </div>
-
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="tab-v1">
+                      <ul class="nav nav-tabs">
+                        <li class="nav-item"><a href="#pending_users" class="nav-link nav-link-large active" data-bs-toggle="tab" data-bs-target="#pending_users">Pending Applications</a><li>
+                        <li class="nav-item"><a href="#users" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#users">Current Users</a></li>
+                      </ul>
+                      <div class="tab-content">
+                        <div id="pending_users" class="tab-pane show fade active">
+                          <% if @organization.can_manage_users(current_user) or can? :manage, :all %>
+                            <%= link_to "Add Member", organization_add_user_path(@organization), class: 'btn btn-outline-primary float-end' %>
                           <% end %>
-                      <% end %>
-                  <% end %>
-                <h4 class="text-color">Current Members</h4>
-                <p>Users that register with a <b>verified <%= @organization.domain if !@organization.domain.nil?  %></b> email address will automatically become members of this organization.</p>
-                <% if @organization.users_organizations.count > 0 %>
-                    <% @organization.users_organizations.each do |userorg| %>
-                        <% if !userorg.user.nil? %>
-
-                            <!-- Bordered Funny Boxes -->
-                            <div class="funny-boxes funny-boxes-left-orange">
-                              <div class="row">
-                                <!-- Begin Inner Results -->
-                                <div class="inner-results">
-
-                                  <div class="pull-right">
-                                    <% if (can? :edit, @organization and @organization.can_manage_users(current_user)) or can? :manage, :all %>
-                                        <%= link_to users_organizations_edit_role_path(userorg), class: "btn btn-u btn-sm" do %>
-                                            <i class="fa fa-edit"></i> Edit Role
-                                        <% end %>
-                                        <%= link_to("Remove User", users_organization_path(userorg), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-u btn-sm') %>
-
-                                    <% end %>
-                                  </div>
-                                  <% link_str = '<span class="label label-success pull-left rounded margin-right">' + userorg.role + '</span> '  %>
-                                  <% link_str = link_str + '<h4 class="primary-font pad-left">' %>
-                                  <% link_str = link_str + userorg.user.name + '</h4>' %>
-                                  <%= link_to raw(link_str), userorg.user %>
-                                  <p class="text-muted">
-                                    <%= simple_format userorg.user.about.truncate(80) if !userorg.user.about.nil? %>
-                                  </p>
-                                </div>
+                          <% if (@organization.can_manage_users(current_user) or can? :manage, :all) and @pending_applications.count > 0 %>
+                            <table class="table table-striped table-hover" data-controller="table-sort">
+                              <thead>
+                                <th><%=t('activerecord.attributes.user.name')%></th>
+                                <th><%=t('activerecord.attributes.user.email')%></th>
+                                <th><%=t('activerecord.attributes.user.kamp_role')%></th>
+                              </thead>
+                              <tbody>
+                                <% @pending_applications.each do |pa| %>
+                                  <tr>
+                                    <td><%= link_to pa.user.name, user_path(pa.user, :page => params[:page]) %></td>
+                                    <td><%= pa.user.email %></td>
+                                    <td><%= pa.user.roles.pluck(:name).join(', ').titleize %></td>
+                                    <td><%= link_to("Approve", organization_process_application_path(:id=> pa.id, :result => "approve"), :data => { :confirm => "You are about to accept this membership application\n\nAre you sure?" }, :class => 'btn btn-outline-primary btn-sm float-end') %></td>
+                                    <td><%= link_to("Deny", organization_process_application_path(:id=> pa.id, :result => "deny"), :data => { :confirm => "Are you sure you would like to deny this application?" }, :class => 'btn btn-outline-danger btn-sm float-end') %></td>
+                                  </tr>
+                                <% end %>
+                              </tbody>
+                            </table>
+                            <% if @pending_applications.count > 30 %>
+                              <div class="apple_pagination">
+                                <%= will_paginate @users %>
                               </div>
-                            </div>
-                        <% end %>
-                    <% end %>
-                <% else %>
-                    <p>There are no members of this organization yet.</p>
-                <% end %>
+                            <% end %>
+                          <% end %>
+                        </div>
+                        <div id="users" class="tab-pane show fade ">
+                          <p>Users that register with a <b>verified <%= @organization.domain if !@organization.domain.nil?  %></b> email address will automatically become members of this organization.</p>
+                          <% if @organization.users_organizations.count > 0 %>
+                            <table class="table table-striped table-hover" data-controller="table-sort">
+                              <thead>
+                                <th><%=t('activerecord.attributes.user.name')%></th>
+                                <th><%=t('activerecord.attributes.user.email')%></th>
+                                <th><%=t('activerecord.attributes.user.kamp_role')%></th>
+                                <th><%=t('activerecord.attributes.user.organizations')%></th>
+                              </thead>
+                              <tbody>
+                                <% @users.each do |u| %>
+                                  <tr>
+                                    <td><%= link_to u.name, user_path(u, :page => params[:page]) %></td>
+                                    <td><%= u.email %></td>
+                                    <td><%= u.roles.pluck(:name).join(', ').titleize %></td>
+                                    <td><% if !u.organizations.nil? %>
+                                      <% u.users_organizations.each do |uo| %>
+                                        <%= link_to uo.organization.name, organization_path(uo.organization) %> (<%= uo.role %>)<br>
+                                      <% end %>
+                                    <% end %></td>
+                                    <td class="text-center"><%= button_to deactivate_user_path(u), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deactivate<% end %></td>
+                                  </tr>
+                                <% end %>
+                              </tbody>
+                            </table>
+                            <% if @users.count > 30 %>
+                              <div class="apple_pagination">
+                                <%= will_paginate @users %>
+                              </div>
+                            <% end %>
+                          <% else %>
+                              <p>This organization has no members yet.</p>
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </div><!--- END MEMBERS TAB --->
+          
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-<h5 class="border-bottom pb-2"><%= link_to @organization.name, organization_path(@organization) %></h5>
+<h5 class="border-bottom pb-2"><%= @organization.name %></h5>
 
 <!--- Alert for unapproved organization --->
 <% if !@organization.approved %>
