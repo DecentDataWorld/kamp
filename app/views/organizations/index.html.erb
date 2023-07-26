@@ -32,6 +32,7 @@
           <table class="table table-striped table-hover" data-controller="table-sort">
             <thead>
               <th><%=t('activerecord.attributes.organization.name')%></th>
+              <th><%=t('activerecord.attributes.organization.organization_type')%></th>
               <th><%=t('activerecord.attributes.organization.email_domain')%></th>
               <th><%=t('activerecord.attributes.organization.admins')%></th>
               <th><%=t('activerecord.attributes.organization.members')%></th>
@@ -41,6 +42,7 @@
               <% @organizations.each do |o| %>
                 <tr>
                   <td><%= link_to o.name, organization_path(o, :page => params[:page]) %></td>
+                  <td><%= o.organization_type ? o.organization_type.organization_type : "" %></td>
                   <td><%= o.domain %></td>
                   <td><%= o.users.where("users_organizations.role = 'admin'").pluck(:name).join(', ') %></td>
                   <td class="centered-content"><%= o.users.count %></td>

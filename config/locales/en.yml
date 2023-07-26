@@ -60,6 +60,7 @@ en:
         members: "Members"
         approved: "Approved"
         results: "Results"
+        organization_type: "Type"
       organization_type:
         name: "Name"
       tag:
