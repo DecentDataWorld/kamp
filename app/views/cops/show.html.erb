@@ -30,23 +30,71 @@
           <li class="list-group-item bg-transparent text-muted">
             <div class="text-danger">Members</div>
             <ul class="list-group border-0 bg-transparent">
-            <% @cop.users.each do |m| %>
-              <li class="list-group-item bg-transparent border-0"><%= link_to m.name, user_path(m) %></li>
-            <% end %>
+              <% @cop.users.each do |m| %>
+                <li class="list-group-item bg-transparent border-0"><%= link_to m.name, user_path(m) %></li>
+              <% end %>
             </ul>
           </li>
+          <% if @cop.admin == current_user || current_user.admin? %>
+            <li class="list-group-item bg-transparent text-muted">
+              <div class="text-danger">Administration</div>
+              <ul class="list-group border-0 bg-transparent">
+                <li class="list-group-item bg-transparent border-0"><%= link_to "Edit COP/Members", edit_cop_path(@cop) %></li>
+                <li class="list-group-item bg-transparent border-0"><%= link_to "Relevant Searches", featured_searches_path %></li>
+                <li class="list-group-item bg-transparent border-0"><%= link_to "Announcements", announcements_path %></li>
+                <li class="list-group-item bg-transparent border-0"><%= link_to "Events", events_path %></li>
+              </ul>
+            </li>
+          <% end %>
         </ul>
      </div>
      <div class="col-9">
       <div class="border-bottom"><h5><%= @cop.name %> &nbsp;</h5></div>
-      <% if @cop.featured_searches.length > 0 %>
+      <% if @cop.events.length > 0 %>
         <div class="border-bottom p-1">
           Events:
-          <div class="d-flex justify-content-center">
-            <% @cop.featured_searches.each do |fs| %>
-              <div class="p-2"><%= link_to fs.name, fs.get_url, class: 'btn btn-outline-primary' %></div>
-            <% end %>
-          </div>
+          <table class="table table-striped table-hover table-sm" data-controller="table-sort">
+            <thead>
+              <tr>
+                <th><%=t('activerecord.attributes.event.name') %></th>
+                <th><%=t('activerecord.attributes.event.date') %></th>
+                <th><%=t('activerecord.attributes.event.location') %></th>
+                <th><%=t('activerecord.attributes.event.short_description') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @cop.events.each do |e| %>
+                <tr>
+                  <td><%= e.name %></td>
+                  <td><%= e.date.strftime("%-d/%-m/%y") %></td>
+                  <td><%= e.location %></td>
+                  <td><%= e.short_description %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+
+       <% if @cop.announcements.length > 0 %>
+        <div class="border-bottom p-1">
+          Announcements:
+          <table class="table table-striped table-hover table-sm" data-controller="table-sort">
+            <thead>
+              <tr>
+                <th><%=t('activerecord.attributes.event.name') %></th>
+                <th><%=t('activerecord.attributes.event.short_description') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @cop.announcements.each do |a| %>
+                <tr>
+                  <td><%= a.name %></td>
+                  <td><%= a.short_description %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
         </div>
       <% end %>
 
@@ -60,6 +108,15 @@
           </div>
         </div>
       <% end %>
+
+      <% if @cop.resources.length > 0 %>
+        <div class="border-bottom p-1">
+          <% @cop.resources.each do |resource| %>
+              <%= render resource %>
+          <% end %>
+        </div>
+      <% end %>
+
        
        <div class="mt-2">
         

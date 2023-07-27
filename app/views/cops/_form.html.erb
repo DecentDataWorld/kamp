@@ -33,7 +33,7 @@
                           :collection => User.all.order(:name).collect {|u| [u.name, u.id]},
                           :multiple => true,
                           :class => "form-control",
-                          data: {controller: "multiselect", placeholder: "Begin typing to search for tags"} %>
+                          data: {controller: "multiselect", placeholder: "Begin typing to search for members"} %>
     </div>
 
     <div class="col-md-12">

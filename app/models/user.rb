@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
   has_many :organization_applications, :class_name => "OrganizationApplication", :foreign_key => "user_id"
   has_many :users_organizations, :class_name => 'UsersOrganization', dependent: :destroy
   has_many :organizations, through: :users_organizations
+  has_many :cops, foreign_key: 'admin_id', class_name: 'User', inverse_of: :admin
   
   has_many :subscriptions, :class_name => "UserSubscription", :foreign_key => "user_id"
 
