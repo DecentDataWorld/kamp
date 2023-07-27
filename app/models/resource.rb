@@ -29,6 +29,7 @@ class Resource < ActiveRecord::Base
   belongs_to :organization, :class_name => "Organization", :foreign_key => "organization_id"
   belongs_to :license, :class_name => "License", :foreign_key => "license_id", :optional => true
   belongs_to :batch, :class_name => "Batch", :foreign_key => "batch_id",  :optional => true
+  belongs_to :cop, :class_name => "Cop", :foreign_key => "cop_id",  :optional => true
 
   has_attached_file :attachment
   do_not_validate_attachment_file_type :attachment
@@ -176,7 +177,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
-      WHERE 0=0 "
+      WHERE r.cop_private = false "
       query = query + " AND r.approved = true " if only_approved
       query = query + " AND r.private = false " if exclude_private
       query = query + "
@@ -225,7 +226,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
-      WHERE 0=0 "
+      WHERE r.cop_private = false "
       query = query + " AND r.approved = true " if only_approved
       query = query + " AND r.private = false " if exclude_private
       query = query + "
@@ -279,7 +280,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
-      WHERE 0=0 "
+      WHERE r.cop_private = false "
       query = query + " AND r.approved = true " if only_approved
       query = query + " AND r.private = false " if exclude_private
       query = query + "

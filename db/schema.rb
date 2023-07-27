@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_25_133953) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_27_151348) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -301,10 +301,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_133953) do
     t.string "positive_users", limit: 255, default: [], array: true
     t.string "negative_users", limit: 255, default: [], array: true
     t.boolean "newsletter_only", default: false
+    t.bigint "cop_id"
+    t.boolean "cop_private", default: false, null: false
     t.index "to_tsvector('english'::regconfig, (((name)::text || ' '::text) || description))", name: "idx_fts_resources_concat", using: :gin
     t.index "to_tsvector('english'::regconfig, (name)::text)", name: "idx_fts_resources_name", using: :gin
     t.index "to_tsvector('english'::regconfig, description)", name: "idx_fts_resources_description", using: :gin
     t.index ["ci_lower_bound"], name: "index_resources_on_ci_lower_bound"
+    t.index ["cop_id"], name: "index_resources_on_cop_id"
     t.index ["organization_id"], name: "index_resources_on_organization_id"
   end
 
@@ -469,5 +472,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_25_133953) do
   add_foreign_key "events", "cops"
   add_foreign_key "events", "users"
   add_foreign_key "featured_searches", "cops"
+  add_foreign_key "resources", "cops"
   add_foreign_key "tags", "tag_types"
 end

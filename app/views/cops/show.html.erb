@@ -1,0 +1,71 @@
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+          <li><%= link_to root_path do %>Home<% end %></li>
+          <li>Community of Practice</li>
+      </ol>
+    </div>
+</section><!-- End Breadcrumbs -->
+
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+
+   <div class="row">
+     <div class="col-3 border-end">
+      <h5 class="border-bottom pb-2">Community of Practice</h5>
+        <ul class="list-group list-group-flush bg-transparent">
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Description</div>
+            <div class="ms-3"><%= @cop.description %></div>
+          </li>
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Contact</div>
+            <div class="ms-3">
+              <%= link_to @cop.admin.name, user_path(@cop.admin) %> <br/>
+              <%= mail_to @cop.admin.email %>
+            </div>
+          </li>
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Members</div>
+            <ul class="list-group border-0 bg-transparent">
+            <% @cop.users.each do |m| %>
+              <li class="list-group-item bg-transparent border-0"><%= link_to m.name, user_path(m) %></li>
+            <% end %>
+            </ul>
+          </li>
+        </ul>
+     </div>
+     <div class="col-9">
+      <div class="border-bottom"><h5><%= @cop.name %> &nbsp;</h5></div>
+      <% if @cop.featured_searches.length > 0 %>
+        <div class="border-bottom p-1">
+          Events:
+          <div class="d-flex justify-content-center">
+            <% @cop.featured_searches.each do |fs| %>
+              <div class="p-2"><%= link_to fs.name, fs.get_url, class: 'btn btn-outline-primary' %></div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @cop.featured_searches.length > 0 %>
+        <div class="border-bottom fw-light bg-light bg-gradient p-1">
+          Relevant Searches:
+          <div class="d-flex justify-content-center">
+            <% @cop.featured_searches.each do |fs| %>
+              <div class="p-2"><%= link_to fs.name, fs.get_url, class: 'btn btn-outline-primary' %></div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+       
+       <div class="mt-2">
+        
+       </div>
+     </div>
+   </div>
+
+  </div>
+</section><!-- End About Section -->

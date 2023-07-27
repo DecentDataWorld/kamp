@@ -1,5 +1,5 @@
 class CopsController < ApplicationController
-  before_action :set_cop, only: [:edit, :update, :destroy]
+  before_action :set_cop, only: [:edit, :update, :destroy, :show]
 
   # GET /cops
   # GET /cops.json
@@ -20,6 +20,10 @@ class CopsController < ApplicationController
 
   # GET /cops/1/edit
   def edit
+  end
+
+  # GET /cops/1
+  def show
   end
 
   # POST /cops

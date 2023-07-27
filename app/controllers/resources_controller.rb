@@ -425,6 +425,6 @@ class ResourcesController < ApplicationController
 
 # Never trust parameters from the scary internet, only allow the white list through.
   def resource_params
-    params.require(:resource).permit(:activity_id, :url, :name, :description, :format, :collection_id, :status, :resource_type, :attachment, :author_id, :license_id, :organization_id, :private, :tag_list, :source, :language, :issue_date, :corporate_authorship, :newsletter_only)
+    params.require(:resource).permit(:activity_id, :url, :name, :description, :format, :collection_id, :status, :resource_type, :attachment, :author_id, :license_id, :organization_id, :private, :tag_list, :source, :language, :issue_date, :corporate_authorship, :newsletter_only, :cop_id, :cop_private )
   end
 end
