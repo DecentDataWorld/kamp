@@ -1,6 +1,26 @@
-<div class="card">
-  <div class="card-body">
-    <h5 class="card-title"><%= t('headers.featured_search.new') %></h5>
-    <%= render 'form' %>
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+        <li><%= link_to admin_index_path do %><%=t('navigation.administration')%><% end %></li>
+        <li><%= link_to tags_path do %><%=t('navigation.featured_searches')%><% end %></li>
+      </ol>
+    </div>
+</section><!-- End Breadcrumbs -->
+
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+    <div class="col-3 border-end">
+      <h5 class="border-bottom pb-2"><%=t('navigation.administration')%></h5>
+      <%= render 'admin/side_nav' %>
+      <br/>
+    </div>
+    <div class="col-9">
+      <h5><%= t('headers.featured_search.new') %></h5>
+      <%= render 'form' %>
+    </div>
   </div>
-</div>
+</section>

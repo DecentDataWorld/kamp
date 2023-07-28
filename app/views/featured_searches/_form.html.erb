@@ -21,35 +21,39 @@
     </div>
 
     <div class="col-md-12">
-      <%= form.label :icon_identifier %><span class="text-danger">*</span><br>
+      <%= form.label :icon_identifier %><br>
       <%= form.text_field :icon_identifier, class: "form-control" %>
     </div>
 
-    <div class="col-md-12">
-      <%
-
-   grouped_tags = {}
-   TagType.all.order(:name).each do |category|
-     category.tags.order(:name).each do |tag|
-       grouped_tags[category.name] ||= []
-       grouped_tags[category.name] << tag.name
-     end
-   end
-
-%>
-
-<div  class="col-md-12 pb-2">
-  <%= form.label :tags %><span class="text-danger">*</span><br>
-  <%= form.input_field :tags,
-                          :label => false,
-                          :id => "multiselect",
-                          :as => :grouped_select,
-                          :collection => grouped_tags,
-                          :group_method => :last,
-                          :multiple => true,
-                          :class => "form-control",
-                          data: {controller: "multiselect", placeholder: "Begin typing to search for tags"} %>
+    <div  class="col-md-12 pb-2">
+      <%= form.label :tags %><span class="text-danger">*</span><br>
+      <%= form.input_field :tags,
+                              :label => false,
+                              :id => "multiselect",
+                              :as => :grouped_select,
+                              :collection => @grouped_tags,
+                              :group_method => :last,
+                              :multiple => true,
+                              :class => "form-control",
+                              data: {controller: "multiselect", placeholder: "Begin typing to search for tags"} %>
     </div>
+
+    <%  if Cop.is_user_cop_admin(current_user) %>
+      <div class="card m-3">
+        <div class="card-header">
+          COP-specific fields
+        </div>
+        <div class="card-body">
+          <div class="row p-2">
+            <div class="col-md-12">
+              <%= form.label :cop %><br>
+              <%= form.select :cop_id, Cop.admin(current_user).collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
     <div class="col-md-12">
       <% if current_page?(new_featured_search_path) || @featured_search.id == nil %>
         <%= form.submit t('helpers.submit.create', model: FeaturedSearch.model_name.human), class: "btn btn-outline-primary" %>

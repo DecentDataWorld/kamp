@@ -15,10 +15,24 @@ class FeaturedSearchesController < ApplicationController
     # GET /featured_searches/new
     def new
       @featured_search = FeaturedSearch.new
+      @grouped_tags = {}
+      TagType.all.order(:name).each do |tt|
+        tt.tags.order(:name).each do |tag|
+          @grouped_tags[tt.name] ||= []
+          @grouped_tags[tt.name] << tag.name
+        end
+      end
     end
   
     # GET /featured_searches/1/edit
     def edit
+      @grouped_tags = {}
+      TagType.all.order(:name).each do |tt|
+        tt.tags.order(:name).each do |tag|
+          @grouped_tags[tt.name] ||= []
+          @grouped_tags[tt.name] << tag.name
+        end
+      end
     end
   
     # POST /featured_searches
@@ -74,7 +88,7 @@ class FeaturedSearchesController < ApplicationController
   
       # Only allow a list of trusted parameters through.
       def featured_search_params
-        params.require(:featured_search).permit(:name, :icon_identifier, :tag_list)
+        params.require(:featured_search).permit(:name, :icon_identifier, :tag_list, :cop_id)
       end
   end
   
