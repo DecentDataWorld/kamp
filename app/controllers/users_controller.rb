@@ -65,9 +65,6 @@ class UsersController < ApplicationController
         format.html { redirect_to users_path }
         format.json { render :show, status: :ok, location: @user }
       else
-        # updating role is always erroring, as below. i don't know why it's submitting a (blank?) email address when the form doesn't have that field at all..
-        # <ActiveModel::Errors [#<ActiveModel::Error attribute=email, type=invalid, options={}>]>
-        puts @user.errors.inspect
         format.html { render :edit }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
@@ -218,6 +215,6 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:id, :role_ids, :invitation_email, :search, :role_id)
+    params.require(:user).permit(:id, :role_ids, :invitation_email, :search)
   end
 end

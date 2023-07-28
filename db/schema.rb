@@ -263,6 +263,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_27_151348) do
     t.boolean "approved"
     t.string "domain", limit: 255
     t.integer "organization_type_id"
+    t.datetime "deactivated_at"
   end
 
   create_table "resources", id: :serial, force: :cascade do |t|

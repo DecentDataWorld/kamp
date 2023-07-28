@@ -1,101 +1,79 @@
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %>Home<% end %></li>
+      <li><%= link_to users_path do %>Administration<% end %></li>
+      <li><%= link_to organizations_path(:page => params[:page]) do %>Organizations<% end %></li>
+      <li><%= link_to organization_path(@organization) do %> <%= @organization.name %><% end %></li>
+      <li>Add Member</li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
 
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-sm-3">
-      <%= render partial: 'organizations/info', locals: { :short=>false } %>
-    </div>
-    <div class="col-sm-9">
+<!--=== About Section ===-->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <%= render partial: 'organizations/info', locals: { :short=>false } %>
+      </div>
 
-      <%= render partial: 'organizations/tab_nav' %>
+      <div class="col-9">
+        <div class="row pb-1">
+          <div class="col-5">
+            <%= simple_form_for(@users_organization) do |f| %>
+              <div class="row-fluid form-group pb-3">
+                <%= f.input :organization_id, :as => "hidden" %>
+                <%= f.error_notification %>
 
-      <div class="tab-content">
-          <div class="row">
-              <div class="col-sm-5">
-                <div class="row-fluid">
-                  <%= simple_form_for(@users_organization) do |f| %>
-                      <%= f.input :organization_id, :as => "hidden" %>
-                      <%= f.error_notification %>
-
-                      <% if @users_organization.errors.count > 0 %>
-                          <div class="info-board info-board-red">
-                            <h4>Correct Errors Before Continuing</h4>
-                            <p>The following fields have to be corrected.</p>
-                            <% @users_organization.errors.each do |e| %>
-                                <%= e %>
-                            <% end %>
-                          </div>
-                      <% end %>
-                      <h3>Existing User</h3>
-                <p>If you wish to add an existing user, search for their username below.</p>
-                <%= f.input_field :user_id, :collection => User.all.order('name'), :class => "form-control chosen-select", :label => false, :label_method => lambda { |user| "#{user.name.capitalize} (#{user.email})".html_safe } %>
-
-                </div>
-                <div class="row-fluid">
-                  <br>
-                  <h3>Add to Organization as a:</h3>
-                  <%= f.select :role, UsersOrganization.role.options %>
-                </div>
-                      <div class="row-fluid">
-                        <br>
-                        <div class="form-actions col-lg-offset-4">
-                          <%= button_tag(type: 'submit', class: "btn btn-info") do %>
-                              <i class="icon icon-plus-sign"></i>
-                              Add This User
-                          <% end %>
-                        </div>
-                      </div>
-
-                  <% end %>
+                <% if @users_organization.errors.count > 0 %>
+                  <div class="info-board info-board-red">
+                    <h5>Correct Errors Before Continuing</h5>
+                    <p>The following fields have to be corrected.</p>
+                    <% @users_organization.errors.each do |e| %>
+                      <%= e %>
+                    <% end %>
                   </div>
-              <div class="col-sm-1">
-                <p>&nbsp;</p>
-                <h5>or</h5>
-              </div>
-              <div class="col-sm-5">
-                <h3>New User</h3>
-                <p>If you wish to invite a new user, enter their email address.</p>
-
-                <%= simple_form_for @inviteuser,
-                                    :url => url_for(:action => 'invite_user', :controller => 'organizations'),
-                                    :method => 'post' do |f| %>
-                    <input type="hidden", name="organization_id" value="<%= @organization.url %>"/>
-                    <div class="form-group">
-                      <label for="name">Name</label>
-                      <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter Name' %>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="name">Email</label>
-                      <%= f.input_field :email, class: "form-control", id: 'email', placeholder: 'Enter Email' %>
-                    </div>
-
-                    <div class="form-actions">
-                      <%= f.button :submit, value: 'Invite User', class: 'btn btn-sm btn-color' %>
-                    </div>
                 <% end %>
-              </div>
-            </div>
-       </div>
 
+                <h5>Existing User</h5>
+                <p>If you wish to add an existing user, search for their username below.</p>
+                <label for="username">Username</label>
+                <%= f.input_field :user_id, :collection => User.all.order('name'), :class => "form-control", :label => false, :label_method => lambda { |user| "#{user.name.capitalize} (#{user.email})".html_safe } %>
+              </div>
+              <div class="row-fluid">
+                <label for="role">Add to Organization as a:</label>
+                <%= f.select :role, UsersOrganization.role.options, {}, {class: "form-select"} %>
+              </div>
+              <%= button_tag(type: 'submit', class: "btn btn-outline-primary mt-3") do %>Add User<% end %>
+            <% end %>
+          </div>
+
+          <div class="col-1">
+            <p>&nbsp;</p>
+            <h5>or</h5>
+          </div>
+
+          <div class="col-5">
+            <h5>New User</h5>
+            <p>If you wish to invite a new user, enter their name and email address.</p>
+            <%= simple_form_for @inviteuser, :url => url_for(:action => 'invite_user', :controller => 'organizations'), :method => 'post' do |f| %>
+              <input type="hidden", name="organization_id" value="<%= @organization.url %>"/>
+              <div class="form-group pb-3">
+                <label for="name">Name</label>
+                <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter Name' %>
+              </div>
+              <div class="form-group pb-2">
+                <label for="name">Email</label>
+                <%= f.input_field :email, class: "form-control", id: 'email', placeholder: 'Enter Email' %>
+              </div>
+              <%= f.button :submit, value: 'Invite User', class: 'btn btn-outline-primary mt-2' %>
+            <% end %>
+            <%= link_to "Cancel", organization_path(@organization), class: "btn btn-outline-secondary float-end"%>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
-
-<script>
-    $(function(){
-
-        $(".chosen-select").chosen();
-
-        $('#new_user').submit(function( event ) {
-
-            if ($('#name').val() == "" || $('#email').val() == "" ) {
-                alert("Please enter both a name and email address for the person you are inviting");
-                return false;
-            }
-
-        });
-
-    });
-</script>
+</section>

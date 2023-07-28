@@ -1,5 +1,5 @@
 
-<% if !resource.private || resource.organization.can_add_collections(current_user) %>
+<% if !resource.private || resource.organization.can_add_collections(current_user) or can? :manage, :all %>
     <% str_title = resource.name.truncate(75) %>
     <% if resource.private == true %>
         <% str_title = str_title + ' <i class="fa fa-lock"></i>' %>

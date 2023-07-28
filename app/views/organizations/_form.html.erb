@@ -1,69 +1,68 @@
 <%= simple_form_for(@organization, :html => { role: "form", multipart: true }) do |f| %>
+  <%= f.error_notification %>
 
-    <%= f.error_notification %>
-
-    <% if @organization.errors.count > 0 %>
-        <%= logger.info @organization.errors %>
-        <div class="info-board info-board-red">
-          <h4>Correct Errors Before Continuing</h4>
-          <p>The following fields have to be corrected.</p>
-          <% @organization.errors.each do |e| %>
-              <%= e %>
-          <% end %>
-        </div>
-    <% end %>
-
-    <% if !@organization.logo.blank? %>
-        <div class="pull-left">
-          <b>Current Logo</b><br>
-          <%= link_to raw('<i class="fa fa-save"></i> ' + @organization.logo_file_name), @organization.logo.url %>
-        </div>
-        <div class="form-group col-lg-offset-3">
-          <label for="logo">Replace Logo</label>
-    <% else %>
-        <div class="form-group">
-          <label for="logo">Attach Logo</label>
-    <% end %>
-    <%= f.input_field :logo, id: 'logo', label: false,  data: { :"show-upload" => "false" } %>
+  <% if @organization.errors.count > 0 %>
+    <%= logger.info @organization.errors %>
+    <div class="info-board info-board-red">
+      <h5>Correct Errors Before Continuing</h5>
+      <p>The following fields have to be corrected.</p>
+      <% @organization.errors.each do |e| %>
+        <%= e %>
+      <% end %>
     </div>
+  <% end %>
 
-    <div class="form-group">
-      <label for="name">Name</label>
-      <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter Name' %>
-    </div>
+  <div class="form-group mb-3">
+    <label for="name">Name</label>
+    <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter Name' %>
+  </div>
 
-    <div class="form-group">
+  <div class="row">
+    <div class="form-group mb-3 col-6">
       <label for="domain">Email Domain</label>
       <% if can? :manage, :all %>
-          <%= f.input_field :domain, class: "form-control", id: 'domain', placeholder: 'Organization Email Domain' if can? :manage, @organization %>
+        <%= f.input_field :domain, class: "form-control", id: 'domain', placeholder: 'Enter Organization Email Domain' if can? :manage, @organization %>
       <% else %>
-          <%= @organization.domain %>
-          <%= raw '<small><i>&nbsp;&nbsp;&nbsp;[Generated automatically]</i></small>' if @organization.domain.blank? %>
+        <%= @organization.domain %>
+        <%= raw '<small><i>&nbsp;&nbsp;&nbsp;[Generated automatically]</i></small>' if @organization.domain.blank? %>
       <% end %>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3 col-6">
       <label for="attachment">Organization Type</label>
-      <%= f.select :organization_type_id, OrganizationType.all.collect {|x| [x.organization_type, x.id]}, label: false, :include_blank => true %>
+      <%= f.select :organization_type_id, OrganizationType.all.collect {|x| [x.organization_type, x.id]}, {label: false, :include_blank => true}, {class: "form-select"} %>
     </div>
+  </div>
 
-    <div class="form-group">
+  <div class="row">
+    <div class="form-group mb-3 col-6">
       <label for="description">Description</label>
-      <%= f.input_field :description, class: "form-control", id: 'description', placeholder: 'Enter a description' %>
+      <%= f.text_area :description, class: "form-control", id: 'description', placeholder: 'Enter a description', rows: 6 %>
     </div>
 
-    <div class="form-actions">
-      <%= f.button :submit, class: 'btn btn-lg btn-color' %>
+    <div class="form-group mb-3 col-6">
+      <label for="logo">Logo Image</label>
+      <% if !@organization.logo.blank? %>
+        <div class="pull-left mt-3">
+          <b>Current Logo</b>
+          <%= link_to raw('<i class="fa fa-save"></i> ' + @organization.logo_file_name), @organization.logo.url, {class: "mb-3"} %>
+        </div>
+        <div class="form-group mt-3">
+          <label for="logo">Replace Logo</label>
+      <% else %>
+        <div class="form-group mt-3">
+          <label for="logo">Attach Logo</label>
+      <% end %>
+      <%= f.input_field :logo, id: 'logo', label: false, class: "form-control", data: { "show-upload" => "false" } %>
+      </div>
     </div>
+  </div>
+
+  <div class="form-actions mt-2">
+    <%= f.button :submit, class: 'btn btn-outline-primary' %>
+    <%= link_to "Cancel", @organization.id ? organization_path(@organization) : organizations_path, class: "btn btn-outline-secondary"%>
+    <% if @organization.id? %>
+      <%= link_to "Deactivate", deactivate_organization_path(@organization), data: { turbo_confirm: "Are you sure you want to deactivate this organization?", turbo_method: :put }, class: "btn btn-outline-danger float-end"%>
+    <% end %>
+  </div>
 <% end %>
-
-<script>
-    $(function(){
-
-        $(".chosen-select").chosen();
-
-        $('#collection_tag_list').tagsInput();
-
-
-    });
-</script>

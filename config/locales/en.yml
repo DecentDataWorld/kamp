@@ -50,7 +50,7 @@ en:
         admin: "Administrator"
         roles: "Roles"
         portal_roles: "Portal Roles"
-        kamp_role: "KaMP Role"
+        kamp_role: "Role"
         organizations: "Organizations"
         results: "Results"
       organization:
@@ -60,6 +60,7 @@ en:
         members: "Members"
         approved: "Approved"
         results: "Results"
+        organization_type: "Type"
       organization_type:
         name: "Name"
       tag:

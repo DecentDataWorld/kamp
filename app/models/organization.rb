@@ -77,4 +77,12 @@ class Organization < ActiveRecord::Base
     url
   end
 
+  def deactivate
+    update_attribute(:deactivated_at, Time.current)
+  end
+
+  def reactivate
+    update_attribute(:deactivated_at, nil)
+  end
+
 end
