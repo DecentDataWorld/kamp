@@ -35,6 +35,7 @@
               <%= f.input_field :comment, :as => :text, :class => 'form-control' %>
               <%= button_tag(type: 'submit', class: 'btn btn-outline-danger mt-3') do %>Deny Membership Application<% end %>
             <% end %>
+            <%= link_to "Cancel", organization_path(@organization), class: "btn btn-outline-secondary float-end"%>
           </div>
         </div>
       </div>

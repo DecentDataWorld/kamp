@@ -4,8 +4,9 @@
     <ol>
       <li><%= link_to root_path do %>Home<% end %></li>
       <li><%= link_to users_path do %>Administration<% end %></li>
-      <li><%= link_to organizations_path(:page => params[:page]) do %>Organizations<% end%></li>
-      <li><%= @organization.name %></li>
+      <li><%= link_to organizations_path(:page => params[:page]) do %>Organizations<% end %></li>
+      <li><%= link_to organization_path(@organization) do %> <%= @organization.name %><% end %></li>
+      <li>Add Member</li>
     </ol>
   </div>
 </section><!-- End Breadcrumbs -->
@@ -69,6 +70,7 @@
               </div>
               <%= f.button :submit, value: 'Invite User', class: 'btn btn-outline-primary mt-2' %>
             <% end %>
+            <%= link_to "Cancel", organization_path(@organization), class: "btn btn-outline-secondary float-end"%>
           </div>
         </div>
       </div>
