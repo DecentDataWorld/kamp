@@ -91,9 +91,11 @@
                         </div>
 
                         <div id="inner_cops" class="tab-pane show fade">
-                          <% @cops.each do |cop| %>
-                            <%= render cop %>
-                          <% end %>
+                          <ul class="list-group list-group-flush bg-transparent">
+                            <% @cops.each do |cop| %>
+                              <li class="list-group-item bg-transparent"><%= link_to cop.name, cop_path(cop) %></li>
+                            <% end %>
+                          </ul>
                           <% if @cops.empty? %>
                             <% if @user == @current_user %> You are <% else %> This user is <% end %> not part of any Communities of Practice.
                           <% end %>

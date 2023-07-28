@@ -113,3 +113,30 @@
   </div>
 </div>
 
+<%  if current_user.cops.length != 0 %>
+  <div class="card m-3">
+    <div class="card-header">
+      COP-specific fields
+    </div>
+    <div class="card-body">
+      <div class="row p-2">
+        <div class="col-md-12">
+          <%= f.label :cop %><br>
+          <%= f.select :cop_id, current_user.cops.collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
+        </div>
+      </div>
+      <div class="row p-2">
+        <div class="col-md-12">
+        <%=
+            f.input :cop_private, label: false, as: :boolean do
+              f.check_box :cop_private, {}, "true", "false"
+            end
+        %> Mark as a private resource that can only be accessed by users in my COP
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+
+

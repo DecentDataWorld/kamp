@@ -1,5 +1,10 @@
 class FeaturedSearch < ActiveRecord::Base
   acts_as_taggable
+  belongs_to :cop, optional: true
+
+  scope :cop_searches, -> (cop) { where cop_id: cop }
+  scope :home_searches, -> () { where cop_id: nil }
+
 
   validates_presence_of :name, :message => "Name is required"
 
