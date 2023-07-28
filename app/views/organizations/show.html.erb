@@ -29,23 +29,6 @@
                   <li class="pe-4"><a href="#resources_pending" data-bs-toggle="tab" data-bs-target="#resources_pending">Pending Approval</a></li>
                 <% end %>
                 <li class="pe-4"><a href="#members" data-bs-toggle="tab" data-bs-target="#members">Members</a></li>
-                <% if (user_signed_in? and @organization.can_edit_organization(current_user)) or can? :manage, :all %>
-                  <li class="dropdown pe-4 ps-4">
-                    <a href="#" id="myTabDrop1" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-target="#manage">Manage <b class="caret"></b></a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
-                      <li><%= link_to org_private_resources_path(@organization) do %><i class="fa fa-lock"></i> Private Resources<% end %></li>
-                      <li><%= link_to edit_organization_path(@organization) do %><i class="fa fa-edit"></i> Edit<% end %></li>
-                      <% if can? :delete, @organization %>
-                        <li class="divider"></li>
-                        <li>
-                          <%= link_to @organization, method: :delete, data: { confirm: 'Are you sure?' } do %>
-                            <span class="glyphicon glyphicon-remove"></span> Delete
-                          <% end %>
-                        </li>
-                      <% end %>
-                    </ul>
-                  </li>
-                <% end %>
               </ul>
             </nav>
 
@@ -80,6 +63,9 @@
                         <ul class="nav nav-tabs">
                           <li class="nav-item"><a href="#inner_resources" class="nav-link nav-link-large <%= !@show_collections ? 'active' : ''%>" data-bs-toggle="tab" data-bs-target="#inner_resources">Resources</a></li>
                           <li class="nav-item"><a href="#inner_collections" class="nav-link nav-link-large  <%= @show_collections ? 'active' : ''%>" data-bs-toggle="tab" data-bs-target="#inner_collections">Collections</a></li>
+                          <% if @organization.can_manage_users(current_user) or can? :manage, :all %>
+                            <li class="nav-item"><a href="#inner_private_resources" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#inner_private_resources">Private Resources</a></li>
+                          <% end %>
                         </ul>
                         <div class="tab-content">
                           <div id="inner_resources" class="tab-pane show fade <%= !@show_collections ? 'active' : ''%>">
@@ -89,11 +75,11 @@
                               <% end %>
                               <%= will_paginate @resources %>
                             <% else %>
-                              <blockquote><i class="fa fa-thumbs-down"></i> No resources found with that combination</blockquote>
-                              <div class="alert alert-info fade">
+                              <blockquote>No resources found.</blockquote>
+                              <div class="alert alert-info">
                                 <h4>Let Us Know What We're Missing</h4>
                                 <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
-                                <p><a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a></p>
+                                <p><%= link_to "Take the Survey", survey_index_path, class: 'btn btn-outline-primary' %></p>
                               </div>
                             <% end %>
                           </div>
@@ -105,12 +91,23 @@
                               <% end %>
                               <%= will_paginate @collections, :param_name => 'collection_page' %>
                             <% else %>
-                              <blockquote><i class="fa fa-thumbs-down"></i> No collections found with that combination</blockquote>
-                              <div class="alert alert-info fade">
+                              <blockquote>No collections found.</blockquote>
+                              <div class="alert alert-info">
                                 <h4>Let Us Know What We're Missing</h4>
                                 <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
-                                <p><a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a></p>
+                                <p><%= link_to "Take the Survey", survey_index_path, class: 'btn btn-outline-primary' %></p>
                               </div>
+                            <% end %>
+                          </div>
+
+                          <div id="inner_private_resources" class="tab-pane show fade">
+                            <% if @private_resources.count > 0 %>
+                              <% @private_resources.each do |resource| %>
+                                <%= render resource %>
+                              <% end %>
+                              <%= will_paginate @private_resources, :param_name => 'private_resource_page' %>
+                            <% else %>
+                              <blockquote>No private resources.</blockquote>
                             <% end %>
                           </div>
                         </div>
@@ -185,8 +182,8 @@
                                     <td><%= link_to pa.user.name, user_path(pa.user, :page => params[:page]) %></td>
                                     <td><%= pa.user.email %></td>
                                     <td><%= pa.user.roles.pluck(:name).join(', ').titleize %></td>
-                                    <td><%= link_to("Approve", organization_process_application_path(:id=> pa.id, :result => "approve"), :data => { :confirm => "You are about to accept this membership application\n\nAre you sure?" }, :class => 'btn btn-outline-primary btn-sm float-end') %></td>
-                                    <td><%= link_to("Deny", organization_process_application_path(:id=> pa.id, :result => "deny"), :data => { :confirm => "Are you sure you would like to deny this application?" }, :class => 'btn btn-outline-danger btn-sm float-end') %></td>
+                                    <td><%= link_to("Approve", organization_process_application_path(:id=> pa.id, :result => "approve"), :data => { turbo_confirm: "You are about to accept this membership application\n\nAre you sure?" }, :class => 'btn btn-outline-primary btn-sm float-end') %></td>
+                                    <td><%= link_to("Deny", organization_process_application_path(:id=> pa.id, :result => "deny"), :data => { turbo_confirm: "Are you sure you would like to deny this application?" }, :class => 'btn btn-outline-danger btn-sm float-end') %></td>
                                   </tr>
                                 <% end %>
                               </tbody>
@@ -238,14 +235,13 @@
                   </div>
                 </div>
               </div><!--- END MEMBERS TAB --->
-          
             </div>
+
           </div>
+          <!-- End Tab v1 -->
         </div>
-        <!-- End Tab v1 -->
-
-
       </div>
+
     </div>
   </div>
 </section>

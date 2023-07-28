@@ -1,63 +1,43 @@
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %>Home<% end %></li>
+      <li><%= link_to users_path do %>Administration<% end %></li>
+      <li><%= link_to organizations_path(:page => params[:page]) do %>Organizations<% end%></li>
+      <li><%= @organization.name %></li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
 
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-sm-3">
-      <%= render partial: 'organizations/info', locals: { :short=>false } %>
-    </div>
-    <div class="col-sm-9">
-
-      <%= render partial: 'organizations/tab_nav' %>
-
-      <div class="tab-content">
-
-          <%= simple_form_for @get_application,
-              :url => url_for(:action => 'process_application_denial', :controller => 'organizations'),
-              :method => 'post' do |f| %>
-
-              <div class="row">
-                <%= f.input :id, :as => "hidden", :value => @get_application.id %>
-
-              <h3>Deny Organization Membership</h3>
-              <p>You are about to deny the following user membership to this organization.</p>
-                <p><strong><%= @get_application.user.name %> (<%= @get_application.user.email %>)</strong></p>
-
-                <p>Optional: If you would like to include a message in the notification please enter it below.</p>
-
-              <%= f.input_field :comment, :as => :text, :class => 'form-control' %>
-
-              </div>
-            <div class="row-fluid">
-              <br>
-              <div class="form-actions col-lg-offset-4">
-                <%= button_tag(type: 'submit', class: "btn btn-u btn-u-red") do %>
-                    <i class="icon icon-plus-sign"></i>
-                    Deny Membership Application
-                <% end %>
-              </div>
-            </div>
-          <% end %>
-
+<!--=== About Section ===-->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <%= render partial: 'organizations/info', locals: { :short=>false } %>
       </div>
 
+      <div class="col-9">
+        <div class="row pb-1">
+          <div class="row">
+            <h5>Deny Organization Membership</h5>
+            <p>You are about to deny the following user membership to this organization.</p>
+            <p><strong><%= @get_application.user.name %> (<%= @get_application.user.email %>)</strong></p>
+            <p>Optional: If you would like to include a message in the notification please enter it below.</p>
+          </div>
+
+          <div class="row-fluid">
+            <%= simple_form_for @get_application,
+              :url => url_for(:action => 'process_application_denial', :controller => 'organizations'),
+              :method => 'post' do |f| %>
+              <%= f.input :id, :as => "hidden", :value => @get_application.id %>
+              <%= f.input_field :comment, :as => :text, :class => 'form-control' %>
+              <%= button_tag(type: 'submit', class: 'btn btn-outline-danger mt-3') do %>Deny Membership Application<% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-
-
-<script>
-  $(function(){
-
-    $(".chosen-select").chosen();
-
-    $('#new_user').submit(function( event ) {
-
-      if ($('#name').val() == "" || $('#email').val() == "" ) {
-        alert("Please enter both a name and email address for the person you are inviting");
-        return false;
-      }
-
-    });
-
-  });
-</script>
+</section>

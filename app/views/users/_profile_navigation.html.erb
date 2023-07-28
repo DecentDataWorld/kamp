@@ -1,6 +1,7 @@
 <% if !@user.about.nil? %>
   <p class="text-muted"><%= simple_format @user.about %></p>
 <% end %>
+
 <ul class="list-group list-group-flush">
   <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> Title: <span class="text-muted"><%= @user.title ? @user.title : 'None' %></span></li>
   <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> Portal Role: <span class="text-muted"><%= @user.roles.pluck(:name).join(', ') %></span></li>
@@ -10,8 +11,8 @@
   <% end %>
   <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> <%= @user.resources.count %> Resources Contributed</li>
   <li class="list-group-item no-border p-0 ps-2"><i class="fa fa-angle-right"></i> <%= @user.collections_authored.count %> Collections Contributed</li>
-  
 </ul>
+
 <ul class="list-group list-group-flush pt-2">
   <% if !current_page?(edit_user_registration_path) %>
     <% if current_user == @user %>

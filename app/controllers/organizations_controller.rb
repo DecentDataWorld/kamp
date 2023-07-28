@@ -65,6 +65,11 @@ class OrganizationsController < ApplicationController
        # with(:newsletter_only, false)
      # end
 
+    # get all private resources for this organization
+    if current_user.organizations.exists?(@organization.id) or can? :manage, :all
+      @private_resources = @organization.private_resources.paginate(:page => params[:page]).per_page(20)
+    end
+
     # if user can view pending submissions, query for them
     if @hide_pending == false
       @resources_pending = Resource.where(:organization_id => @organization.id).where(:approved => false).order("updated_at desc")
