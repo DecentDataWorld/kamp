@@ -21,7 +21,7 @@
     <div class="form-group mb-3 col-6">
       <label for="domain">Email Domain</label>
       <% if can? :manage, :all %>
-        <%= f.input_field :domain, class: "form-control", id: 'domain', placeholder: 'Organization Email Domain' if can? :manage, @organization %>
+        <%= f.input_field :domain, class: "form-control", id: 'domain', placeholder: 'Enter Organization Email Domain' if can? :manage, @organization %>
       <% else %>
         <%= @organization.domain %>
         <%= raw '<small><i>&nbsp;&nbsp;&nbsp;[Generated automatically]</i></small>' if @organization.domain.blank? %>

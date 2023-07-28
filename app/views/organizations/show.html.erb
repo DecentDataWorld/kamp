@@ -24,7 +24,7 @@
           <div class="tab-v1">
             <nav>
               <ul class="nav nav-tabs pb-2">
-                <li class="pe-4"><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources">Uploads<span class="badge badge-yellow"><%= @resource_count %></span></a></li>
+                <li class="pe-4 ps-2"><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources">Uploads<span class="badge badge-yellow"><%= @resource_count %></span></a></li>
                 <% if (!@resources_pending.nil? and @resources_pending.count > 0) || (!@collections_pending.nil? and @collections_pending.count > 0) %>
                   <li class="pe-4"><a href="#resources_pending" data-bs-toggle="tab" data-bs-target="#resources_pending">Pending Approval</a></li>
                 <% end %>
