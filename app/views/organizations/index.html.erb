@@ -14,7 +14,7 @@
   <div class="container">
     <div class="row">
       <div class="col-3 border-end">
-      <h5 class="border-bottom pb-2"><%=t('navigation.administration')%></h5>
+        <h5 class="border-bottom pb-2"><%=t('navigation.administration')%></h5>
         <%= render 'admin/side_nav' %>
         <br/>
       </div>
@@ -22,10 +22,16 @@
       <div class="col-9">
         <div class="border-bottom">
           <div class="row pb-1">
-            <div class="col-10">
+            <div class="col-9">
               <%= render 'search' %>
             </div>
             <div class="col-2"><%=t('activerecord.attributes.organization.results')%>: <%= @organizations.count %></div>
+            <% if can? :manage, :all %>
+              <div class="col-1 mt-n3 m-0 p-0">
+                <%= link_to new_organization_path, class: 'btn btn-primary mt-1 pt-2 ms-4' do  %><i class="fa-solid fa-plus"></i><% end %>
+              </div>
+          <% end %>
+
           </div>
         </div>
         <div data-controller="organization-list">

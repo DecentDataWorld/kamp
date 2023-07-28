@@ -1,18 +1,30 @@
-<% content_for :title do %><%= @page_title %><% end %>
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-sm-3">
-      <%= render partial: 'organizations/info', locals: { :short=>true } %>
-    </div>
-    <div class="col-sm-9">
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %>Home<% end %></li>
+      <li><%= link_to users_path do %>Administration<% end %></li>
+      <li><%= link_to organizations_path(:page => params[:page]) do %>Organizations<% end %></li>
+      <li><%= link_to organization_path(@organization) do %> <%= @organization.name %><% end %></li>
+      <li>Edit</li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
 
-      <div class="tag-box tag-box-v3 form-page">
-        <div class="headline"><h2>Edit Organization Information</h2></div>
+<!--=== About Section ===-->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <%= render partial: 'organizations/info', locals: { :short=>true } %>
+      </div>
 
-        <%= render 'form' %>
-
+      <div class="col-9">
+        <div class="row pb-1">
+          <h5>Edit Organization Information</h5>
+          <%= render 'form' %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>

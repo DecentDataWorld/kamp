@@ -174,14 +174,12 @@
                               <thead>
                                 <th><%=t('activerecord.attributes.user.name')%></th>
                                 <th><%=t('activerecord.attributes.user.email')%></th>
-                                <th><%=t('activerecord.attributes.user.kamp_role')%></th>
                               </thead>
                               <tbody>
                                 <% @pending_applications.each do |pa| %>
                                   <tr>
                                     <td><%= link_to pa.user.name, user_path(pa.user, :page => params[:page]) %></td>
                                     <td><%= pa.user.email %></td>
-                                    <td><%= pa.user.roles.pluck(:name).join(', ').titleize %></td>
                                     <td><%= link_to("Approve", organization_process_application_path(:id=> pa.id, :result => "approve"), :data => { turbo_confirm: "You are about to accept this membership application\n\nAre you sure?" }, :class => 'btn btn-outline-primary btn-sm float-end') %></td>
                                     <td><%= link_to("Deny", organization_process_application_path(:id=> pa.id, :result => "deny"), :data => { turbo_confirm: "Are you sure you would like to deny this application?" }, :class => 'btn btn-outline-danger btn-sm float-end') %></td>
                                   </tr>

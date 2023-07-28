@@ -57,7 +57,7 @@
 
           <div class="col-5">
             <h5>New User</h5>
-            <p>If you wish to invite a new user, enter their email address.</p>
+            <p>If you wish to invite a new user, enter their name and email address.</p>
             <%= simple_form_for @inviteuser, :url => url_for(:action => 'invite_user', :controller => 'organizations'), :method => 'post' do |f| %>
               <input type="hidden", name="organization_id" value="<%= @organization.url %>"/>
               <div class="form-group pb-3">
