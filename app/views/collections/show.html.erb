@@ -1,189 +1,112 @@
-<% content_for :title do %><%= @collection.title  %><% end %>
-<% content_for :description do %><%= Sanitize.fragment(@collection.description, Sanitize::Config::RELAXED) if !@collection.description.nil? and !@collection.description.blank? %><% end %>
-<% content_for :author do %><%= @collection.author  %><% end %>
-<!--=== Content Part ===-->
-<div class="container">
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+          <li><%= link_to root_path do %>Home<% end %></li>
+          <li><%= link_to search_path(session[:last_search_id]) do %>Search<% end %></li>
+          <li>Collection</li>
+      </ol>
+    </div>
+</section><!-- End Breadcrumbs -->
 
-  <div class="row blog-p-body">
-    <div class="headline"><h2><i class="fa fa-files-o"></i> <%= @collection.title %></h2></div>
-    <div class="col-sm-3">
-      <% if !session[:last_search_id].nil? %>
-          <%= link_to search_path(session[:last_search_id]) do %>
-              <i class="fa fa-chevron-left"></i> Return to Search Results
-          <% end %>
-      <% end %>
-      <% if (can? :moderate, @collection) or (@collection.can_edit(@current_user)) or (@collection.can_add_resources(@current_user)) %>
-          <div class="headline"><h4>Manage Collection</h4></div>
-          <ul class="list-group sidebar-nav-v1">
-            <% if (can? :moderate, @collection) or @collection.can_edit(@current_user) %>
-                <li class="list-group-item"><%= link_to edit_collection_path(@collection) do %><i class="fa fa-edit"></i> Edit Collection<% end %></li>
-                <li class="list-group-item"><%= link_to collection_path(@collection), method: :delete, data: { confirm: 'Are you sure?' } do %><i class="fa fa-edit"></i> Delete Collection<% end %></li>
-                <li class="list-group-item">
-                  <%= link_to new_collection_resourcing_path(@collection) do %>
-                      <i class="fa fa-plus"></i> Add Resource
-                  <% end %>
-                </li>
-            <% end %>
-          </ul>
-      <% end %>
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
 
-      <% if can? :approve, @collection and !@collection.approved %>
-          <ul class="list-group sidebar-nav-v1">
-            <li class="list-group-item"><%= link_to approve_submission_path(submission_id: @collection.id, submission_type: "collection"), data: { confirm: 'Are you sure you want to approve this collection?' }, class: "btn btn-success" do %><i class="fa fa-thumbs-up"></i> Approve collection<% end %></li>
-            <li class="list-group-item"><%= link_to denial_submission_path(submission_id: @collection.id, submission_type: "collection"), class: "btn btn-danger" do %><i class="fa fa-thumbs-down"></i> Deny collection<% end %></li>
-          </ul>
-          <br>
-      <% end %>
-
-      <div class="headline"><h4>Collection Details</h4></div>
-
-      <% if !@collection.image.blank? and !@collection.image.nil? %>
-      <div class="thumbnails thumbnail-style thumbnail-kenburn">
-        <div class="thumbnail-img">
-          <div class="overflow-hidden">
-                <%= link_to @collection.image.expiring_url(10), target: '_blank' do %><img class="img-responsive" src="<%= @collection.image.expiring_url(10) %>" alt="<%= @collection.title %>" /><% end %>
-          </div>
-        </div>
-      </div>
-      <% end %>
-
-      <div class="well well-sm">
-        <dl>
-          <dt>Uploaded by:</dt>
-          <dd><%= link_to @collection.author.name, user_path(@collection.author) if !@collection.author.nil? %>
-            <br><%= link_to @collection.organization.name, organization_path(@collection.organization) %></dd>
-
-          <% if !@collection.activity_id.nil? %>
-              <dt><strong>Activity</strong></dt>
-                <dd><%= @collection.activity.name %></dd>
-          <% end %>
-        </dl>
-      </div>
-      <% if @collection.private %>
-          <div class="panel panel-green">
-            <div class="panel-heading"><i class="fa fa-eye-slash"></i> Private Collection</div>
-            <div class="panel-body">
-              This collection is marked <b>private</b> so can only be viewed by members of your organization.
-            </div>
-          </div>
-      <% end %>
-      <div class="row-fluid well well-sm">
-        <div class="widget-box">
-          <div class="widget-header">
-            <h5 class="widget-title smaller"><i class="fa fa-files-o"></i> Related Collections</h5>
-          </div>
-
-          <div class="widget-body">
-            <div class="widget-main padding-6">
-              <ul>
-                <% @related_collections.each do |collection| %>
-                    <li><%= link_to collection.title.truncate(50), collection %></li>
-                <% end %>
+   <div class="row">
+     <div class="col-3 border-end">
+      <div class="row border-bottom pb-2 me-1">
+        <div class="col fs-5">Collection</div>
+        <div class="col d-flex flex-row-reverse available-tags">
+          <% if (can? :moderate, @collection) or (@collection.can_edit(@current_user)) or (@collection.can_add_resources(@current_user)) %>
+            <div class="dropdown">
+              <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-cog"></i>
+              </button>
+              <ul class="dropdown-menu">
+              <% if (can? :moderate, @collection) or @collection.can_edit(current_user) %>
+                <li><%= link_to "Edit Collection", edit_collection_path(@collection), class: "dropdown-item" %></li>
+              <% end %>
+              <% if can? :delete, @collection or can? :moderate, @collection %>
+              <li><%= link_to "Add Resource", new_collection_resourcing_path(@collection), class: "dropdown-item" %></li>
+                  <li><%= link_to "Delete", @collection, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "dropdown-item" %></li>
+              <% end %>
+              <% if can? :approve, @collection and !@collection.approved %>
+                <li><%= link_to "Approve collection", approve_submission_path(:submission_id => @collection.id, :submission_type => "collection"), :class => "dropdown-item" %></li>
+                <li><%= link_to "Deny Submission", denial_submission_path(:submission_id => @collection.id, :submission_type => "collection"), :class => "dropdown-item" %></li>
+              <% end %>
               </ul>
             </div>
-          </div>
+          <% end %>
         </div>
       </div>
-
-    </div>
-    <div class="col-sm-9">
-
-      <div class="row port-item-p">
-            <div class="col-sm-12">
-              <% if !@collection.approved %>
-                  <div class="alert alert-warning fade in">
-                    <strong>Pending Approval</strong> Our moderators have not yet approved this collection. It will not show up in searches or to members outside your organization
-                  </div>
-              <% end %>
-              <h5 class="primary-font first-child text-color">
-                <span class="border-color">Description</span>
-              </h5>
-
-              <!-- AddToAny BEGIN -->
-              <div class="a2a_kit a2a_kit_size_32 a2a_default_style pull-right margin-left-10">
-                <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-                <a class="a2a_button_email"></a>
-              </div>
-              <script async src="https://static.addtoany.com/menu/page.js"></script>
-              <!-- AddToAny END -->
-        <p class="text-muted">
-          <%= simple_format @collection.description %>
-        </p>
-        <% if !@collection.notes.blank? %>
-            <h5 class="primary-font first-child text-color">
-              <span class="border-color">Maintainer Notes</span>
-            </h5>
-
-            <p>
-              <%= simple_format @collection.notes %>
-            </p>
-        <% end %>
-        </div> <!-- / .row -->
-
-
-        <% if !@collection.tags.empty? %>
-            <div class="well well-sm">
-              <%= raw @collection.tags.map { |t| link_to raw('<span class=" btn btn-xs btn-primary">' + t.name + '</span>'), new_search_path(:tags=>[t.id]) }.join(' ') %>
+        <ul class="list-group list-group-flush bg-transparent">
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Uploaded By</div>
+            <div class="ms-3">
+              <%= link_to organization_path(@collection.organization) do %><%= @collection.organization.name %><% end %>
             </div>
-        <% end %>
-
-        <% if @show_feedback %>
-            <p class="text-center">Is this collection helpful? <%= link_to rate_collection_path(:id => @collection.url, :positive => "1", :negative => "0") do %><i class="fa fa-thumbs-up"></i> Yes<% end %> | <%= link_to rate_collection_path(:id => @collection.url, :positive => "0", :negative => "1") do %><i class="fa fa-thumbs-down"></i> No<% end %></p>
-        <% end %>
-
-        <% if @collection.resources.empty? %>
+          </li>
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Date Added</div>
+            <div class="ms-3">
+              <%= @collection.created_at.strftime("%Y-%m-%d") %>
+            </div>
+          </li>
+          <% if @related_collections %>
+            <li class="list-group-item bg-transparent text-muted">
+              <div class="text-danger">Related collections</div>
+              <ul class="list-group list-group-flush bg-transparent">
+                <% @related_collections.each do |collection| %>
+                  <li class="list-group-item bg-transparent"><%= link_to collection do %><%= collection.title %><% end %></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+     </div>
+     <div class="col-9">
+      <div class="border-bottom pb-2"><span class="fs-5"><%= @collection.title %> &nbsp;</span></h5></div>
+       <% if @collection.tags.count > 0 %>
+        <div class="p-2">
+          <% @collection.tags.each do |tag| %>
+            <a href="<%= new_search_path(:tags => [tag.id]) %>" class="badge rounded-pill bg-dark dark-badge-link" href="#"><i class="fa fa-tags"></i> <%= tag.name %></a>
+          <% end %>
+        </div>
+       <% end %>
+       <div class="card text-bg-light m-2">
+        <div class="card-body">
+          <%= simple_format @collection.description %>
+        </div>
+      </div>
+      <div class="card m-2">
+        <div class="card-body">
+          <% if @collection.resources.empty? %>
             <p>
               No resources available in this collection,
               <% if @collection.can_add_resources(current_user) %>
                   <%= link_to 'add some', new_resource_path(:collection_id => @collection) if can? :add, @collection and @collection.can_add_resources(current_user) %>
               <% end %>
             </p>
-        <% else %>
-            <dl>
-              <% @collection.resources.each do |resource| %>
-                  <dd class="well well-sm">
-                    <div class="dropdown btn-group pull-right">
-                      <a data-toggle="dropdown" class="btn btn-color dropdown-toggle" href="#">
-                        <i class="fa fa-folder-open"></i>
-                        Explore
-                        <span class="caret"></span>
-                      </a>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <%= link_to raw('<i class="fa fa-save"></i> Preview'), resource %>
-                        </li>
-                        <li>
-                          <%= link_to raw('<i class="fa fa-eye"></i> Download'), download_resource_path(:id => resource.url) %>
-                        </li>
-                        <% if (can? :add, @collection and @collection.can_add_resources(current_user)) %>
-                            <li>
-                              <%= link_to raw('<i class="fa fa-edit"></i> Edit'), edit_resource_path(resource) %>
-                            </li>
-                        <% end %>
-
-                      </ul>
-                    </div>
-                    <strong><%= link_to raw('<i class="fa fa-file"></i> ' + resource.name), resource %></strong>
-                    <p class="text-muted">
-                      <%= raw(resource.description + '<br>') if !resource.description.nil? %>
-                      <small>
-                        <span class="btn btn-green btn-xs"><%= resource.resource_type  %></span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        Added <%= resource.created_at.to_formatted_s(:long_ordinal) %>
-
-                        <% if (can? :moderate, @collection) or (@collection.can_edit(@current_user)) or (@collection.can_add_resources(@current_user)) %>
-                          <%= link_to "Remove From Collection", remove_resourcing_path(resource_id: resource.id, collection_id: @collection.id), :data => { :confirm => 'Are you sure you want to remove this resource? It will not be deleted but will be removed from this collection.' }, class: 'btn btn-xs btn-danger pull-right' %>
-                        <% end %>
-                      </small>
-                    </p>
-                  </dd>
-
+            <% else %>
+            <% @collection.resources.each do |resource| %>
+              <% if (can? :moderate, @collection) or (@collection.can_edit(@current_user)) or (@collection.can_add_resources(@current_user)) %>
+                <div class="d-flex flex-row-reverse"><%= link_to "Remove From Collection", remove_resourcing_path(resource_id: resource.id, collection_id: @collection.id), :data => { :turbo_confirm => 'Are you sure you want to remove this resource? It will not be deleted but will be removed from this collection.' }, class: 'btn btn-outline-danger btn-sm' %></div>
               <% end %>
-            </dl>
-
-        <% end %>
+              <%= render resource %>
+              <div class="border-bottom mb-2">&nbsp; </div>
+            <% end %>
+          <% end %>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
+
+       
+       <div class="mt-2">
+        
+       </div>
+     </div>
+   </div>
+
+  </div>
+</section><!-- End About Section -->
