@@ -5,7 +5,7 @@
       <ol>
           <li><%= link_to root_path do %>Home<% end %></li>
           <li><%= link_to search_path(session[:last_search_id]) do %>Search<% end %></li>
-          <li><%= link_to collection_path(@coll.id) do %>Collection<% end %></li>
+          <li><%= link_to @coll do %>Collection<% end %></li>
           <li>Add Resource</li>
       </ol>
     </div>
