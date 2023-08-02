@@ -15,56 +15,28 @@
     <%= f.input :resourceable_id, :as => "hidden" %>
     <%= f.input :resourceable_type, :as => "hidden" %>
 
-    <div class="form-group">
-      <label for="resource_id"><div class="headline"><h3>Search for an existing resource</h3></div></label>
-      <div class="input-group">
-      <%= f.input_field :resource_id, :collection => Resource.order('name'), :class => " input-block search-select col-xs-12 col-sm-12", :label => false, :label_method => lambda { |resource| "#{resource.name}".html_safe }, :prompt => 'Type Resource Name' %>
+    <div class="row p-2">
+      <div class="col-md-12">
+        <%= f.label "Search for an existing resource" %><br>
+        <%= f.input_field :resource_id, :collection => Resource.order('name'), :class => "form-select", :label => false, :label_method => lambda { |resource| "#{resource.name}".html_safe }, :prompt => 'Type Resource Name' %>
       </div>
     </div>
-    <div class="form-actions text-right">
-      <%= f.button :submit, value: 'Add To Collection', class: 'btn btn-primary' %>
+
+    <div class="row p-2">
+      <div class="col-md-12">
+        <%= f.button :submit, value: 'Add To Collection', class: 'btn btn-outline-primary btn-sm' %>
+      </div>
     </div>
 
-    <div class="headline"><h4><strong>Or </strong>Add A New One Below</h4></div>
+    <div class="border-bottom border-top bg-light p-2">Or Add A New One Below</div>
     <%= f.fields_for :resource, @resource do |r| %>
-
         <%= render partial: 'resources/form_fields', locals: { f: r, resource: @resourcing.resource } %>
-
     <% end %>
 
-    <div class="form-action text-right">
-      <%= f.button :submit, value: 'Save New Resource', class: 'btn btn-primary' %>
+    <div class="row p-2">
+      <div class="col-md-12">
+        <%= f.button :submit, value: 'Save New Resource', class: 'btn btn-outline-primary btn-sm' %>
+      </div>
     </div>
 <% end %>
 
-<script>
-    $(function(){
-
-        $(".search-select").chosen();
-
-        $('#new_resourcing').on('submit', function(e) {
-          if($('#resourcing_resource_id_chosen').chosen().val() == "") {
-            if($('#name').val() == "") {
-              alert('Enter a name');
-              return false;
-            }
-            else if ($('#source').val() == "" && $('#attachment').val() == "") {
-              alert('Enter a source URL or upload an attachment');
-              return false;
-            }
-            else if (!$(".search-select option:selected").length) {
-              alert('Select at least one tag to continue');
-              return false;
-            }
-            else if ($('#description').val() == "") {
-              alert('Enter a description to continue');
-              return false;
-            }
-
-          }
-
-        });
-
-    });
-
-</script>
