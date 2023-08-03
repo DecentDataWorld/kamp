@@ -1,164 +1,127 @@
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+          <li><%= link_to root_path do %>Home<% end %></li>
+          <li><%= link_to search_path(session[:last_search_id]) do %>Search<% end %></li>
+          <li>Resource</li>
+      </ol>
+    </div>
+</section><!-- End Breadcrumbs -->
 
-<% content_for :title do %><%= @resource.name %><% end %>
-<% content_for :description do %><%= Sanitize.fragment(@resource.description, Sanitize::Config::RELAXED) if !@resource.description.nil? and !@resource.description.blank? %><% end %>
-<% content_for :author do %><%= @resource.author %><% end %>
-<!--=== Content Part ===-->
-<div class="container">
-  <div class="row-fluid blog-page blog-item">
-    <div class="headline"><h2><i class="fa fa-file"></i> <%= @resource.name %></h2></div>
-        <!-- Left Sidebar -->
-    <div class="col-sm-3">
-      <% if !@resource.collection.nil? %>
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
 
-          <div class="thumbnails thumbnail-style thumbnail-kenburn">
-            <div class="thumbnail-img">
-              <div class="overflow-hidden">
-                <% if @resource.collection.image.blank? or  @resource.collection.image.nil? %>
-                <% else %>
-                    <img class="img-responsive" src="<%= @resource.collection.image.expiring_url(10) %>" alt="<%= @resource.collection.title %>" />
-                    <%= link_to "View Collection +", collection_path(@resource.collection), class: 'btn-more hover-effect' %>
-                <% end %>
-              </div>
-            </div>
-          </div>
-
-      <% end %>
-      <% if !session[:last_search_id].nil? %>
-          <p>
-              <%= link_to search_path(session[:last_search_id]) do %>
-              <i class="fa fa-chevron-left"></i> Return to Search Results
+   <div class="row">
+     <div class="col-3 border-end">
+      <div class="row border-bottom pb-2 me-1">
+        <div class="col fs-5">Resource</div>
+        <div class="col d-flex flex-row-reverse available-tags">
+          <% if @resource.can_edit(@current_user) || (can? :approve, @resource and @resource.approved != true) %>
+            <div class="dropdown">
+              <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-cog"></i>
+              </button>
+              <ul class="dropdown-menu">
+              <% if @resource.can_edit(current_user) %>
+                <li><%= link_to "Edit Resource", edit_resource_path(@resource), class: "dropdown-item" %></li>
               <% end %>
-            </p>
-      <% end %>
-      <%= render partial: 'resource_details_column', locals: { resource: @resource } %>
-      <div class="row-fluid well well-sm">
-        <div class="widget-box">
-          <div class="widget-header">
-            <h5 class="widget-title smaller"><i class="fa fa-file"></i> Related Resources</h5>
-          </div>
-
-          <div class="widget-body">
-            <div class="widget-main padding-6">
-              <ul>
-                <% @related_resources.each do |resource| %>
-                    <li><%= link_to resource.name.truncate(50), resource %></li>
-                <% end %>
+              <% if can? :delete, @resource or can? :moderate, @resource %>
+                  <li><%= link_to "Delete", @resource, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "dropdown-item" %></li>
+              <% end %>
+              <% if can? :approve, @resource and !@resource.approved %>
+                <li><%= link_to "Approve Resource", approve_submission_path(:submission_id => @resource.id, :submission_type => "resource"), :class => "dropdown-item" %></li>
+                <li><%= link_to "Deny Submission", denial_submission_path(:submission_id => @resource.id, :submission_type => "resource"), :class => "dropdown-item" %></li>
+              <% end %>
               </ul>
             </div>
-          </div>
+          <% end %>
+        </div>
+      </div>
+        <ul class="list-group list-group-flush bg-transparent">
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Language</div>
+            <div class="ms-3"><%= @resource.language.titlecase %></div>
+          </li>
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Resource Type</div>
+            <div class="ms-3">
+              <%= @resource.resource_type %>
+            </div>
+          </li>
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Uploaded By</div>
+            <div class="ms-3">
+              <%= link_to organization_path(@resource.organization) do %><%= @resource.organization.name %><% end %>
+            </div>
+          </li>
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Date Added</div>
+            <div class="ms-3">
+              <%= @resource.created_at.strftime("%Y-%m-%d") %>
+            </div>
+          </li>
+          <% if @resource.corporate_authorship && @resource.corporate_authorship.length > 0 %>
+            <li class="list-group-item bg-transparent text-muted">
+              <div class="text-danger">Corporate Authorship</div>
+              <div class="ms-3">
+                <%= @resource.corporate_authorship %>
+              </div>
+            </li>
+          <% end %>
+          <% if @resource.collections.count > 0 %>
+            <li class="list-group-item bg-transparent text-muted">
+              <div class="text-danger">Collections</div>
+              <ul class="list-group list-group-flush bg-transparent">
+                <% @resource.collections.each do |collection| %>
+                  <li class="list-group-item bg-transparent "><%= link_to collection do %><%= collection.title %><% end %></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+          <% if @related_resources %>
+            <li class="list-group-item bg-transparent text-muted">
+              <div class="text-danger">Related Resources</div>
+              <ul class="list-group list-group-flush bg-transparent">
+                <% @related_resources.each do |resource| %>
+                  <li class="list-group-item bg-transparent"><%= link_to resource do %><%= resource.name %><% end %></li>
+                <% end %>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+     </div>
+     <div class="col-9">
+      <div class="border-bottom pb-2"><span class="fs-5"><%= @resource.name %> &nbsp;</span></h5></div>
+      <div class="border-bottom fw-light bg-light bg-gradient p-2 pt-3">
+        <% if !@resource.attachment.blank? %>
+          <h6><%= link_to download_resource_path(:id => @resource.url), title: "Filename of resource", target: "_blank" do %><i class="bi bi-download"></i> <%= @resource.attachment_file_name %><% end %></h6>
+        <% end %>
+        <% if !@resource.source.blank? %>
+          <h6><%= link_to @resource.source, title: "Source of resource", target: "_blank" do %><i class="bi bi-link"></i> <%= @resource.source %><% end %></h6>
+        <% end %>
+       </div>
+       <% if @resource.tags.count > 0 %>
+        <div class="p-2">
+          <% @resource.tags.each do |tag| %>
+            <a href="<%= new_search_path(:tags => [tag.id]) %>" class="badge rounded-pill bg-dark dark-badge-link" href="#"><i class="fa fa-tags"></i> <%= tag.name %></a>
+          <% end %>
+        </div>
+       <% end %>
+       <div class="card text-bg-light m-2">
+        <div class="card-body">
+          <%= simple_format @resource.description %>
         </div>
       </div>
 
-    </div><!--/span3-->
 
-    <!-- Right Sidebar -->
-    <div class="col-sm-9">
-      <div class="blog margin-bottom-30">
+       
+       <div class="mt-2">
+        
+       </div>
+     </div>
+   </div>
 
-        <% if !@resource.approved %>
-          <div class="alert alert-warning fade in">
-            <strong>Pending Approval</strong> Our moderators have not yet approved this resource. It will not show up in searches or to members outside your organization
-          </div>
-        <% end %>
-
-        <% if @resource.collection.blank? or @resource.collection.resources.count < 2 %>
-          <div class="well well-xs">
-            <% if !@resource.attachment.blank? %>
-              <div class="button-group">
-                <%= link_to download_resource_path(:id => @resource.url), class: 'btn btn-success pull-right rounded', id: 'download_button', title: "Download This Resource", target: "_blank" do %>
-                  <i class="fa fa-download"></i> Download
-                <% end %>
-                <% if @resource.resource_type != "other" and @resource.resource_type != "Document" and !@resource.attachment.blank? and @resource.resource_type != "GeoJSON" %>
-                  <a class="btn btn-primary pull-right rounded margin-right-10" id="jumptopreview" data-toggle="modal" data-target=".bs-example-modal-sm"> <i class="fa fa-eye" data-toggle="tooltip" data-placement="bottom" title="Jump to Preview"></i> Preview</a>
-                <% elsif @resource.resource_type == "geojson" || @resource.resource_type == "GeoJSON" %>
-                  <a class="btn-u btn-primary pull-right rounded margin-right-10" id="showmap" href="<%= resource_preview_path(@resource) %>" target="_blank"><i class="fa fa-eye"></i> Preview</a>
-                <% end %>
-              </div>
-              <h4><i class="fa fa-file"></i> <%= link_to @resource.attachment_file_name.truncate(120), download_resource_path(:id => @resource.url), title: "Filename of resource", target: "_blank" %></h4>
-            <% end %>
-
-            <% if !@resource.source.blank? %>
-              <strong>Source URL:</strong>
-              <%= link_to @resource.source, target: "_blank" do %><i class="fa fa-link"></i> <%= @resource.source %><% end %>
-            <% end %>
-          </div>
-          <% if @resource.tags.count > 0 %>
-            <p class="fsize16"> Tags:
-              <% @resource.tags.each do |tag| %>
-                <a href="<%= new_search_path(:tags => [tag.id]) %>" class="label label-default light rounded" href="#"><i class="fa fa-tags"></i> <%= tag.name %></a>
-              <% end %>
-            </p>
-          <% end %>
-          <% if !@resource.description.blank? %>
-            <div class="row-fluid panel panel-default">
-              <div class="panel-body">
-                <%= simple_format @resource.description %>
-              </div>
-            </div>
-          <% end %>
-        <% end %>
-
-        <% if @show_feedback %>
-          <p class="text-center">Is this resource helpful? <%= link_to rate_resource_path(:id => @resource.url, :positive => "1", :negative => "0") do %><i class="fa fa-thumbs-up"></i> Yes<% end %> | <%= link_to rate_resource_path(:id => @resource.url, :positive => "0", :negative => "1") do %><i class="fa fa-thumbs-down"></i> No<% end %></p>
-        <% end %>
-
-        <%= render partial: 'resource_preview', locals: { resource: @resource } %>
-      </div><!--/blog-->
-
-    </div><!--/span9-->
-
-
-  </div><!--/row-fluid-->
-</div><!--/container-->
-<!--=== End Content Part ===-->
-
-<div class="modal fade bs-survey-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
-        <h2>Thanks for Downloading</h2>
-        <p>We hope you found this resource useful. Please take a minute to tell us how we're doing by taking a brief 3-question survey.</p>
-        <p>
-          <a class="btn-u btn-u-xs btn-u-blue" id="survey_button" href="<%= survey_index_url %>?return_resource=<%= @resource.url %>"><i class="fa fa-angle-right"></i> Take the survey</a>
-        </p>
-      </div>
-    </div>
   </div>
-</div>
-
-
-<% content_for :page_javascript do %>
-    <script>
-
-        $(document).ready(function () {
-            $('#jumptopreview').click(function() {
-                $('html, body').animate({
-                    scrollTop: $("#previewbox").offset().top - 100
-                }, 400);
-            });
-
-            $('.extra-description').hide();
-
-            $('.toggle-extra-description').live('click',function() {
-                $('.extra-description').slideToggle("slow", function(){ });
-            });
-
-
-            $('#survey_button').click(function() {
-                $.ajax({
-
-                    url : '<%= log_event_url %>',
-                    type : 'GET',
-                    data : {
-                        'model' : 'Resource',
-                        'model_id': '<%= @resource.id.to_s %>',
-                        'event': 'Survey Accepted'
-                    },
-                    dataType:'json'
-                });
-            });
-
-        });
-
-    </script>
-<% end %>
+</section><!-- End About Section -->

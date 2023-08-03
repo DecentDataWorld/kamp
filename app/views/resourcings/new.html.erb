@@ -1,18 +1,31 @@
 
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-sm-9">
-      <div class="headline"><h4><%= @klass_name %></h4></div>
-      <p><strong><%= @coll.title %></strong></p>
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+          <li><%= link_to root_path do %>Home<% end %></li>
+          <li><%= link_to search_path(session[:last_search_id]) do %>Search<% end %></li>
+          <li><%= link_to @coll do %>Collection<% end %></li>
+          <li>Add Resource</li>
+      </ol>
+    </div>
+</section><!-- End Breadcrumbs -->
 
+
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+    <div class="col-3 border-end">
+      <h5 class="border-bottom pb-2">Guidance</h5>
+      <%= render 'form_instructions' %>
+      <br/>
+    </div>
+    <div class="col-9">
+      <div class="h5 border-bottom pb-2"><%= @coll.title %></div>
       <%= render partial: 'form', locals: { resource: @resource, destination: '' } %>
     </div>
-    <div class="col-sm-3">
-
-      <%= render 'form_instructions' %>
-
-    </div>
   </div>
-</div>
+</section>
 
+  

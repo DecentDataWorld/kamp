@@ -4,7 +4,7 @@
     <div class="container">
       <ol>
           <li><%= link_to root_path do %>Home<% end %></li>
-          <li><%= link_to new_search_path do %>Search<% end %></li>
+          <li><%= link_to search_path(session[:last_search_id]) do %>Search<% end %></li>
           <li>Add Resource</li>
       </ol>
     </div>
