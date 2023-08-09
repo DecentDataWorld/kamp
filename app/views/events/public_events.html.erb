@@ -1,0 +1,62 @@
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+      <li>Events</li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
+    
+<!-- ======= Services Section ======= -->
+<section id="services" class="services">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h5 class="border-bottom pb-2"><i class="bi bi-calendar-event"></i> Events</h5>
+      </div>
+    </div>
+
+    <div class="row p-2 pb-4 border-bottom">
+
+      <% @featured_events.each do |e| %>
+        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
+          <div class="icon-box w-100">
+            <h4><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></h4>
+            <p><span class="text-muted">date: </span><%= e.start_date %></p>
+            <p><span class="text-muted">location: </span><%= e.location %></p>
+            <p><span class="text-muted">description: </span> <%= e.short_description %></p>
+            <p><%= link_to "click for more", show_event_path(e), data: { turbo_frame: "modal" } %></p>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+
+    <div class="row p-2">
+      <div class="table-responsive">
+          <table class="table table-hover" data-controller="table-sort">
+            <thead>
+              <tr>
+                <th><%=t('activerecord.attributes.event.name') %></th>
+                <th><%=t('activerecord.attributes.event.date') %></th>
+                <th><%=t('activerecord.attributes.event.location') %></th>
+                <th><%=t('activerecord.attributes.event.short_description') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @events.each do |e| %>
+                <tr>
+                  <td><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></td>
+                  <td><%= e.start_date.strftime("%Y-%m-%d") %></td>
+                  <td><%= e.location %></td>
+                  <td><%= e.short_description %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+    </div>
+
+  </div>
+</section><!-- End Services Section -->

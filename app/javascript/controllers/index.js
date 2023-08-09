@@ -12,3 +12,9 @@ application.register("table-sort", TableSortController)
 
 import MultiselectController from "./multiselect_controller.js"
 application.register("multiselect", MultiselectController)
+
+import { Datepicker } from 'stimulus-datepicker'
+application.register('datepicker', Datepicker)
+
+import ModalController from "./modal_controller.js"
+application.register("modal", ModalController)

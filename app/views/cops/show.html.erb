@@ -53,7 +53,7 @@
       <% if @cop.events.length > 0 %>
         <div class="border-bottom p-1">
           Events:
-          <table class="table table-striped table-hover table-sm" data-controller="table-sort">
+          <table class="table table-hover" data-controller="table-sort">
             <thead>
               <tr>
                 <th><%=t('activerecord.attributes.event.name') %></th>
@@ -65,8 +65,8 @@
             <tbody>
               <% @cop.events.each do |e| %>
                 <tr>
-                  <td><%= e.name %></td>
-                  <td><%= e.date.strftime("%-d/%-m/%y") %></td>
+                  <td><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></td>
+                  <td><%= e.start_date.strftime("%-d/%-m/%y") %></td>
                   <td><%= e.location %></td>
                   <td><%= e.short_description %></td>
                 </tr>
@@ -79,7 +79,7 @@
        <% if @cop.announcements.length > 0 %>
         <div class="border-bottom p-1">
           Announcements:
-          <table class="table table-striped table-hover table-sm" data-controller="table-sort">
+          <table class="table table-hover" data-controller="table-sort">
             <thead>
               <tr>
                 <th><%=t('activerecord.attributes.event.name') %></th>
@@ -89,7 +89,7 @@
             <tbody>
               <% @cop.announcements.each do |a| %>
                 <tr>
-                  <td><%= a.name %></td>
+                  <td><%= link_to a.name, show_announcement_path(a), data: { turbo_frame: "modal" } %></td>
                   <td><%= a.short_description %></td>
                 </tr>
               <% end %>

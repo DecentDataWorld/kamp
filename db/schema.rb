@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_27_151348) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_08_125818) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -179,16 +179,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_27_151348) do
     t.string "name", null: false
     t.string "short_description"
     t.text "long_description"
-    t.datetime "date"
     t.string "location"
-    t.boolean "is_virtual"
+    t.boolean "is_virtual", default: false, null: false
     t.string "url"
-    t.string "is_private"
-    t.boolean "is_featured"
+    t.boolean "is_featured", default: false, null: false
     t.bigint "user_id"
     t.bigint "cop_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_private", default: false, null: false
+    t.datetime "start_date"
     t.index ["cop_id"], name: "index_events_on_cop_id"
     t.index ["user_id"], name: "index_events_on_user_id"
   end

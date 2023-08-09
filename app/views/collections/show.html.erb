@@ -16,7 +16,7 @@
    <div class="row">
      <div class="col-3 border-end">
       <div class="row border-bottom pb-2 me-1">
-        <div class="col fs-5">Collection</div>
+        <div class="col fs-5"><i class="bi bi-archive"></i> Collection</div>
         <div class="col d-flex flex-row-reverse available-tags">
           <% if (can? :moderate, @collection) or (@collection.can_edit(@current_user)) or (@collection.can_add_resources(@current_user)) %>
             <div class="dropdown">
