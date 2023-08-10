@@ -41,7 +41,8 @@
                     <h2>Welcome to the <span>Jordan Knowledge Management Portal</span></h2>
                   
                     <div class="ps-5 pb-2">
-                      This portal is a repository of development resources designed to improve sharing of data and information between the USAID/Jordan Mission, local implementing partners and development organizations within Jordan. 
+                      This portal is a repository of development resources designed to improve sharing of data and information between the USAID/Jordan Mission, local implementing partners and development organizations within Jordan.
+                      <br/> <%= link_to raw('Read more  &raquo;'), about_index_path %> 
                     </div>
                   </div>
                 </div>
@@ -71,26 +72,16 @@
                       </div>
                     </div>
                     <div class="col-6">
-                      <div class="hero-box border-success card">
-                      <div class="card-body">
-                        <h3 class="card-title text-success">Announcements</h3>
-                        <div class="row p-2 d-flex text-secondary">
-                          Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident
-                        </div>
-                      </div>
-                    </div>
+                      <% if @announcements.length != 0 %>
+                        <%= render  'layouts/announcements' %>
+                      <% end %>
                     </div>
                   </div>
                    <div class="row">
                     <div class="col-6">
-                      <div class="hero-box border-success card">
-                      <div class="card-body">
-                        <h3 class="card-title text-success">Events</h3>
-                          <div class="row p-2 d-flex text-secondary">
-                            Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident
-                          </div>
-                      </div>
-                      </div>
+                      <% if @events.length != 0 %>
+                        <%= render  'layouts/events' %>
+                      <% end %>
                     </div>
                     <div class="col-6">
                       <div class="hero-box border-success card">

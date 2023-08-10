@@ -11,7 +11,7 @@
       <% end %>
 
       <% if user_signed_in? and can? :dashboard, current_user%>
-        <%= link_to admin_index_path, :class=> "toolbar-item" do %><i class="bi bi-kanban"></i> Administration<% end %>
+        <%= link_to admin_index_path, :class=> "toolbar-item" do %><i class="bi bi-toggles2"></i></i> Administration<% end %>
       <% end %>
       <% if user_signed_in? %>
           <%= link_to user_path(current_user), :class=> "toolbar-item" do %><i class="fa fa-user"></i> Profile<% end %>

@@ -13,66 +13,68 @@
     </div>
   <% end %>
 
-  <div class="row g-3">
+  <div class="row p-2">
     <div class="col-md-12">
-      <%= form.label :name %><span class="text-danger">*</span><br>
+      <%= form.label :name %><br>
       <%= form.text_field :name, class: "form-control" %>
     </div>
-
+  </div>
+  <div class="row p-2">
      <div class="col-md-12">
       <%= form.label :short_description %><br>
       <%= form.text_field :short_description, class: "form-control" %>
     </div>
-
+  </div>
+  <div class="row p-2">
     <div class="col-md-12">
       <%= form.label :long_description %><br>
-      <%= form.text_field :long_description, class: "form-control" %>
+      <%= form.text_area :long_description, class: "form-control" %>
     </div>
-
-    <div class="col-md-12">
+  </div>
+  <div class="row p-2">
+    <div class="col-md-3">
       <%= form.label :expiration_date %><br>
-      <%= form.date_select :expiration_date, class: "form-control" %>
+      <div data-controller="datepicker" class="input-group mb-3">
+        <%= form.text_field :expiration_date, value: @announcement.expiration_date ? @announcement.expiration_date.strftime("%Y-%m-%d") : "", class: "form-control", data: {"datepicker-target": "input"} %>
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2" data-datepicker-target="toggle"><i class="bi bi-calendar3"></i></button>
+      </div>
     </div>
+    <div class="col-md-3">
 
-    <div class="col-md-12">
-      <%= form.label :is_private %><br>
-      <%= form.check_box :is_private %>
     </div>
-
-    <div class="col-md-12">
-      <%= form.label :is_featured %><br>
-      <%= form.check_box :is_featured %>
+    <div class="col-md-6">
+      <div class="form-check form-switch pt-4">
+        <%= form.check_box :is_featured, class: "form-check-input", role: "switch" %>
+        <%= form.label "Featured on Homepage (until expiration date)", class: "form-check-label" %>
+      </div>
     </div>
+  </div>
 
-    <div class="col-md-12">
-      <%= form.label :cop %><br>
-      <%= form.collection_select :cop_id, Cop.order(:name), :id, :name, {}, { class: "form-control" } %>
-    </div>
+    <%  if current_user.cops.length != 0 %>
+      <div class="card m-3">
+        <div class="card-header">
+          COP-specific fields
+        </div>
+        <div class="card-body">
+          <div class="row p-2">
+            <div class="col-md-12">
+              <%= form.label :cop %><br>
+              <%= form.select :cop_id, current_user.cops.collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
+            </div>
+          </div>
+          <div class="row p-2">
+            <div class="col-md-12">
+              <div class="form-check form-switch pt-4">
+                <%= form.check_box :is_private, class: "form-check-input", role: "switch" %>
+                <%= form.label "Mark as a private announcement that can only be accessed by users in selected COP", class: "form-check-label" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
 
-    <div class="col-md-12">
-      <%
 
-   grouped_tags = {}
-   TagType.all.each do |category|
-     category.tags.each do |tag|
-       grouped_tags[category.name] ||= []
-       grouped_tags[category.name] << tag.name
-     end
-   end
-
-%>
-
-<div class="form-group">
-  <%= form.label :tags %><span class="text-danger">*</span><br>
-  <%= form.input_field :tags,
-                    :label => false,
-                    :id => "tags",
-                    :as => :grouped_select,
-                    :collection => grouped_tags,
-                    :group_method => :last,
-                    :multiple => true,
-                    :class => "col-md-10 form-control multiple-chosen-select" %>
-    </div>
     <div class="col-md-12">
       <% if current_page?(new_announcement_path) || @announcement.id == nil %>
         <%= form.submit t('helpers.submit.create', model: Announcement.model_name.human), class: "btn btn-outline-primary" %>

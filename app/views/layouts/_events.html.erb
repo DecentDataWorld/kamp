@@ -1,0 +1,17 @@
+
+<div class="hero-box border-success card">
+  <div class="card-body">
+    <h3 class="card-title text-success">Events</h3>
+    <div class="row ps-2 pe-2 d-flex text-secondary">
+      <% @events.each do |e| %>
+        <div class="border-bottom p-2">
+          <span class="text-danger"><%= e.name %></span><br>
+          <small>event date <%= e.start_date.strftime("%Y-%m-%d") %></small>
+        </div>
+      <% end %>
+      <div class="pt-2">
+       <%= link_to raw('more  &raquo;'), public_events_path %> 
+      </div>
+    </div>
+  </div>
+</div>

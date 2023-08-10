@@ -1,8 +1,18 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [:edit, :update, :destroy]
+  before_action :set_event, only: [:edit, :update, :destroy, :show_event]
 
-  # GET /events
-  # GET /events.json
+  #GET /events
+  def public_events
+    @events = Event.active.is_public.order(:start_date => :asc)
+    @featured_events = @events.featured
+  end
+
+  #GET /events/1
+  def show_event
+  end
+
+  # GET /admin/events
+  # GET /admin/events.json
   def index
     @events = Event.order(:name)
 
@@ -13,20 +23,19 @@ class EventsController < ApplicationController
   end
 
 
-  # GET /events/new
+  # GET /admin/events/new
   def new
     @event = Event.new
   end
 
-  # GET /events/1/edit
+  # GET /admin/events/1/edit
   def edit
   end
 
-  # POST /events
-  # POST /events.json
+  # POST /admin/events
+  # POST /admin/events.json
   def create
     @event = Event.new(event_params)
-    @event.tag_list = params[:event][:tags]
     @event.user_id = current_user.id
 
     respond_to do |format|
@@ -41,10 +50,9 @@ class EventsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /events/1
-  # PATCH/PUT /events/1.json
+  # PATCH/PUT /admin/events/1
+  # PATCH/PUT /admin/events/1.json
   def update
-    @event.tag_list = params[:event][:tags]
     respond_to do |format|
       if @event.update(event_params)
         flash[:notice] = I18n.t("notices.update_success")
@@ -57,8 +65,8 @@ class EventsController < ApplicationController
     end
   end
 
-  # DELETE /events/1
-  # DELETE /events/1.json
+  # DELETE /admin/events/1
+  # DELETE /admin/events/1.json
   def destroy
     @event.destroy
     flash[:notice] = I18n.t("notices.delete_success")
@@ -76,7 +84,7 @@ class EventsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def event_params
-      params.require(:event).permit(:name, :short_description, :long_description, :date, :location, :is_virtual, :url, :is_private, :is_featured, :user_id, :cop_id, :tag_list)
+      params.require(:event).permit(:name, :short_description, :long_description, :start_date, :location, :is_virtual, :url, :is_private, :is_featured, :user_id, :cop_id)
     end
   end
   

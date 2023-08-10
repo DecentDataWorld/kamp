@@ -1,8 +1,18 @@
 class AnnouncementsController < ApplicationController
-  before_action :set_announcements, only: [:edit, :update, :destroy]
+  before_action :set_announcement, only: [:edit, :update, :destroy, :show_announcement]
 
-  # GET /announcements
-  # GET /announcements.json
+  #GET /announcements
+  def public_announcements
+    @announcements = Announcement.active.is_public.order(:expiration_date => :desc)
+    @featured_announcements = @announcements.featured
+  end
+
+  #GET /announcements/1
+  def show_announcement
+  end
+
+  # GET /admin/announcements
+  # GET /admin/announcements.json
   def index
     @announcements = Announcement.order(:name)
     
@@ -12,20 +22,19 @@ class AnnouncementsController < ApplicationController
     end
   end
 
-  # GET /announcements/new
+  # GET /admin/announcements/new
   def new
     @announcement = Announcement.new
   end
 
-  # GET /announcements/1/edit
+  # GET /admin/announcements/1/edit
   def edit
   end
 
-  # POST /announcements
-  # POST /announcements.json
+  # POST /admin/announcements
+  # POST /admin/announcements.json
   def create
     @announcement = Announcement.new(announcement_params)
-    @announcement.tag_list = params[:announcement][:tags]
     @announcement.user_id = current_user.id
 
     respond_to do |format|
@@ -40,10 +49,9 @@ class AnnouncementsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /announcements/1
-  # PATCH/PUT /announcements/1.json
+  # PATCH/PUT /admin/announcements/1
+  # PATCH/PUT /admin/announcements/1.json
   def update
-    @announcement.tag_list = params[:announcement][:tags]
     respond_to do |format|
       if @announcement.update(announcement_params)
         flash[:notice] = I18n.t("notices.update_success")
@@ -56,8 +64,8 @@ class AnnouncementsController < ApplicationController
     end
   end
 
-  # DELETE /announcements/1
-  # DELETE /announcements/1.json
+  # DELETE /admin/announcements/1
+  # DELETE /admin/announcements/1.json
   def destroy
     
     respond_to do |format|
@@ -76,6 +84,6 @@ class AnnouncementsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def announcement_params
-      params.require(:announcement).permit(:name, :short_description, :long_description, :expiration_date, :is_private, :is_featured, :user_id, :cop_id, :tag_list)
+      params.require(:announcement).permit(:name, :short_description, :long_description, :expiration_date, :is_private, :is_featured, :user_id, :cop_id)
     end
 end
