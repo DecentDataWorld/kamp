@@ -1,0 +1,143 @@
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+          <li><%= link_to root_path do %>Home<% end %></li>
+          <li>Community of Practice</li>
+      </ol>
+    </div>
+</section><!-- End Breadcrumbs -->
+
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+
+   <div class="row">
+     <div class="col-3 border-end">
+      <h5 class="border-bottom pb-2">Community of Practice</h5>
+        <ul class="list-group list-group-flush bg-transparent">
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Description</div>
+            <div class="ms-3"><%= @cop.description %></div>
+          </li>
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Contact</div>
+            <div class="ms-3">
+              <%= link_to @cop.admin.name, user_path(@cop.admin) %> <br/>
+              <%= mail_to @cop.admin.email %>
+            </div>
+          </li>
+          <li class="list-group-item bg-transparent text-muted">
+            <div class="text-danger">Members</div>
+            <ul class="list-group border-0 bg-transparent">
+              <% @cop.users.each do |m| %>
+                <li class="list-group-item bg-transparent border-0"><%= link_to m.name, user_path(m) %></li>
+              <% end %>
+            </ul>
+          </li>
+          <% if @cop.admin == current_user || current_user.admin? %>
+            <li class="list-group-item bg-transparent text-muted">
+              <div class="text-danger">Administration</div>
+              <ul class="list-group border-0 bg-transparent">
+                <li class="list-group-item bg-transparent border-0"><%= link_to "Edit COP/Members", edit_cop_path(@cop) %></li>
+                <li class="list-group-item bg-transparent border-0"><%= link_to "Relevant Searches", featured_searches_path %></li>
+                <li class="list-group-item bg-transparent border-0"><%= link_to "Announcements", announcements_path %></li>
+                <li class="list-group-item bg-transparent border-0"><%= link_to "Events", events_path %></li>
+              </ul>
+            </li>
+          <% end %>
+        </ul>
+     </div>
+     <div class="col-9">
+      <div class="border-bottom"><h5><%= @cop.name %> &nbsp;</h5></div>
+
+      <% if @cop.featured_searches.length > 0 %>
+        <div class="border-bottom p-1 mt-3">
+          <section id="featured" class="featured">
+            <div class="container">
+
+              <div class="row">
+                <% @cop.featured_searches.each do |fs| %>
+                  <div class="col">
+                    <div class="icon-box">
+                      <h3><a href="<%= fs.get_url %>">
+                        <i class="<%= fs.icon_identifier %>"></i>
+                        Learn About <br/>
+                        <%= fs.name %>
+                      </a>
+                    </h3>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+
+            </div>
+          </section>
+        </div>
+      <% end %>
+
+      <% if @cop.events.length > 0 %>
+        <div class="border-bottom p-1">
+          Events:
+          <table class="table table-hover" data-controller="table-sort">
+            <thead>
+              <tr>
+                <th><%=t('activerecord.attributes.event.name') %></th>
+                <th><%=t('activerecord.attributes.event.date') %></th>
+                <th><%=t('activerecord.attributes.event.location') %></th>
+                <th><%=t('activerecord.attributes.event.short_description') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @cop.events.each do |e| %>
+                <tr>
+                  <td><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></td>
+                  <td><%= e.start_date.strftime("%-d/%-m/%y") %></td>
+                  <td><%= e.location %></td>
+                  <td><%= e.short_description %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+
+       <% if @cop.announcements.length > 0 %>
+        <div class="border-bottom p-1">
+          Announcements:
+          <table class="table table-hover" data-controller="table-sort">
+            <thead>
+              <tr>
+                <th><%=t('activerecord.attributes.event.name') %></th>
+                <th><%=t('activerecord.attributes.event.short_description') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @cop.announcements.each do |a| %>
+                <tr>
+                  <td><%= link_to a.name, show_announcement_path(a), data: { turbo_frame: "modal" } %></td>
+                  <td><%= a.short_description %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+
+      <% if @cop.resources.length > 0 %>
+        <div class="border-bottom p-1">
+          <% @cop.resources.each do |resource| %>
+              <%= render resource %>
+          <% end %>
+        </div>
+      <% end %>
+
+       
+       <div class="mt-2">
+        
+       </div>
+     </div>
+   </div>
+
+  </div>
+</section><!-- End About Section -->

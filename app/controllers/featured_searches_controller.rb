@@ -1,3 +1,4 @@
+require 'json'
 class FeaturedSearchesController < ApplicationController
     before_action :set_featured_search, only: [:edit, :update, :destroy]
   
@@ -15,24 +16,12 @@ class FeaturedSearchesController < ApplicationController
     # GET /featured_searches/new
     def new
       @featured_search = FeaturedSearch.new
-      @grouped_tags = {}
-      TagType.all.order(:name).each do |tt|
-        tt.tags.order(:name).each do |tag|
-          @grouped_tags[tt.name] ||= []
-          @grouped_tags[tt.name] << tag.name
-        end
-      end
+      @grouped_tags = TagType.grouped_tags
     end
   
     # GET /featured_searches/1/edit
     def edit
-      @grouped_tags = {}
-      TagType.all.order(:name).each do |tt|
-        tt.tags.order(:name).each do |tag|
-          @grouped_tags[tt.name] ||= []
-          @grouped_tags[tt.name] << tag.name
-        end
-      end
+      @grouped_tags = TagType.grouped_tags
     end
   
     # POST /featured_searches

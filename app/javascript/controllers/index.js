@@ -18,3 +18,7 @@ application.register('datepicker', Datepicker)
 
 import ModalController from "./modal_controller.js"
 application.register("modal", ModalController)
+
+import IconpickerController from "./iconpicker_controller.js"
+application.register("iconpicker", IconpickerController)
+

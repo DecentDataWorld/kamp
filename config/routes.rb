@@ -35,6 +35,8 @@ Rails.application.routes.draw do
   get 'announcements/:id', to: 'announcements#show_announcement', as: :show_announcement
 
   resources :cops, path: 'admin/cops'
+  get 'cops/:id', to: 'cops#show_cop', as: :show_cop
+  
   resources :events, path: 'admin/events'
   get 'events', to: 'events#public_events', as: :public_events
   get 'events/:id', to: 'events#show_event', as: :show_event
