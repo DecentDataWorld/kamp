@@ -4,7 +4,7 @@
     <% if resource.private == true %>
         <% str_title = str_title + ' <i class="fa fa-lock"></i>' %>
     <% end %>
-    <% header_text = ' <i class="fa-solid fa-file"></i> ' %>
+    <% header_text = ' <i class="bi bi-file-earmark"></i> ' %>
     <%
        header_text = header_text + str_title
 
@@ -33,7 +33,7 @@
       <h4 class="card-title pb-2"><%= link_to raw(header_text), resource_path(resource) %></h4>
       <% if !resource.collection.nil? %>
           <h6 class="card-subtitle mb-2 text-muted">
-          <i class="fa-solid fa-file"></i> <%= link_to resource.collection.title, collection_path(resource.collection) %>
+          <i class="bi bi-file-earmark"></i> <%= link_to resource.collection.title, collection_path(resource.collection) %>
           </h6>
       <% end %>
       <h6 class="card-subtitle mb-2 text-muted">

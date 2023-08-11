@@ -25,15 +25,19 @@ Rails.application.routes.draw do
 
   #mount RailsAdmin::Engine => '/cpanel', as: 'rails_admin'
 
-  resources :batches
-  resources :categories
+  #resources :batches
+  #resources :categories
   resources :tags, path: 'admin/tags'
   resources :tag_types, path: 'admin/tag_types'
   resources :featured_searches
-  resources :announcements
+  resources :announcements, path: 'admin/announcements'
+  get 'announcements', to: 'announcements#public_announcements', as: :public_announcements
+  get 'announcements/:id', to: 'announcements#show_announcement', as: :show_announcement
 
-  resources :cops
-  resources :events
+  resources :cops, path: 'admin/cops'
+  resources :events, path: 'admin/events'
+  get 'events', to: 'events#public_events', as: :public_events
+  get 'events/:id', to: 'events#show_event', as: :show_event
 
   get 'faq/index', to: 'faq#index', as: :faq
   resources :users_organizations

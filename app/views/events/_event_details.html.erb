@@ -1,0 +1,52 @@
+<div class="row p-2">
+  <div class="col-md-3 d-flex flex-row-reverse text-danger">
+    event date:
+  </div>
+  <div class="col-md-9">
+    <%= event.start_date.strftime("%Y-%m-%d") %>
+  </div>
+</div>
+<div class="row p-2">
+  <div class="col-md-3 d-flex flex-row-reverse text-danger">
+    location:
+  </div>
+  <div class="col-md-9">
+    <%= event.location %>
+  </div>
+</div>
+<div class="row p-2">
+  <div class="col-md-3 d-flex flex-row-reverse text-danger">
+    virtual/online:
+  </div>
+  <div class="col-md-9">
+    <%= event.is_virtual ? "yes" : "no" %>
+  </div>
+</div>
+<% if event.url.length > 0 %>
+  <div class="row p-2">
+    <div class="col-md-3 d-flex flex-row-reverse text-danger">
+      url:
+    </div>
+    <div class="col-md-9">
+      <%= event.url %>
+    </div>
+  </div>
+<% end %>
+<div class="row p-2">
+  <div class="col-md-3 d-flex flex-row-reverse text-danger">
+    short description:
+  </div>
+  <div class="col-md-9">
+    <%= event.short_description %>
+  </div>
+</div>
+<div class="row p-2">
+  <div class="col-md-3 d-flex flex-row-reverse text-danger">
+    long description:
+  </div>
+  <div class="col-md-9">
+    <%= event.long_description %>
+  </div>
+</div>
+
+

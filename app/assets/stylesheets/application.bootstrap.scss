@@ -13,6 +13,7 @@ $enable-negative-margins: true;
 @import 'bootstrap-icons/font/bootstrap-icons';
 @import 'swiper/swiper';
 @import 'choices.js/public/assets/styles/choices';
+@import 'stimulus-datepicker/css/datepicker';
 
 
 .home-about-box {
@@ -428,6 +429,11 @@ body {
     opacity: 1;
     top: 100%;
     visibility: visible;
+  }
+
+  .dropdown:hover .dropdown-menu {
+    display: block;
+    animation: fadeIn .7s;
   }
   
   .navbar .dropdown .dropdown ul {
@@ -911,9 +917,10 @@ body {
   # Our Services
   --------------------------------------------------------------*/
   .services .icon-box {
-    text-align: center;
+    //text-align: center;
     border: 1px solid #ededed;
-    padding: 80px 20px;
+    border-radius: 10px;
+    padding: 20px 20px;
     transition: all ease-in-out 0.3s;
   }
   
@@ -955,37 +962,14 @@ body {
     font-size: 24px;
   }
   
-  .services .icon-box h4 a {
-    color: #8C8985;
-  }
   
   .services .icon-box p {
     line-height: 24px;
-    font-size: 14px;
+    font-size: 16px;
     margin-bottom: 0;
   }
   
-  .services .icon-box:hover {
-    background: #205493;
-    border-color: #205493;
-  }
   
-  .services .icon-box:hover .icon {
-    background: #fff;
-  }
-  
-  .services .icon-box:hover .icon i {
-    color: #205493;
-  }
-  
-  .services .icon-box:hover .icon::before {
-    background: #ef9383;
-  }
-  
-  .services .icon-box:hover h4 a,
-  .services .icon-box:hover p {
-    color: #fff;
-  }
   
   /*--------------------------------------------------------------
   # Our Clients
