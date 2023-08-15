@@ -4,14 +4,20 @@
   <div class="row p-2">
     <div class="col-md-12">
       <%= f.label "Reason for Denial" %><br>
-      <%= f.input_field :reason, label: false, class: 'form-control' %>
+      <%= f.text_area :reason, label: false, class: 'form-control', :rows => 10 %>
     </div>
   </div>
 
 
   <div class="row p-2">
     <div class="col-md-12">
-      <%= f.button :submit, class: 'btn btn-outline-primary btn-sm' %>
+      <%= f.button :submit, class: 'btn btn-outline-primary ' %>
+      <% if !current_page?(new_denial_reason_path) || @denial_reason.id != nil %>
+          <span class="float-end"><%= link_to t('navigation.delete'), denial_reason_path(@denial_reason),
+            method: :delete,
+            data: { turbo_confirm: "Are you sure?", turbo_method: :delete }, class: "btn btn-outline-danger" %></span>
+      <% end %>
+      <%= link_to t('navigation.cancel'), denial_reasons_path, class: "btn btn-outline-secondary" %>
     </div>
   </div>
 <% end %>

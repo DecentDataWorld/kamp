@@ -5,7 +5,6 @@
         <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
         <li><%= link_to users_path do %><%=t('navigation.administration')%><% end %></li>
         <li><%= link_to cops_path do %><%=t('navigation.cops')%><% end %></li>
-        <li><%= @cop.name %></li>
       </ol>
     </div>
 </section><!-- End Breadcrumbs -->
@@ -21,7 +20,7 @@
       </div>
 
       <div class="col-9">
-        <h5><%= t('headers.cop.edit') %></h5>
+        <div class="border-bottom pb-2 h5">Edit Community of Practice</div>
         <%= render 'form' %>
       </div>
     </div>

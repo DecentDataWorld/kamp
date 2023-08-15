@@ -12,7 +12,7 @@
   <div class="row p-2 d-flex text-secondary">
     <ul class="list-group list-group-flush bg-transparent">
       <% current_user.cops.each do |cop| %>
-        <li class="list-group-item bg-transparent"><%= link_to cop.name, cop_path(cop) %></li>
+        <li class="list-group-item bg-transparent"><%= link_to cop.name, show_cop_path(cop) %></li>
       <% end %>
     </ul>
   </div>

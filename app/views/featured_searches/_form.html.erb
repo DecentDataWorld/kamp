@@ -1,5 +1,4 @@
-
-<%= simple_form_for(@featured_search, :html => { role: "form", multipart: true, class: "sky-form" }) do |form| %>
+<%= simple_form_for(@featured_search, :html => { role: "form", multipart: true, autocomplete: 'off'}) do |form| %>
   <% if @featured_search.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -14,17 +13,24 @@
     </div>
   <% end %>
 
-  <div class="row g-3">
+  <div class="row g-3 p-2">
     <div class="col-md-12">
       <%= form.label :search_name %><span class="text-danger">*</span><br>
       <%= form.text_field :name, class: "form-control" %>
     </div>
-
+  </div>
+  <div class="row g-3 p-2">
     <div class="col-md-12">
       <%= form.label :icon_identifier %><br>
-      <%= form.text_field :icon_identifier, class: "form-control" %>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text h-100 selected-icon"></span>
+        </div>
+        <%= form.text_field :icon_identifier, id: "iconpicker", class: "form-control iconpicker", data: {controller: "iconpicker"}, placeholder: "Begin typing to search for icons", value: @featured_search.icon_identifier  %>
+      </div>
     </div>
-
+  </div>
+  <div class="row g-3 p-2">
     <div  class="col-md-12 pb-2">
       <%= form.label :tags %><span class="text-danger">*</span><br>
       <%= form.input_field :tags,
@@ -37,6 +43,7 @@
                               :class => "form-control",
                               data: {controller: "multiselect", placeholder: "Begin typing to search for tags"} %>
     </div>
+  </div>
 
     <%  if Cop.is_user_cop_admin(current_user) %>
       <div class="card m-3">
@@ -53,6 +60,8 @@
         </div>
       </div>
     <% end %>
+
+  <div class="row g-3 p-2">
 
     <div class="col-md-12">
       <% if current_page?(new_featured_search_path) || @featured_search.id == nil %>

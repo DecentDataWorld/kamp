@@ -15,7 +15,7 @@
   <div class="container">
     <div class="row">
       <div class="col-3 border-end">
-        <h5 class="border-bottom pb-2"><%=t('navigation.administration')%></h5>
+        <h5 class="border-bottom pb-2"><i class="bi bi-dash-circle"></i> Denial Reasons</h5>
         <%= render 'admin/side_nav' %>
         <br/>
       </div>
@@ -26,16 +26,13 @@
           <thead>
           <tr>
             <th>Reason</th>
-            <th colspan="2"></th>
           </tr>
           </thead>
 
           <tbody>
           <% @denial_reasons.each do |denial_reason| %>
               <tr>
-                <td><%= denial_reason.reason %></td>
-                <td><%= link_to 'Edit', edit_denial_reason_path(denial_reason), class: "btn btn-outline-primary btn-sm" %></td>
-                <td><%= link_to 'Destroy', denial_reason, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure?"  }, class: "btn btn-outline-danger btn-sm" %></td>
+                <td><%= link_to denial_reason.reason, edit_denial_reason_path(denial_reason) %></td>
               </tr>
           <% end %>
           </tbody>

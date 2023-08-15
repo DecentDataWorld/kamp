@@ -1,8 +1,8 @@
 class CopsController < ApplicationController
-  before_action :set_cop, only: [:edit, :update, :destroy, :show]
+  before_action :set_cop, only: [:edit, :update, :destroy, :show, :show_cop]
 
-  # GET /cops
-  # GET /cops.json
+  # GET /admin/cops
+  # GET /admin/cops.json
   def index
     @cops = Cop.order(:name)
 
@@ -13,21 +13,25 @@ class CopsController < ApplicationController
   end
 
 
-  # GET /cops/new
+  # GET /admin/cops/new
   def new
     @cop = Cop.new
   end
 
-  # GET /cops/1/edit
+  # GET /admin/cops/1/edit
   def edit
   end
 
-  # GET /cops/1
+  # GET /admin/admin/cops/1
   def show
   end
 
-  # POST /cops
-  # POST /cops.json
+  # GET /cops/1
+  def show_cop
+  end
+
+  # POST /admin/cops
+  # POST /admin/cops.json
   def create
     @cop = Cop.new(cop_params)
 
@@ -43,8 +47,8 @@ class CopsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /cops/1
-  # PATCH/PUT /cops/1.json
+  # PATCH/PUT /admin/cops/1
+  # PATCH/PUT /admin/cops/1.json
   def update
     respond_to do |format|
       if @cop.update(cop_params)
@@ -58,8 +62,8 @@ class CopsController < ApplicationController
     end
   end
 
-  # DELETE /cops/1
-  # DELETE /cops/1.json
+  # DELETE /admin/cops/1
+  # DELETE /admin/cops/1.json
   def destroy
     respond_to do |format|
       if @cop.destroy

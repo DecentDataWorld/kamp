@@ -12,5 +12,16 @@ class TagType < ActiveRecord::Base
       end
       return values
     end
+
+    def self.grouped_tags
+      grouped_tags = {}
+      TagType.all.order(:name).each do |tt|
+        tt.tags.order(:name).each do |tag|
+          grouped_tags[tt.name] ||= []
+          grouped_tags[tt.name] << tag.name
+        end
+      end
+      return grouped_tags
+    end
   end
   
