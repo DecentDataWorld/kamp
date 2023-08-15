@@ -5,8 +5,6 @@
       <li><%= link_to root_path do %>Home<% end %></li>
       <li><%= link_to users_path do %>Administration<% end %></li>
       <li><%= link_to organizations_path(:page => params[:page]) do %>Organizations<% end %></li>
-      <li><%= link_to organization_path(@organization) do %> <%= @organization.name %><% end %></li>
-      <li>Edit</li>
     </ol>
   </div>
 </section><!-- End Breadcrumbs -->
@@ -20,8 +18,8 @@
       </div>
 
       <div class="col-9">
+        <div class="border-bottom pb-3 h5">Edit Organization</div>
         <div class="row pb-1">
-          <h5>Edit Organization Information</h5>
           <%= render 'form' %>
         </div>
       </div>

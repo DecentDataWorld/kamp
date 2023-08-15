@@ -5,7 +5,7 @@
     <ol>
       <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
       <li><%= link_to admin_index_path do %><%=t('navigation.administration')%><% end %></li>
-      <li>Events</li>
+      <li><%= link_to events_path do %>Events<% end %></li>
     </ol>
   </div>
 </section><!-- End Breadcrumbs -->

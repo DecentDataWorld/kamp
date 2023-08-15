@@ -182,7 +182,7 @@ export default class Iconpicker
               "bi-image",
               "bi-images",
               "bi-inbox",
-              "bi-incogneto",
+              "bi-incognito",
               "bi-infinity",
               "bi-info-circle",
               "bi-intersect",
