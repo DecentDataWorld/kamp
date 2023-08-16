@@ -13,7 +13,7 @@
   <div class="col-4">
     <%= form_with url: users_path, method: :get do |form| %>
       <div class="input-group mt-n3 m-0 p-0">
-        <%= form.collection_select :role_id, Role.order(:name), :id, :name, {prompt: 'Role'}, { class: "form-select mt-1 pt-2" } %>
+        <%= form.collection_select :role_id, Role.order(:name), :id, :human_name, {prompt: 'Role'}, { class: "form-select mt-1 pt-2" } %>
         <button type="submit" class="btn btn-outline-primary mt-1 pt-2"><i class="fa-solid fa-arrow-right"></i></button>
         <% if params[:role_id] && params[:role_id].length > 0 %>
           <%= link_to users_path, class: 'btn btn-outline-primary mt-1 pt-2', role: "button" do %><i class="fa fa-refresh"></i><% end %>
