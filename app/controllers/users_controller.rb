@@ -8,11 +8,11 @@ class UsersController < ApplicationController
     @users = User.where(deactivated_at: nil).joins(:users_organizations, :organizations, :roles, :organization_applications).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30)
 
     if params[:organization_id]
-      @users = @users.filter{|u| u.users_organizations.pluck(:organization_id).include?(params[:organization_id].to_i)}
+      @users = @users.filter{|u| params[:organization_id].length > 0 ? u.users_organizations.pluck(:organization_id).include?(params[:organization_id].to_i) : u.users_organizations.pluck(:organization_id)}
     end
 
     if params[:role_id]
-      @users = @users.filter{|u| u.roles.pluck(:role_id).include?(params[:role_id].to_i)}
+      @users = @users.filter{|u| params[:role_id].length > 0 ? u.roles.pluck(:role_id).include?(params[:role_id].to_i) : u.roles.pluck(:role_id)}
     end
 
     if params[:usage_id]
