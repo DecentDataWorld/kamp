@@ -1,5 +1,6 @@
 require 'paperclip/io_adapters/uri_adapter'
 module Paperclip
+  Paperclip::Attachment.default_options[:path] = "prod_uploads/system/:class/:attachment/:id_partition/:style/:filename"
   class UriAdapter < AbstractAdapter
 
     def content_type_from_content
