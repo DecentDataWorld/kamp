@@ -30,6 +30,7 @@ class UsersController < ApplicationController
     @collections = @user.collections_authored.where("private = false and approved = true and newsletter_only = false").page(params[:collections_page]).per_page(10).order("updated_at desc")
     @organizations = @user.organizations.page(params[:organizations_page]).per_page(10).order("updated_at desc")
     @cops = @user.cops.page(params[:cops_page]).per_page(10).order('updated_at desc')
+    @page_title = @user.name
 
     # if user is current user can view pending submissions, query for them
     @current_user = current_user
@@ -53,6 +54,7 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
+    @page_title = "Edit " + @user.name
   end
   
   def update
