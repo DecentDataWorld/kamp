@@ -16,7 +16,6 @@
   <div class="container">
     <div class="row">
       <div class="col-3 border-end">
-        <h5 class="border-bottom pb-2"><%= @user.name.titleize %> Profile</h5>
         <%= render 'users/profile_navigation' %>
       </div>
 
@@ -24,11 +23,11 @@
         <div class="row">
           <div class="col-md-9">
             <%= render "devise/shared/error_messages", resource: resource %>
-            <h5>Edit <%= resource_name.to_s.humanize %></h5>
+            <div class="border-bottom pb-2"><span class="fs-5">Edit Profile</span></div>
             <%= render "devise/shared/error_messages", resource: resource %>
             <%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :role => 'form'}) do |f| %>
               <%= render "devise/shared/error_messages", resource: resource %>
-              <div class="form-group pb-3">
+              <div class="form-group pb-3 mt-2">
                 <%= f.label :name %>
                 <%= f.text_field :name, :autofocus => true, class: 'form-control pb-2' %>
               </div>
@@ -67,6 +66,7 @@
                 </div>
               </fieldset>
               <%= f.submit 'Update', :class => 'btn btn-outline-primary mb-4' %>
+              <%= link_to t('navigation.cancel'), user_path(@user), class: "btn btn-outline-secondary mb-4" %>
             <% end %>
 
             <h6><strong>Cancel Account</strong></h6>

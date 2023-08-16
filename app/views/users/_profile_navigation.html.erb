@@ -1,17 +1,10 @@
 <div class="row border-bottom pb-2 me-1">
   <div class="col fs-5"><i class="bi bi-person"></i> Users </div>
   <div class="col d-flex flex-row-reverse available-tags">
-    <% if can? :manage, :all || (can? :approve, @user && !@user.approved) %>
-      <div class="dropdown">
-        <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fa fa-cog"></i>
-        </button>
-        <ul class="dropdown-menu">
-          <% if can? :manage, :all %>
-            <li><%= link_to "Edit User", edit_user_path(@user), class: "dropdown-item" %></li>
-          <% end %>
-        </ul>
-      </div>
+    <% if current_user == @user && !current_page?(edit_user_registration_path)%>
+      <%= link_to edit_user_registration_path, class: "btn btn-sm btn-outline-primary" do %><i class="fa-regular fa-pen-to-square"></i> Edit<% end %>
+    <% elsif current_user != @user && !current_page?(edit_user_path(@user)) && (can? :manage, :all || (can? :approve, @user && !@user.approved)) %>
+      <%= link_to edit_user_path(@user), class: "btn btn-sm btn-outline-primary" do %><i class="fa-regular fa-pen-to-square"></i> Edit<% end %>
     <% end %>
   </div>
 </div>
