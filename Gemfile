@@ -39,6 +39,7 @@ gem 'sanitize'
 gem 'negative_captcha'
 gem "recaptcha", require: "recaptcha/rails"
 gem 'puma', '~> 5.0'
+gem 'ckeditor'
 
 # Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
 gem "jsbundling-rails"

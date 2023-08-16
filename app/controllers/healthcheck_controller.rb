@@ -1,6 +1,4 @@
 class HealthcheckController < ApplicationController
-  skip_before_action :authenticate_user!
-
   before_action :set_cache_headers
 
   def check_db
