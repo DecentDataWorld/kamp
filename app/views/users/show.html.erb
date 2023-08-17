@@ -15,24 +15,25 @@
   <div class="container">
     <div class="row">
       <div class="col-3 border-end">
-        <h5 class="border-bottom pb-2"><%= @user.name.titleize %> Profile</h5>
         <%= render 'users/profile_navigation' %>
       </div>
 
       <div class="col-9">
-        <div class="row pb-1">
+        <div class="border-bottom pb-2"><span class="fs-5"><%= @user.name %> &nbsp;</span></div>
+        <div class="row pb-1 mt-2">
           <!-- Tab v1 -->
           <div class="tab-v1">
             <nav>
               <ul class="nav nav-tabs pb-2">
-                <li class="pe-4 ps-2"><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources">Contributions</a></li>
+                <li class="pe-4 ps-2"><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources">Uploads&nbsp;<span class="badge rounded-pill bg-dark dark-badge-link align-text-bottom"><%= @user.resources.count %></span></a></li>
                 <li class="pe-4"><a href="#organizations" data-bs-toggle="tab" data-bs-target="#organizations">Memberships</a></li>
               </ul>
             </nav>
 
             <div class="tab-content">
-              <!--- CONTRIBUTIONS TAB --->
+              <!--- RESOURCES TAB --->
               <div class="tab-pane fade show active pb-2" id="resources">
+                <!--- Resource and collections content --->
                 <div class="row">
                   <div class="col-sm-12">
                     <div class="tab-v1">
@@ -70,7 +71,7 @@
                     </div>
                   </div>
                 </div>
-              </div><!--- END CONTRIBUTIONS TAB --->
+              </div><!--- END RESOURCES TAB --->
             
               <!--- MEMBERSHIPS TAB --->
               <div class="tab-pane fade" id="organizations">

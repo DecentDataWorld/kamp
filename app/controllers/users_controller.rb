@@ -5,14 +5,14 @@ class UsersController < ApplicationController
 
   def index
     authorize! :index, @user, :message => 'Not authorized as an administrator.'
-    @users = User.where(deactivated_at: nil).joins(:users_organizations, :organizations, :roles, :organization_applications).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30)
+    @users = User.where(deactivated_at: nil).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30)
 
     if params[:organization_id]
-      @users = @users.filter{|u| u.users_organizations.pluck(:organization_id).include?(params[:organization_id].to_i)}
+      @users = @users.filter{|u| params[:organization_id].length > 0 ? u.users_organizations.pluck(:organization_id).include?(params[:organization_id].to_i) : u.users_organizations.pluck(:organization_id)}
     end
 
     if params[:role_id]
-      @users = @users.filter{|u| u.roles.pluck(:role_id).include?(params[:role_id].to_i)}
+      @users = @users.filter{|u| params[:role_id].length > 0 ? u.roles.pluck(:role_id).include?(params[:role_id].to_i) : u.roles.pluck(:role_id)}
     end
 
     if params[:usage_id]
@@ -30,6 +30,7 @@ class UsersController < ApplicationController
     @collections = @user.collections_authored.where("private = false and approved = true and newsletter_only = false").page(params[:collections_page]).per_page(10).order("updated_at desc")
     @organizations = @user.organizations.page(params[:organizations_page]).per_page(10).order("updated_at desc")
     @cops = @user.cops.page(params[:cops_page]).per_page(10).order('updated_at desc')
+    @page_title = @user.name
 
     # if user is current user can view pending submissions, query for them
     @current_user = current_user
@@ -53,6 +54,7 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
+    @page_title = "Edit " + @user.name
   end
   
   def update
