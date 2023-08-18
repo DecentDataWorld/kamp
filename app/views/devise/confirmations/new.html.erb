@@ -13,7 +13,7 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <h5 class="border-bottom pb-2 mb-5"><i class="bi bi-box-arrow-in-right"></i> Resend Confirmation Instructions</h5>
+        <h5 class="border-bottom pb-2 mb-5"><i class="bi bi-envelope"></i> Resend Confirmation Instructions</h5>
 
         <%= simple_form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, :class => 'reg-page' }) do |f| %>
          <%= devise_error_messages! %>
