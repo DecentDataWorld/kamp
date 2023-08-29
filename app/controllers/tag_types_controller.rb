@@ -1,5 +1,6 @@
 class TagTypesController < ApplicationController
     before_action :set_tag_type, only: [:edit, :update, :destroy]
+    before_action :authorized?
   
     # GET /tag_types
     # GET /tag_types.json
@@ -78,6 +79,13 @@ class TagTypesController < ApplicationController
       # Use callbacks to share common setup or constraints between actions.
       def set_tag_type
         @tag_type = TagType.find(params[:id])
+      end
+
+      def authorized?
+        unless (can? :dashboard, current_user)
+          flash[:error] = "You are not authorized to view that page."
+          redirect_to root_path
+        end
       end
   
       # Only allow a list of trusted parameters through.

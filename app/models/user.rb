@@ -33,6 +33,10 @@ class User < ActiveRecord::Base
 
   # after_update :assign_default_role
 
+  def cop_admin?
+    Cop.where(admin_id: self.id).any?
+  end
+
   def assign_default_role
     self.add_role(:member) if self.confirmed? and self.roles.count == 0
   end

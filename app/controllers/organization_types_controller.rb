@@ -1,7 +1,8 @@
 class OrganizationTypesController < ApplicationController
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
   load_and_authorize_resource :only => [:edit, :update, :destroy]
   before_action :set_organization_type, only: [:show, :edit, :update, :destroy]
+  before_action :authorized?
 
   # GET /organization_types
   # GET /organization_types.json
@@ -77,6 +78,13 @@ class OrganizationTypesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_organization_type
       @organization_type = OrganizationType.find(params[:id])
+    end
+
+    def authorized?
+      unless (can? :dashboard, current_user)
+        flash[:error] = "You are not authorized to view that page."
+        redirect_to root_path
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

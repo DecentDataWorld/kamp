@@ -1,11 +1,18 @@
 require 'json'
 class FeaturedSearchesController < ApplicationController
     before_action :set_featured_search, only: [:edit, :update, :destroy]
+    before_action :authorized?
   
     # GET /featured_searches
     # GET /featured_searches.json
     def index
-      @featured_searches = FeaturedSearch.order(:name)
+      if can? :dashboard, current_user
+        @featured_searches = FeaturedSearch.order(:name)
+      else
+        cop_ids = Cop.where(:admin_id => current_user.id).pluck(:id)
+        @featured_searches = FeaturedSearch.where(:cop_id => cop_ids).order(:name)
+      end
+      
       
       respond_to do |format|
         format.html
@@ -73,6 +80,13 @@ class FeaturedSearchesController < ApplicationController
       # Use callbacks to share common setup or constraints between actions.
       def set_featured_search
         @featured_search = FeaturedSearch.find(params[:id])
+      end
+
+      def authorized?
+        unless (can? :dashboard, current_user) || current_user.cop_admin?
+          flash[:error] = "You are not authorized to view that page."
+          redirect_to root_path
+        end
       end
   
       # Only allow a list of trusted parameters through.

@@ -1,5 +1,6 @@
 class AnnouncementsController < ApplicationController
   before_action :set_announcement, only: [:edit, :update, :destroy, :show_announcement]
+  before_action :authorized?, except: [:public_announcements, :show_announcement]
 
   #GET /announcements
   def public_announcements
@@ -14,7 +15,13 @@ class AnnouncementsController < ApplicationController
   # GET /admin/announcements
   # GET /admin/announcements.json
   def index
-    @announcements = Announcement.order(:name)
+    if can? :dashboard, current_user
+      @announcements = Announcement.order(:name)
+    else
+      cop_ids = Cop.where(:admin_id => current_user.id).pluck(:id)
+      @announcements = Announcement.where(:cop_id => cop_ids).order(:name)
+    end
+    
     
     respond_to do |format|
       format.html
@@ -80,6 +87,13 @@ class AnnouncementsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_announcement
       @announcement = Announcement.find(params[:id])
+    end
+
+    def authorized?
+      unless (can? :dashboard, current_user) || current_user.cop_admin?
+        flash[:error] = "You are not authorized to view that page."
+        redirect_to root_path
+      end
     end
 
     # Only allow a list of trusted parameters through.

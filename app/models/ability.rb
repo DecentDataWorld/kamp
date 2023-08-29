@@ -67,7 +67,7 @@ class Ability
       can :index, User
 
       can :access, :rails_admin       # only allow admin users to access Rails Admin
-      #can :dashboard, User                 # allow access to dashboard
+      can :dashboard, User                 # allow access to dashboard
 
       can :add_newsletter_resource, Resource
       can :add_newsletter_collection, Collection

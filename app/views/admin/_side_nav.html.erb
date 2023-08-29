@@ -5,30 +5,34 @@
   <li class="list-group-item available-tags ps-1">
     <a href="<%= cops_url %>" class="<%= 'active' if current_page?(cops_url) %>"><%= t('navigation.cops')%></a>
   </li>
-  <li class="list-group-item available-tags ps-1">
-    <a href="<%= denial_reasons_url %>" class="<%= 'active' if current_page?(denial_reasons_url) %>">Denial Reasons</a>
-  </li>
+  <% if user_signed_in? and (can? :approve, Resource or can? :approve, Collection) %>
+    <li class="list-group-item available-tags ps-1">
+      <a href="<%= denial_reasons_url %>" class="<%= 'active' if current_page?(denial_reasons_url) %>">Denial Reasons</a>
+    </li>
+  <% end %>
   <li class="list-group-item available-tags ps-1">
     <a href="<%= events_url %>" class="<%= 'active' if current_page?(events_url) %>">Events</a>
   </li>
   <li class="list-group-item available-tags ps-1">
     <a href="<%= featured_searches_url %>" class="<%= 'active' if current_page?(featured_searches_url) %>">Featured Searches</a>
   </li>
-  <li class="list-group-item available-tags ps-1">
-    <a href="<%= organizations_url %>" class="<%= 'active' if current_page?(organizations_url) %>"><%=t('navigation.organizations')%></a>
-  </li>
-  <li class="list-group-item available-tags ps-1">
-    <a href="<%= organization_types_url %>" class="<%= 'active' if current_page?(organization_types_url) %>"><%=t('navigation.organization_types')%></a>
-  </li>
-  <li class="list-group-item available-tags ps-1">
-    <a href="<%= tags_url %>" class="<%= 'active' if current_page?(tags_url) %>"><%=t('navigation.tags')%></a>
-  </li>
-  <li class="list-group-item available-tags ps-1">
-    <a href="<%= tag_types_url %>" class="<%= 'active' if current_page?(tag_types_url) %>"><%=t('navigation.tag_types')%></a>
-  </li>
-  <li class="list-group-item available-tags ps-1">
-    <a href="<%= users_url %>" class="<%= 'active' if current_page?(users_url) %>"><%=t('navigation.users')%></a>
-  </li>
+  <% if user_signed_in? and (can? :approve, Resource or can? :approve, Collection) %>
+    <li class="list-group-item available-tags ps-1">
+      <a href="<%= organizations_url %>" class="<%= 'active' if current_page?(organizations_url) %>"><%=t('navigation.organizations')%></a>
+    </li>
+    <li class="list-group-item available-tags ps-1">
+      <a href="<%= organization_types_url %>" class="<%= 'active' if current_page?(organization_types_url) %>"><%=t('navigation.organization_types')%></a>
+    </li>
+    <li class="list-group-item available-tags ps-1">
+      <a href="<%= tags_url %>" class="<%= 'active' if current_page?(tags_url) %>"><%=t('navigation.tags')%></a>
+    </li>
+    <li class="list-group-item available-tags ps-1">
+      <a href="<%= tag_types_url %>" class="<%= 'active' if current_page?(tag_types_url) %>"><%=t('navigation.tag_types')%></a>
+    </li>
+    <li class="list-group-item available-tags ps-1">
+      <a href="<%= users_url %>" class="<%= 'active' if current_page?(users_url) %>"><%=t('navigation.users')%></a>
+    </li>
+  <% end %>
   
   
   
