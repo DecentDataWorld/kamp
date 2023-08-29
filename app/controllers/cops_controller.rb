@@ -1,10 +1,16 @@
 class CopsController < ApplicationController
   before_action :set_cop, only: [:edit, :update, :destroy, :show, :show_cop]
+  before_action :authorized?, except: [:show_cop]
 
   # GET /admin/cops
   # GET /admin/cops.json
   def index
-    @cops = Cop.order(:name)
+    if can? :dashboard, current_user
+      @cops = Cop.order(:name)
+    else
+      cop_ids = Cop.where(:admin_id => current_user.id).pluck(:id)
+      @cops = Cop.where(:id => cop_ids).order(:name)
+    end
 
     respond_to do |format|
       format.html
@@ -81,6 +87,13 @@ class CopsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_cop
       @cop = Cop.find(params[:id])
+    end
+
+    def authorized?
+      unless (can? :dashboard, current_user) || current_user.cop_admin?
+        flash[:error] = "You are not authorized to view that page."
+        redirect_to root_path
+      end
     end
 
     # Only allow a list of trusted parameters through.

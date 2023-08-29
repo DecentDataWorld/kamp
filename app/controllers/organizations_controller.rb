@@ -1,7 +1,7 @@
 class OrganizationsController < ApplicationController
-  before_action :authenticate_user!, :except => [:index, :show, :not_found]
   load_and_authorize_resource :only => [:edit, :update, :destroy], :find_by => :url
   before_action :set_organization, only: [:show, :edit, :update, :destroy, :deactivate, :private_resources]
+  before_action :authorized?, :except => [:index, :show, :not_found]
 
   # GET /organizations
   def index
@@ -322,6 +322,13 @@ class OrganizationsController < ApplicationController
       end
       if @organization.nil?
         redirect_to organization_not_found_path
+      end
+    end
+
+    def authorized?
+      unless (can? :dashboard, current_user)
+        flash[:error] = "You are not authorized to view that page."
+        redirect_to root_path
       end
     end
 

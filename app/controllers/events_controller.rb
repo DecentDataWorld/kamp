@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:edit, :update, :destroy, :show_event]
+  before_action :authorized?, except: [:public_events, :show_event]
 
   #GET /events
   def public_events
@@ -14,8 +15,13 @@ class EventsController < ApplicationController
   # GET /admin/events
   # GET /admin/events.json
   def index
-    @events = Event.order(:name)
-
+    if can? :dashboard, current_user
+      @events = Event.order(:name)
+    else
+      cop_ids = Cop.where(:admin_id => current_user.id).pluck(:id)
+      @events = Event.where(:cop_id => cop_ids).order(:name)
+    end
+    
     respond_to do |format|
       format.html
       format.json { render json: @events.order(:name), status: :ok }
@@ -80,6 +86,13 @@ class EventsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_event
       @event = Event.find(params[:id])
+    end
+
+    def authorized?
+      unless (can? :dashboard, current_user) || current_user.cop_admin?
+        flash[:error] = "You are not authorized to view that page."
+        redirect_to root_path
+      end
     end
 
     # Only allow a list of trusted parameters through.
