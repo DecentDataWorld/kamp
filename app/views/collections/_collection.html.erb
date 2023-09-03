@@ -12,16 +12,9 @@
       <div class="card-body">
       <!-- Begin Inner Results -->
       <% if can? :approve, collection and !collection.approved %>
-        <div class=" d-flex flex-row-reverse">
-          <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-cog"></i>
-            </button>
-            <ul class="dropdown-menu">
-              <li><%= link_to "Approve Collection", approve_submission_path(:submission_id => collection.id, :submission_type => "collection"), :class => "dropdown-item" %></li>
-              <li><%= link_to "Deny Submission", denial_submission_path(:submission_id => collection.id, :submission_type => "collection"), :class => "dropdown-item" %></li>
-            </ul>
-          </div>
+        <div class="float-end">
+          <%= link_to "Approve", approve_submission_path(:submission_id => collection.id, :submission_type => "collection"), :class => "btn btn-outline-primary btn-sm" %></li>
+          <%= link_to "Deny", denial_submission_path(:submission_id => collection.id, :submission_type => "collection"), :class => "btn btn-outline-danger btn-sm" %></li>
         </div>
      <% end %>
       <h4 class="card-title pb-2"><%= link_to raw(str_title), collection_path(collection) %></h4>
