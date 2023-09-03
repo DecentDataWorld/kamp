@@ -11,7 +11,7 @@
           <% if can? :manage, :all %>
             <li><%= link_to "Edit Organization", edit_organization_path(@organization), class: "dropdown-item" %></li>
           <% end %>
-          <% if can? :approve, @organization && !@organization.approved %>
+          <% if (can? :approve, @organization) && (!@organization.approved) %>
             <li><%= link_to "Approve Organization", organization_approve_path(@organization.url), :class => "dropdown-item" %></li>
             <li><%= link_to("Delete Organization", organization_path(@organization), :data => { turbo_method: :delete, turbo_confirm: "Are you sure?" }, :method => :delete, :class => "dropdown-item") %></li>
           <% end %>
