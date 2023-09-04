@@ -105,11 +105,10 @@
 
 <div class="row p-2">
   <div class="col-md-12">
-  <%=
-      f.input :private, label: false, as: :boolean do
-        f.check_box :private, {}, "true", "false"
-      end
-  %> Mark as a private resource that can only be accessed by users in my organization
+    <div class="form-check form-switch pt-2">
+      <%= f.check_box :private, class: "form-check-input", role: "switch" %>
+      <%= f.label "Mark as a private resource that can only be accessed by users in my organization", class: "form-check-label" %>
+    </div>
   </div>
 </div>
 
@@ -127,11 +126,10 @@
       </div>
       <div class="row p-2">
         <div class="col-md-12">
-        <%=
-            f.input :cop_private, label: false, as: :boolean do
-              f.check_box :cop_private, {}, "true", "false"
-            end
-        %> Mark as a private resource that can only be accessed by users in selected COP
+          <div class="form-check form-switch pt-2">
+            <%= f.check_box :private, class: "form-check-input", role: "switch" %>
+            <%= f.label "Mark as a private resource that can only be accessed by users in my organization", class: "form-check-label" %>
+          </div>
         </div>
       </div>
     </div>
