@@ -37,7 +37,7 @@
               <div class="tab-pane fade show active pb-2" id="resources">
                 <!--- Resource search and add (if permitted) within organization --->
                 <div class="row pb-2">
-                  <div class="<%= @organization.approved and @organization.users.exists?(current_user.id) ? 'col-11' : 'col-12' %>">
+                  <div class="col-12">
                     <%= form_for @organization, method: 'get', role: 'form', class: 'form-inline text-center pb-2' do %>
                       <div class="input-group">
                         <%= text_field_tag :resource_query, params[:resource_query], class: 'form-control', placeholder: 'Search ' + @organization.name + '\'s Resources', id: 'shop-search' %>
@@ -48,11 +48,7 @@
                       </div>
                     <% end %>
                   </div>
-                  <% if @organization.approved and @organization.users.exists?(current_user.id) %>
-                    <div class="col-1">
-                      <%= link_to new_resource_path, class: 'btn btn-primary' do  %><i class="fa-solid fa-file-circle-plus"></i><% end %>
-                    </div>
-                  <% end %>
+
                   <h5 class="pt-2 ps-3"><% if !params[:resource_query].nil? %> <%= @resource_count %> resources <%= 'found with "' + params[:resource_query] + '"' %><% else %>&nbsp; <% end %> </h6>
                   <!--- End resource search and add --->
 
