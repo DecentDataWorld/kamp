@@ -85,7 +85,7 @@
                       <div class="tab-content">
                         <div id="inner_organizations" class="tab-pane show fade active">
                           <%= link_to "New Organization", new_organization_path, class: 'btn btn-outline-primary float-end' %>
-                          <%= render partial: 'organizations/boxes', :param_name => 'organizations_page' %>
+                          <%= render partial: 'organizations/table_list', locals: { user_memberships_tab: true, param_name: 'organizations_page', user_id: @user.id } %>
                           <% if @organizations.empty? %>
                             <% if @user == @current_user %> You are <% else %> This user is <% end %> not part of any organizations.
                           <% end %>

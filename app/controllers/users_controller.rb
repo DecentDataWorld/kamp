@@ -90,9 +90,11 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     unless @user == current_user
       @user.deactivate
-      redirect_to users_path, :notice => "User deactivated."
+      flash[:notice] = "User deactivated."
+      redirect_back(fallback_location: users_path)
     else
-      redirect_to users_path, :notice => "Can't deactivate yourself."
+      flash[:notice] = "Can't deactivate yourself."
+      redirect_back(fallback_location: users_path)
     end
   end
 
@@ -181,6 +183,12 @@ class UsersController < ApplicationController
 
   end
 
+  def remove_membership
+    uo = UsersOrganization.find_by(user_id: params[:user_id], organization_id: params[:organization_id])
+    uo.destroy! if uo
+    redirect_back(fallback_location: users_path)
+  end
+
   def export
     @page_title = "Export Users"
     @users = User.all
@@ -218,6 +226,6 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:id, :role_ids, :invitation_email, :search)
+    params.require(:user).permit(:id, :role_ids, :invitation_email, :search, :organization_id)
   end
 end

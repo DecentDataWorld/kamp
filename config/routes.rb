@@ -104,6 +104,8 @@ Rails.application.routes.draw do
   post 'organizations/invite_user', to: 'organizations#invite_user', as: :org_invite_user
   get 'organizations/private_resources/:id', to: 'organizations#private_resources', as: :org_private_resources
   resources :organizations, path: '/admin/organizations'
+  put 'organizations/deactivate/:id', to: 'organizations#deactivate', as: 'deactivate_organization'
+  put 'organizations/reactivate/:id', to: 'organizations#reactivate', as: 'reactivate_organization'
 
   root :to => 'home#index'
   get 'home/error', to: 'home#error', as: :error_page
@@ -119,8 +121,7 @@ Rails.application.routes.draw do
   resources :users, path: 'admin/users'
   put 'users/deactivate/:id', to: 'users#deactivate', as: 'deactivate_user'
   put 'users/reactivate/:id', to: 'users#reactivate', as: 'reactivate_user'
-  put 'organizations/deactivate/:id', to: 'organizations#deactivate', as: 'deactivate_organization'
-  put 'organizations/reactivate/:id', to: 'organizations#reactivate', as: 'reactivate_organization'
+  put 'users/remove_membership', to: 'users#remove_membership', as: :remove_membership
 
   #HEALTHCHECK
   get '/healthcheck', to: 'healthcheck#check_db'

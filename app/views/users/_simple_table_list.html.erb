@@ -5,6 +5,7 @@
     <th>Organization(s)</th>
     <th>Registered</th>
     <th>Last Accessed</th>
+    <th>Portal Role</th>
   </tr>
   </thead>
   <tbody>
@@ -33,6 +34,12 @@
         </td>
         <td><%= user.created_at.to_date %></td>
         <td><%= user.last_sign_in_at.to_date if !user.last_sign_in_at.nil? %></td>
+        <% if can? :manage, user %>
+          <td>
+            <%= user.roles.pluck(:name) %>
+          </td>
+          <td><%= button_to deactivate_user_path(user), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deactivate<% end %></td>
+        <% end %>
       </tr>
   <% end %>
   </tbody>

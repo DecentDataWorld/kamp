@@ -26,21 +26,21 @@
             <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded=<%= !@show_orgs ? "true" : "false" %> aria-controls="collapseOne">
-                  <h5 class="text-primary p-2"><%= @users.count %> Recent Signups</h5>
+                  <h5 class="text-primary p-2"><%= @users_needing_role.count %> Users Pending Portal Role Assignment</h5>
                 </button>
               </h2>
               <div id="collapseOne" class="<%= !@show_orgs ? "accordion-collapse collapse show" : "accordion-collapse collapse" %>" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                  <%= render partial: 'users/simple_table_list', locals: { users: @users } %>
+                  <%= render partial: 'users/simple_table_list', locals: { users: @users_needing_role } %>
                   <div class="apple_pagination">
-                    <%= will_paginate @users %>
+                    <%= will_paginate @users_needing_role %>
                   </div>
                 </div>
               </div>
             </div>
             <div class="accordion-item">
               <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded=<%= @show_orgs ? "true" : "false" %> aria-controls="collapseTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                   <h5 class="text-primary p-2"><%= @organizations.count %> Organizations Pending Approval</h5>
                 </button>
               </h2>
@@ -48,7 +48,7 @@
                 <div class="accordion-body">
                   <% if @organizations.count > 0 %>
                       <p class="resource-small">The following organizations are pending approval. Check their domains to make sure they are a valid organization and click "Approve".</p>
-                      <%= render partial: 'organizations/table_list' %>
+                      <%= render partial: 'organizations/table_list', locals: {user_memberships_tab: false} %>
                       <div class="apple_pagination">
                         <%= will_paginate @organizations, :param_name => 'org_page' %>
                       </div>
