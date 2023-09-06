@@ -10,7 +10,7 @@
         <%= link_to moderate_submissions_path, :class=> "toolbar-item" do %><i class="fa-solid fa-list-check"></i></i> Moderate Submissions<% end %>
       <% end %>
 
-      <% if user_signed_in? and can? :dashboard, current_user%>
+      <% if user_signed_in? and can? :manage, :all %>
         <%= link_to admin_index_path, :class=> "toolbar-item" do %><i class="bi bi-toggles2"></i></i> Administration<% end %>
       <% elsif user_signed_in? && current_user.cop_admin? %>
         <%= link_to cops_path, :class=> "toolbar-item" do %><i class="bi bi-toggles2"></i></i> COP Administration<% end %>

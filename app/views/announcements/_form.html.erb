@@ -44,8 +44,10 @@
     </div>
     <div class="col-md-6">
       <div class="form-check form-switch pt-4">
-        <%= form.check_box :is_featured, class: "form-check-input", role: "switch" %>
-        <%= form.label "Featured on Homepage (until expiration date)", class: "form-check-label" %>
+        <% if can? :manage, :all %>
+          <%= form.check_box :is_featured, class: "form-check-input", role: "switch" %>
+          <%= form.label "Featured on Homepage (until expiration date)", class: "form-check-label" %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -59,8 +61,12 @@
           <div class="row p-2">
             <div class="col-md-12">
               <%= form.label :cop %><br>
-              <%= form.select :cop_id, current_user.cops.collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
-            </div>
+              <% if can? :manage, :all %>
+                <%= form.select :cop_id, Cop.all.order(:name).collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
+              <% else %>
+                <%= form.select :cop_id, Cop.admin(current_user).collect {|a| [a.name, a.id]}, {include_blank: false}, { :class => "form-control" } %>
+              <% end %>
+              </div>
           </div>
           <div class="row p-2">
             <div class="col-md-12">

@@ -326,7 +326,7 @@ class OrganizationsController < ApplicationController
     end
 
     def authorized?
-      unless (can? :dashboard, current_user)
+      unless (can? :manage, :all)
         flash[:error] = "You are not authorized to view that page."
         redirect_to root_path
       end

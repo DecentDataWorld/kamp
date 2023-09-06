@@ -54,7 +54,11 @@
           <div class="row p-2">
             <div class="col-md-12">
               <%= form.label :cop %><br>
-              <%= form.select :cop_id, Cop.admin(current_user).collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
+              <% if can? :manage, :all %>
+                <%= form.select :cop_id, Cop.all.order(:name).collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
+              <% else %>
+                <%= form.select :cop_id, Cop.admin(current_user).collect {|a| [a.name, a.id]}, {include_blank: false}, { :class => "form-control" } %>
+              <% end %>
             </div>
           </div>
         </div>
