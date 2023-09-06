@@ -1,17 +1,21 @@
-<%= simple_form_for(@collection, :html => { role: "form", multipart: true }) do |f| %>
+<%= simple_form_for(@collection, :html => { role: "form", multipart: true }, data: { turbo: false }) do |f| %>
     <%= f.input :url, :as => "hidden" %>
     <%= f.input :author_id, :as => "hidden" %>
     <%= f.input :maintainer_id, :as => "hidden" %>
     <input type="hidden" name="tags_list" value="" id="tags_list">
 
-    <% if @collection.errors.count > 0 %>
-        <div class="alert alert-danger fade in">
-          <h4>Correct Errors Before Continuing</h4>
-          <p>The following fields have to be corrected.</p>
-          <% @collection.errors.each do |e| %>
-              <%= e %><br>
+    <% if @collection.errors.any? %>
+      <div id="error_explanation">
+        <h2>
+          <%= pluralize(@collection.errors.count, t('errors.error')) %>
+          <%= t('errors.prohibited') %>
+        </h2>
+        <ul>
+          <% @collection.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
           <% end %>
-        </div>
+        </ul>
+      </div>
     <% end %>
 
     <div class="row p-2">

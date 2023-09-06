@@ -17,11 +17,11 @@ class Collection < ActiveRecord::Base
   has_many :resources, :through => :resourcings
 
   belongs_to :author, :class_name => "User", :foreign_key => "author_id"
-  belongs_to :activity, :class_name => "Activity", :foreign_key => "activity_id"
+  belongs_to :activity, :class_name => "Activity", :foreign_key => "activity_id", :optional => true
   belongs_to :maintainer, :class_name => "User", :foreign_key => "maintainer_id"
   belongs_to :organization, :class_name => "Organization", :foreign_key => "organization_id"
-  belongs_to :type, :class_name => "Type", :foreign_key => "type_id"
-  belongs_to :license, :class_name => "License", :foreign_key => "license_id"
+  belongs_to :type, :class_name => "Type", :foreign_key => "type_id", :optional => true
+  belongs_to :license, :class_name => "License", :foreign_key => "license_id", :optional => true
 
   scope :by_author, lambda{ |author_id| where(author_id: author_id) unless author_id.nil? }
   scope :by_maintainer, lambda{ |maintainer_id| where(maintainer_id: maintainer_id) unless maintainer_id.nil? }
