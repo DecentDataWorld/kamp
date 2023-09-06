@@ -82,7 +82,7 @@
         <%= form.submit t('helpers.submit.update', model: Announcement.model_name.human), class: "btn btn-outline-primary" %>
           <span class="float-end"><%= link_to t('navigation.delete'), announcement_path(@announcement),
             method: :delete,
-            data: { confirm: t('warnings.are_you_sure') }, class: "btn btn-outline-danger" %></span>
+            data: { turbo_confirm: "Are you sure you want to delete this Announcement?", turbo_method: :delete }, class: "btn btn-outline-danger" %></span>
       <% end %>
       <%= link_to t('navigation.cancel'), announcements_path, class: "btn btn-outline-secondary" %>
     </div>
