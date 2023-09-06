@@ -196,17 +196,29 @@
                               <thead>
                                 <th><%=t('activerecord.attributes.user.name')%></th>
                                 <th><%=t('activerecord.attributes.user.email')%></th>
-                                <th><%=t('activerecord.attributes.user.kamp_role')%></th>
-                                <th><%=t('activerecord.attributes.user.organizations')%></th>
+                                <th>Organization Role</th>
+                                <th>Other Organizations</th>
                               </thead>
                               <tbody>
                                 <% @users.each do |u| %>
+                                  <% uo = u.users_organizations %>
                                   <tr>
                                     <td><%= link_to u.name, user_path(u, :page => params[:page]) %></td>
                                     <td><%= u.email %></td>
-                                    <td><%= u.roles.pluck(:name).join(', ').titleize %></td>
+                                    <td>
+                                      <div class="dropdown">
+                                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" style="width:90px;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                          <%= uo.where(organization_id: @organization.id).length ? uo.first.role.titleize : "Select" %>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                          <% UsersOrganization.role.values.each do |r| %>
+                                            <li><%= link_to r.capitalize, update_org_role_path(id: uo.first.id, role: r), data: { turbo_method: :put }, class: "dropdown-item" %></li>
+                                          <% end %>
+                                        </ul>
+                                      </div>
+                                    </td>
                                     <td><% if !u.organizations.nil? %>
-                                      <% u.users_organizations.each do |uo| %>
+                                      <% uo.where.not(organization_id: @organization.id).each do |uo| %>
                                         <%= link_to uo.organization.name, organization_path(uo.organization) %> (<%= uo.role %>)<br>
                                       <% end %>
                                     <% end %></td>

@@ -43,6 +43,8 @@ Rails.application.routes.draw do
 
   get 'faq/index', to: 'faq#index', as: :faq
   resources :users_organizations
+  put 'usersorganizations/update_org_role', to: 'users_organizations#update_org_role', as: :update_org_role
+
   get 'data/csv', to: 'data#csv', as: :data_csv
   #get 'contact', to: 'contact#index', as: :contact
   #get "contact/index"

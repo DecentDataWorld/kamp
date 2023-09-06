@@ -72,6 +72,19 @@ class UsersOrganizationsController < ApplicationController
     end
   end
 
+  def update_org_role
+    if !can? :manage, :all
+      flash[:error] = "You are not able to manage users of this organization."
+      redirect_back(fallback_location: organizations_path)
+    end
+    @user_organization = UsersOrganization.find(params[:id])
+    if @user_organization.update_attribute(:role, params[:role])
+      redirect_back(fallback_location: organizations_path)
+    else
+      render json: @users_organization.errors, status: :unprocessable_entity
+    end
+  end
+
   # DELETE /users_organizations/1
   # DELETE /users_organizations/1.json
   def destroy
