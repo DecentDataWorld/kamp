@@ -6,6 +6,7 @@
     <th>Registered</th>
     <th>Last Accessed</th>
     <th>Portal Role</th>
+    <th></th>
   </tr>
   </thead>
   <tbody>
@@ -36,7 +37,16 @@
         <td><%= user.last_sign_in_at.to_date if !user.last_sign_in_at.nil? %></td>
         <% if can? :manage, user %>
           <td>
-            <%= user.roles.pluck(:name) %>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= user.roles.pluck(:name).first || "Select" %>
+              </button>
+              <ul class="dropdown-menu">
+                <% Role.all.each do |r| %>
+                  <li><%= link_to r.name.capitalize, user_path(user, role_ids: r.id, stay_on_page: true), remote: true, data: { turbo_method: :put, turbo_confirm: "Assign #{r.name.capitalize} role to #{user.name}?"}, class: "dropdown-item" %></li>
+                <% end %>
+              </ul>
+            </div>
           </td>
           <td><%= button_to deactivate_user_path(user), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deactivate<% end %></td>
         <% end %>

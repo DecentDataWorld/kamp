@@ -58,13 +58,19 @@ class UsersController < ApplicationController
   end
   
   def update
+    puts "==========================="
+    puts params
     authorize! :update, @user, :message => 'Not authorized as an administrator.'
     @user = User.find(params[:id])
 
     respond_to do |format|
       if @user.update(user_params)
         flash[:notice] = I18n.t("notices.update_success")
-        format.html { redirect_to users_path }
+        if params[:stay_on_page]
+          format.html { redirect_back(fallback_location: users_path)}
+        else
+          format.html { redirect_to users_path }
+        end
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit }
@@ -226,6 +232,6 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:id, :role_ids, :invitation_email, :search, :organization_id)
+    params.permit(:user, :id, :role_ids, :invitation_email, :search, :organization_id)
   end
 end
