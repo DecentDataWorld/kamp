@@ -122,6 +122,7 @@ Rails.application.routes.draw do
   put 'users/deactivate/:id', to: 'users#deactivate', as: 'deactivate_user'
   put 'users/reactivate/:id', to: 'users#reactivate', as: 'reactivate_user'
   put 'users/remove_membership', to: 'users#remove_membership', as: :remove_membership
+  put 'users/update_role', to: 'users#update_role', as: :update_role
 
   #HEALTHCHECK
   get '/healthcheck', to: 'healthcheck#check_db'

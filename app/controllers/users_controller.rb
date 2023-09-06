@@ -63,11 +63,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update(user_params)
         flash[:notice] = I18n.t("notices.update_success")
-        if params[:stay_on_page]
-          format.html { redirect_back(fallback_location: users_path)}
-        else
-          format.html { redirect_to users_path }
-        end
+        format.html { redirect_to users_path }
         format.json { render :show, status: :ok, location: @user }
       else
         flash[:error] = "Could not update user"
@@ -76,7 +72,19 @@ class UsersController < ApplicationController
       end
     end
   end
-    
+
+  def update_role
+    authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
+    @user = User.find(params[:id])
+    unless @user == current_user
+      if @user.update_attribute(:role_ids, params[:role_ids])
+        redirect_back(fallback_location: users_path)
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
+    end
+  end
+
   def destroy
     authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
     @user = User.find(params[:id])
