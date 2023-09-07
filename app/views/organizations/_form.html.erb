@@ -1,14 +1,15 @@
-<%= simple_form_for(@organization, :html => { role: "form", multipart: true }) do |f| %>
-  <%= f.error_notification %>
-
-  <% if @organization.errors.count > 0 %>
-    <%= logger.info @organization.errors %>
-    <div class="info-board info-board-red">
-      <h5>Correct Errors Before Continuing</h5>
-      <p>The following fields have to be corrected.</p>
-      <% @organization.errors.each do |e| %>
-        <%= e %>
-      <% end %>
+<%= simple_form_for(@organization, :html => { role: "form", multipart: true }, data: { turbo: false }) do |f| %>
+  <% if @organization.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@organization.errors.count, t('errors.error')) %>
+        <%= t('errors.prohibited') %>
+      </h2>
+      <ul>
+        <% @organization.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
     </div>
   <% end %>
 

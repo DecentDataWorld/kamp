@@ -23,6 +23,15 @@
 
   <%= render  'layouts/header' %>
 
+  <% flash.each do |message_type, message| %>
+      <% if message != "Signed in successfully." %>
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+          <%= message %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+    <% end %>
+
   <!-- ======= Hero Section ======= -->
   <section id="hero">
     <div class="hero-container">
