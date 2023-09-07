@@ -325,12 +325,19 @@ class OrganizationsController < ApplicationController
         @organization = Organization.find_by_id(params[:id])
       end
       if @organization.nil?
-        redirect_to organization_not_found_path
+        flash[:error] = "Could not find organization"
+        redirect_back(fallback_location: organizations_path)
       end
     end
 
     def authorized?
-      @organization = Organization.find_by_url(params[:organization])
+      @organization = Organization.find_by_url(params[:id])
+      if @organization.nil?
+        @organization = Organization.find_by_id(params[:id])
+      end
+      if @organization.nil?
+        @organization = Organization.find_by_url(params[:organization])
+      end
 
       unless can? :manage, :all or @organization.can_manage_users(current_user)
         flash[:error] = "You are not authorized to view that page."
