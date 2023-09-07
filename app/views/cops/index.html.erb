@@ -20,7 +20,11 @@
       </div>
 
       <div class="col-9">
-        <div class="h5 border-bottom text-end mt-n3 mb-0 pb-1"><%= link_to t('navigation.new_cop'), new_cop_path, class: "btn btn-outline-primary mt-1 pt-2" %></div>
+        <div class="h5 border-bottom text-end mt-n3 mb-0 pb-1">
+          <% if can? :manage, :all %>
+            <%= link_to t('navigation.new_cop'), new_cop_path, class: "btn btn-outline-primary mt-1 pt-2" %>
+          <% end %>
+        </div>
         <div class="table-responsive">
           <table class="table table-striped table-hover">
             <thead>

@@ -1,4 +1,4 @@
-<%= simple_form_for(@featured_search, :html => { role: "form", multipart: true, autocomplete: 'off'}) do |form| %>
+<%= simple_form_for(@featured_search, :html => { role: "form", multipart: true, autocomplete: 'off'}, data: { turbo: false }) do |form| %>
   <% if @featured_search.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -54,7 +54,11 @@
           <div class="row p-2">
             <div class="col-md-12">
               <%= form.label :cop %><br>
-              <%= form.select :cop_id, Cop.admin(current_user).collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
+              <% if can? :manage, :all %>
+                <%= form.select :cop_id, Cop.all.order(:name).collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
+              <% else %>
+                <%= form.select :cop_id, Cop.admin(current_user).collect {|a| [a.name, a.id]}, {include_blank: false}, { :class => "form-control" } %>
+              <% end %>
             </div>
           </div>
         </div>

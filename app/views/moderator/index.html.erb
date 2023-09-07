@@ -4,7 +4,7 @@
     <div class="container">
       <ol>
         <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
-        <% if can? :dashboard, current_user%>
+        <% if can? :manage, :all %>
           <li><%= link_to admin_index_path do %><%=t('navigation.administration')%><% end %></li>
         <% end %>
         <li>Moderate Submissions</li>
@@ -17,7 +17,7 @@
   <div class="container">
     <div class="row">
       <div class="col-3 border-end">
-      <% if can? :dashboard, current_user%>
+      <% if can? :manage, :all %>
         <h5 class="border-bottom pb-2"><%=t('navigation.administration')%></h5>
         <%= render 'admin/side_nav' %>
         <br/>
