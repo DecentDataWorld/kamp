@@ -266,15 +266,19 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find_by_url(params[:organization])
 
     if cannot? :approve, @organization
-      redirect_to organizations_no_access_path, notice: 'You do not have sufficient rights to perform that action.'
+      flash[:notice] = 'You do not have sufficient rights to perform that action.'
+      return redirect_back(fallback_location: organizations_path)
     end
 
     @organization.approved = true
-    @organization.save
-
-    AdminMailer.notify_organization_admins_of_org_approval(@organization).deliver
-
-    redirect_to organizations_path, notice: 'Organization was successfully approved.'
+    if @organization.save
+      AdminMailer.notify_organization_admins_of_org_approval(@organization).deliver
+      flash[:notice] = 'Organization was successfully approved.'
+      redirect_back(fallback_location: organizations_path)
+    else
+      flash[:error] = 'Could not approve organization.'
+      redirect_back(fallback_location: organizations_path)
+    end
   end
 
   def apply
