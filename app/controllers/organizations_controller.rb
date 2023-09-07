@@ -326,7 +326,9 @@ class OrganizationsController < ApplicationController
     end
 
     def authorized?
-      unless (can? :manage, :all)
+      @organization = Organization.find_by_url(params[:organization])
+
+      unless can? :manage, :all or @organization.can_manage_users(current_user)
         flash[:error] = "You are not authorized to view that page."
         redirect_to root_path
       end
@@ -337,7 +339,7 @@ class OrganizationsController < ApplicationController
       params.require(:organization).permit(:url, :name, :description, :status, :logo, :users, :domain, :organization_type_id)
     end
     # Never trust parameters from the scary internet, only allow the white list through.
-  def users_organization_params
-    params.permit(:organization_id, :user_id, :role, :organization_type_id)
-  end
+    def users_organization_params
+      params.permit(:organization_id, :user_id, :role, :organization_type_id)
+    end
 end

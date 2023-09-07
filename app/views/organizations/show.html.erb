@@ -226,7 +226,7 @@
                                     <% end %></td>
                                     <td class="text-center">
                                       <% if @organization.can_manage_users(current_user) or can? :manage, :all %>
-                                        <%= button_to deactivate_user_path(u), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deactivate<% end %>
+                                        <%= link_to("Remove Member", remove_membership_path(organization_id: @organization.id, user_id: u.id), data: {turbo_method: :put, turbo_confirm: "Are you sure?"}, class: 'btn btn-outline-danger btn-sm', style: 'width:130px;') %>
                                       <% end %>
                                     </td>
                                   </tr>
