@@ -60,19 +60,31 @@ class UsersController < ApplicationController
   def update
     authorize! :update, @user, :message => 'Not authorized as an administrator.'
     @user = User.find(params[:id])
-
     respond_to do |format|
       if @user.update(user_params)
         flash[:notice] = I18n.t("notices.update_success")
         format.html { redirect_to users_path }
         format.json { render :show, status: :ok, location: @user }
       else
-        format.html { render :edit }
+        flash[:error] = "Could not update user"
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
   end
-    
+
+  def update_role
+    authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
+    @user = User.find(params[:id])
+    unless @user == current_user
+      if @user.update_attribute(:role_ids, params[:role_ids])
+        redirect_back(fallback_location: users_path)
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
+    end
+  end
+
   def destroy
     authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
     @user = User.find(params[:id])
@@ -90,9 +102,11 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     unless @user == current_user
       @user.deactivate
-      redirect_to users_path, :notice => "User deactivated."
+      flash[:notice] = "User deactivated."
+      redirect_back(fallback_location: users_path)
     else
-      redirect_to users_path, :notice => "Can't deactivate yourself."
+      flash[:notice] = "Can't deactivate yourself."
+      redirect_back(fallback_location: users_path)
     end
   end
 
@@ -181,6 +195,12 @@ class UsersController < ApplicationController
 
   end
 
+  def remove_membership
+    uo = UsersOrganization.find_by(user_id: params[:user_id], organization_id: params[:organization_id])
+    uo.destroy! if uo
+    redirect_back(fallback_location: users_path)
+  end
+
   def export
     @page_title = "Export Users"
     @users = User.all
@@ -218,6 +238,6 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:id, :role_ids, :invitation_email, :search)
+    params.require(:user).permit(:id, :role_ids, :invitation_email, :search, :organization_id)
   end
 end

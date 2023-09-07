@@ -3,9 +3,11 @@
   <tr>
     <th>Organization</th>
     <th>Email Domain</th>
-    <th>Admins</th>
-    <th>Editors</th>
-    <th>Members</th>
+    <% if !user_memberships_tab %>
+      <th>Admins</th>
+      <th>Editors</th>
+      <th>Members</th>
+    <% end %>
     <th>Added</th>
     <th></th>
     <th></th>
@@ -16,18 +18,26 @@
       <tr>
         <td><%= link_to organization.name, organization %></td>
         <td><%= organization.domain %></td>
-        <td><%= organization.admins.count %></td>
-        <td><%= organization.editors.count %></td>
-        <td><%= organization.members.count %></td>
+        <% if !user_memberships_tab %>
+          <td><%= organization.admins.count %></td>
+          <td><%= organization.editors.count %></td>
+          <td><%= organization.members.count %></td>
+        <% end %>
         <td><%= organization.created_at.to_date %></td>
         <td>
           <% if !organization.approved and can? :approve, organization %>
-              <%= link_to organization_approve_path(organization.url), :data => { turbo_method: :get, turbo_confirm: "Approve this organization?" }, class: 'btn btn-outline-primary btn-sm' do %>
-                  Approve
-              <% end %>
+            <%= link_to organization_approve_path(organization.url), :data => { turbo_method: :get, turbo_confirm: "Approve this organization?" }, class: 'btn btn-outline-primary btn-sm' do %>
+              Approve
+            <% end %>
           <% end %>
         </td>
-        <td><%= link_to("Delete", organization_path(organization), :data => { turbo_method: :delete, turbo_confirm: "Are you sure?" }, :method => :delete, :class => 'btn btn-outline-danger btn-sm') %></td>
+        <td>
+          <% if !user_memberships_tab && (can? :delete, organization ) %>
+            <%= link_to("Delete", organization_path(organization), :data => { turbo_method: :delete, turbo_confirm: "Are you sure?" }, :method => :delete, :class => 'btn btn-outline-danger btn-sm') %>
+          <% elsif user_memberships_tab %>
+            <%= link_to("Remove Membership", remove_membership_path(organization_id: organization.id, user_id: @user.id), data: {turbo_method: :put, turbo_confirm: "Are you sure?"}, class: 'btn btn-outline-danger btn-sm') %>
+          <% end %>
+        </td>
       </tr>
   <% end %>
   </tbody>

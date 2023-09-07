@@ -21,7 +21,7 @@ class OrganizationsController < ApplicationController
 
     @page_title = @organization.name
 
-    @users = @organization.users
+    @users = @organization.users.where(deactivated_at: nil).order(:name)
     params[:id] = @organization.id
 
     # decide if we have to hide private and pending resources from this user

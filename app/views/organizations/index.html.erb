@@ -51,7 +51,7 @@
                   <td><%= o.organization_type ? o.organization_type.organization_type : "" %></td>
                   <td><%= o.domain %></td>
                   <td><%= o.users.where("users_organizations.role = 'admin'").pluck(:name).join(', ') %></td>
-                  <td class="centered-content"><%= o.users.count %></td>
+                  <td class="centered-content"><%= o.users.where(deactivated_at: nil).count %></td>
                   <td class="centered-content">
                     <% if o.approved %>
                       Yes

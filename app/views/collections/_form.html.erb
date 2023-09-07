@@ -62,22 +62,23 @@
 
     <div class="row p-2">
       <div class="col-md-12">
-      <%=
-          f.input :private, label: "Private", as: :boolean do
-            f.check_box :private, {}, "true", "false"
-          end
-      %> 
+        <div class="form-check form-switch pt-4">
+          <%= f.check_box :private, class: "form-check-input", role: "switch" %>
+          <%= f.label "Mark as a private collection that can only be accessed by users in my organization", class: "form-check-label" %>
+        </div>
       </div>
     </div>
 
-    <% if current_user.organizations.count > 1 && @collection.id.nil? %>
-        <div class="form-group">
-          <label for="attachment">Organization</label>
-          <%= f.select :organization_id, current_user.organizations.all.collect {|x| [x.name, x.id]}, label: false %>
-        </div>
-    <% elsif current_user.organizations.count == 1 && @collection.id.nil? %>
-      <%= f.input_field :organization_id, :value => current_user.organizations.first.id, :as => "hidden" %>
-    <% end %>
+    <div class="row p-2">
+      <% if current_user.organizations.count > 1 && @collection.id.nil? %>
+          <div class="form-group">
+            <label for="attachment">Organization</label>
+            <%= f.select :organization_id, current_user.organizations.all.collect {|x| [x.name, x.id]}, label: false %>
+          </div>
+      <% elsif current_user.organizations.count == 1 && @collection.id.nil? %>
+        <%= f.input_field :organization_id, :value => current_user.organizations.first.id, :as => "hidden" %>
+      <% end %>
+    </div>
 
     <div class="row p-2">
       <div class="col-md-12">
