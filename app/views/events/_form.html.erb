@@ -1,4 +1,4 @@
-<%= simple_form_for(@event, :html => { role: "form", multipart: true, class: "sky-form" }) do |form| %>
+<%= simple_form_for(@event, :html => { role: "form", multipart: true, class: "sky-form" }, data: { turbo: false }) do |form| %>
   <% if @event.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -51,8 +51,10 @@
   <div class="row p-2">
     <div class="col-md-3">
       <div class="form-check form-switch pt-4">
-        <%= form.check_box :is_featured, class: "form-check-input", role: "switch" %>
-        <%= form.label "Featured on Homepage", class: "form-check-label" %>
+        <% if can? :manage, :all %>
+          <%= form.check_box :is_featured, class: "form-check-input", role: "switch" %>
+          <%= form.label "Featured on Homepage", class: "form-check-label" %>
+        <% end %>
       </div>
     </div>
     <div class="col-md-3">
@@ -76,7 +78,11 @@
         <div class="row p-2">
           <div class="col-md-12">
             <%= form.label :cop %><br>
-            <%= form.select :cop_id, current_user.cops.collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
+            <% if can? :manage, :all %>
+              <%= form.select :cop_id, Cop.all.order(:name).collect {|a| [a.name, a.id]}, {include_blank: "Select One (optional)"}, { :class => "form-control" } %>
+            <% else %>
+              <%= form.select :cop_id, Cop.admin(current_user).collect {|a| [a.name, a.id]}, {include_blank: false}, { :class => "form-control" } %>
+            <% end %>
           </div>
         </div>
         <div class="row p-2">
@@ -99,7 +105,7 @@
         <%= form.submit t('helpers.submit.update', model: Event.model_name.human), class: "btn btn-outline-primary" %>
           <span class="float-end"><%= link_to t('navigation.delete'), event_path(@event),
             method: :delete,
-            data: { confirm: t('warnings.are_you_sure') }, class: "btn btn-outline-danger" %></span>
+            data: { turbo_confirm: "Are you sure you want to delete this Event?", turbo_method: :delete }, class: "btn btn-outline-danger" %></span>
       <% end %>
       <%= link_to t('navigation.cancel'), events_path, class: "btn btn-outline-secondary" %>
     </div>

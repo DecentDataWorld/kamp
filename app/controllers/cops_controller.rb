@@ -5,7 +5,7 @@ class CopsController < ApplicationController
   # GET /admin/cops
   # GET /admin/cops.json
   def index
-    if can? :dashboard, current_user
+    if can? :manage, :all
       @cops = Cop.order(:name)
     else
       cop_ids = Cop.where(:admin_id => current_user.id).pluck(:id)
@@ -90,7 +90,7 @@ class CopsController < ApplicationController
     end
 
     def authorized?
-      unless (can? :dashboard, current_user) || current_user.cop_admin?
+      unless (can? :manage, :all) || current_user.cop_admin?
         flash[:error] = "You are not authorized to view that page."
         redirect_to root_path
       end
