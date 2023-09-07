@@ -73,11 +73,11 @@ class UsersOrganizationsController < ApplicationController
   end
 
   def update_org_role
-    if !can? :manage, :all
-      flash[:error] = "You are not able to manage users of this organization."
-      redirect_back(fallback_location: organizations_path)
-    end
     @user_organization = UsersOrganization.find(params[:id])
+    unless can? :manage, :all or @user_organization.organization.can_manage_users(current_user)
+      flash[:error] = "You are not able to manage users of this organization."
+      return redirect_back(fallback_location: organizations_path)
+    end
     if @user_organization.update_attribute(:role, params[:role])
       redirect_back(fallback_location: organizations_path)
     else
