@@ -46,30 +46,18 @@
             <% if @resources.count > 0 %> 
               <ul class="list-group list-group-flush">
                 <% @resources.each do |resource| %>
-                    <li class="list-group-item"><%= render resource %></li>
+                  <li class="list-group-item"><%= render resource %></li>
                 <% end %>
               </ul>
               <%= will_paginate @resources %>
-            <% else %>
-              <h4>Let Us Know What We're Missing</h4>
-              <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP.</p>
-              <p>
-                <a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a>
-              </p>
             <% end %>
           </div>
           <div class="tab-pane fade <%= @show_collections ? ' show active' : ''%>" id="collections" role="tabpanel" aria-labelledby="collections-tab">
             <% if @collections.count > 0 %> 
               <% @collections.each do |resource| %>
-                  <%= render resource %>
+                <%= render resource %>
               <% end %>
               <%= will_paginate @collections, :param_name => 'collection_page' %>
-            <% else %>
-              <h4>Let Us Know What We're Missing</h4>
-              <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP.</p>
-              <p>
-                <a class="btn-u btn-u-xs btn-u-blue" href="<%= survey_index_url %>"><i class="fa fa-angle-right"></i> Take the survey</a>
-              </p>
             <% end %>
           </div>
         </div>
