@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
   resources :cops, path: 'admin/cops'
   get 'cops/:id', to: 'cops#show_cop', as: :show_cop
+
   
   resources :events, path: 'admin/events'
   get 'events', to: 'events#public_events', as: :public_events
@@ -125,6 +126,7 @@ Rails.application.routes.draw do
   put 'users/reactivate/:id', to: 'users#reactivate', as: 'reactivate_user'
   put 'users/remove_membership', to: 'users#remove_membership', as: :remove_membership
   put 'users/update_role', to: 'users#update_role', as: :update_role
+  put 'users/remove_cop_membership', to: 'users#remove_cop_membership', as: :remove_cop_membership
 
   #HEALTHCHECK
   get '/healthcheck', to: 'healthcheck#check_db'

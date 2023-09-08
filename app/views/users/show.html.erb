@@ -92,11 +92,8 @@
                         </div>
 
                         <div id="inner_cops" class="tab-pane show fade">
-                          <ul class="list-group list-group-flush bg-transparent">
-                            <% @cops.each do |cop| %>
-                              <li class="list-group-item bg-transparent"><%= link_to cop.name, cop_path(cop) %></li>
-                            <% end %>
-                          </ul>
+                          <%= link_to "New Community of Practice", new_cop_path, class: 'btn btn-outline-primary float-end' %>
+                          <%= render partial: 'cops/table_list', locals: { user_memberships_tab: true, param_name: 'copss_page', user_id: @user.id } %>
                           <% if @cops.empty? %>
                             <% if @user == @current_user %> You are <% else %> This user is <% end %> not part of any Communities of Practice.
                           <% end %>

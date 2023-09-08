@@ -1,0 +1,30 @@
+<table class="table table-sm table-striped">
+  <thead>
+  <tr>
+    <th>Community of Practice</th>
+    <th>Added</th>
+    <% if user_memberships_tab %>
+      <th>Role</th>
+      <th></th>
+    <% end %>
+  </tr>
+  </thead>
+  <tbody>
+    <% @cops.each do |cop| %>
+      <tr>
+        <td><%= link_to cop.name, cop %></td>
+        <td><%= cop.created_at.to_date %></td>
+        <% if user_memberships_tab %>
+          <td><%= user_id == cop.admin.id ? "Admin" : !cop.users.find_by_id(user_id).nil? ? "Member" : "" %></td>
+          <td class="text-end">
+            <% if !user_memberships_tab && (can? :delete, cop ) %>
+              <%= link_to("Delete", cop_path(cop), :data => { turbo_method: :delete, turbo_confirm: "Are you sure?" }, :method => :delete, :class => 'btn btn-outline-danger btn-sm') %>
+            <% elsif user_memberships_tab %>
+              <%= link_to("Remove Membership", remove_cop_membership_path(cop_id: cop.id, user_id: @user.id), data: {turbo_method: :put, turbo_confirm: "Are you sure?"}, class: 'btn btn-outline-danger btn-sm') %>
+            <% end %>
+          </td>
+        <% end %>        
+      </tr>
+    <% end %>
+  </tbody>
+</table>
