@@ -212,7 +212,7 @@
                                       <% if @organization.can_manage_users(current_user) or can? :manage, :all %>
                                         <div class="dropdown">
                                           <button class="btn btn-outline-secondary btn-sm dropdown-toggle" style="width:90px;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <%= uo.where(organization_id: @organization.id).length ? uo.first.role.titleize : "Select" %>
+                                            <%= uo.where(organization_id: @organization.id).length ? uo.where(organization_id: @organization.id).first.role.titleize : "Select" %>
                                           </button>
                                           <ul class="dropdown-menu">
                                             <% UsersOrganization.role.values.each do |r| %>

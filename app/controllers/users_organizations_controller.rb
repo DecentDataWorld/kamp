@@ -37,19 +37,19 @@ class UsersOrganizationsController < ApplicationController
   # POST /users_organizations.json
   def create
     @users_organization = UsersOrganization.new(users_organization_params)
-
-      @organization = Organization.find_by :id => params[:users_organization][:organization_id]
-    puts 'org_id =' + params[:users_organization].to_s
+    @organization = Organization.find_by :id => params[:users_organization][:organization_id]
 
     if !@organization.can_manage_users(current_user) and !can? :manage, :all
       return redirect_to @organization, notice: 'You are not able to manage users of this organization'
     end
+
     respond_to do |format|
       if @users_organization.save
         format.html { redirect_to @users_organization.organization, notice: 'Member was successfully added.' }
         format.json { render action: 'show', status: :created, location: @users_organization }
       else
-        format.html { render 'organizations/add_user' }
+        flash[:error] = "Could not add this user to this organization. Please make sure they are not already a member."
+        format.html { redirect_back(fallback_location: organization_add_user_path(@organization)) }
         format.json { render json: @users_organization.errors, status: :unprocessable_entity }
       end
     end
