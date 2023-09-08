@@ -16,13 +16,13 @@
 
   <div class="row g-3">
     <div class="col-md-8">
-      <%= form.label :name %><span class="text-danger">*</span><br>
+      <%= form.label :name %><br>
       <%= form.text_field :name, class: "form-control" %>
     </div>
     <div class="col-md-4">
       <% if can? :manage, :all %>
-        <%= form.label :admin %><span class="text-danger">*</span><br>
-        <%= form.collection_select :admin_id, User.order(:name), :id, :name, {include_blank: "Select One"}, { class: "form-control" } %>
+        <%= form.label :admin %><br>
+        <%= form.collection_select :admin_id, User.where(deactivated_at: nil).order(:name), :id, :name, {include_blank: "Select One"}, { class: "form-control" } %>
       <% end %>
     </div>
 
@@ -32,7 +32,7 @@
                           :label => false,
                           :id => "multiselect",
                           :as => :select,
-                          :collection => User.all.order(:name).collect {|u| [u.name, u.id]},
+                          :collection => User.where(deactivated_at: nil).order(:name).collect {|u| [u.name, u.id]},
                           :multiple => true,
                           :class => "form-control",
                           data: {controller: "multiselect", placeholder: "Begin typing to search for members"} %>
