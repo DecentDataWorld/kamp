@@ -9,6 +9,9 @@
       <th>Members</th>
     <% end %>
     <th>Added</th>
+    <% if user_memberships_tab %>
+      <th>Role</th>
+    <% end %>
     <th></th>
     <th></th>
   </tr>
@@ -24,14 +27,17 @@
           <td><%= organization.members.count %></td>
         <% end %>
         <td><%= organization.created_at.to_date %></td>
-        <td>
+        <% if user_memberships_tab %>
+          <td><%= organization.users_organizations.where(user_id: user_id).first.role.titleize %></td>
+        <% end %>
+        <td class="text-end">
           <% if !organization.approved and can? :approve, organization %>
             <%= link_to organization_approve_path(organization.url), :data => { turbo_method: :get, turbo_confirm: "Approve this organization?" }, class: 'btn btn-outline-primary btn-sm' do %>
               Approve
             <% end %>
           <% end %>
         </td>
-        <td>
+        <td class="text-end">
           <% if !user_memberships_tab && (can? :delete, organization ) %>
             <%= link_to("Delete", organization_path(organization), :data => { turbo_method: :delete, turbo_confirm: "Are you sure?" }, :method => :delete, :class => 'btn btn-outline-danger btn-sm') %>
           <% elsif user_memberships_tab %>
