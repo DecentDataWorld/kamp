@@ -9,7 +9,7 @@ class AdminController < ApplicationController
     @users_needing_role = User.where(id: no_role_ids).where(deactivated_at: nil).page(params[:page]).per_page(5).order("created_at desc")
     @organizations = Organization.where(approved: [false, nil]).page(params[:org_page]).per_page(5).order("created_at asc")
 
-    handle_pending_resources
+    handle_pending_submissions
 
     @licenses = License.all
     @types = Type.all
@@ -284,12 +284,10 @@ class AdminController < ApplicationController
     end
   end
 
-  def handle_pending_resources
-
+  def handle_pending_submissions
     if can? :approve, Resource or can? :approve, Collection
-      @pending_submissions = Resource.where(:approved => false)
+      @pending_submissions = Resource.where(:approved => false) + Collection.where(:approved => false)
     end
-
   end
 
   def translate_relationship_for_collections(resource)
