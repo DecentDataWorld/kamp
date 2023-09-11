@@ -5,7 +5,7 @@
     <div class="row ps-2 pe-2 d-flex text-secondary">
       <% @announcements.each do |a| %>
         <div class="border-bottom p-2">
-          <span class="text-danger"><%= a.name %></span><br>
+          <span class="text-danger"><%= link_to a.name, show_announcement_path(a), data: { turbo_frame: "modal" } %></span><br>
           <small>posted <%= a.created_at.strftime("%Y-%m-%d") %></small>
         </div>
       <% end %>

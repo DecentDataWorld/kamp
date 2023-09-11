@@ -1,343 +1,108 @@
+  <!-- ======= Hero Section ======= -->
+  <section id="hero">
+    <div class="hero-container">
+      <div id="heroCarousel" data-bs-interval="5000" class="carousel" data-bs-ride="carousel">
 
-<!--=== Purchase Block ===-->
-<div class="purchase">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8 col-sm-6 col-xs-12 animated fadeInLeft">
-        <h1><span>Jordan Development Knowledge Management Portal</span></h1>
-        <p>All portal resources are flagged with searchable meta-data to help you find the types of resources relevant to you. Related resources are grouped together into collections that are also searchable. Browse using our search page to filter through resources by category, language, format, or simply search by keyword. </p>
-      </div>
-      <div class=" col-md-4 col-sm-6 col-xs-12 alert alert-info fade in">
-        <h4><i class="fa fa-info-circle"></i> No Registration required</h4>
-        <p>Most resources are available to any portal visitor and registration is not required to download or access them.</p>
-      </div>
-
-    </div>
-  </div>
-</div><!--/row-->
-<!-- End Purchase Block -->
+        <div class="carousel-inner" role="listbox">
 
 
-<section id="team" style="background: #cfcdc9;">
-  <div class="container g-pt-100 g-pb-40">
-    <div class="row">
-      <div class="col-md-6 col-sm-12 no-col-space">
-        <a href="/collections/jordan-private-sector-survey-gaining-insight-and-understating-into-the-needs-of-the-jordanian-private-sector"><img src="/img/maggie.png" alt="Jordan" border="0" width="100%"/></a>
-      </div>
-      <div class="col-md-6 col-sm-12 competition-about">
-        <div class="g-heading-v9 g-mb-30">
-          <h4><strong> <a href="/collections/jordan-private-sector-survey-gaining-insight-and-understating-into-the-needs-of-the-jordanian-private-sector">Jordan Private Sector Survey: Gaining Insight and Understating into the Needs of the Jordanian Private Sector</a></strong></h4>
-        </div>
-        <p class="gb-mb-15">About the Private Sector Survey: USAID Jordan’s Monitoring and Evaluation Support Project (MESP), in partnership with Mindset, implemented a survey of 1,864 registered businesses throughout Jordan between November 2017 – January 2018. The survey is representative of the Jordanian formal private sector at the governorate, business size and business sector level. The survey questionnaire built on the World Bank Enterprise Survey, and aimed to capture perceptions from the private sector on key issues surrounding growth and competitiveness in Jordan including company performance, employment, access to finance, the business enabling environment, connectedness, and attitudes toward women and youth.</p>
-      </div>
-    </div>
-  </div>
-</section>
-<br>
-<% @banners.each do |banner| %>
-  <%= render banner %>
-<% end %>
-
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="margin-bottom-10"></div>
-  <div class="row services">
-    <div class="col-sm-4">
-      <!-- Service Item #1 -->
-      <div class="services-item-desc">
-        <h4 class="primary-font"><i class="fa fa-search text-color"></i> How To Find Resources</h4>
-      </div>
-      <div class="services-item well well-xs">
-
-        <p style="color: #000; line-height: 25px;">Our search page has many ways to find what you are looking for. Portal content is downloadable <strong>without the need for registering an account</strong>.</p>
-        <p></p>
-        <p style="color: #000; line-height: 25px;">All content is labelled by category (or tag) which makes finding things a lot easier. Search by type of resource or get items related to a resource you already have used.</p>
-        <div class="text-right"><a href="<%= new_search_url %>" class="btn btn-primary"><i class="fa fa-search"></i> Search Now</a></div>
-      </div>
-
-    </div>
-    <div class="col-sm-4" data-intro="Find Popular or Recently Updated Resources" data-position="top">
-      <div class="tab-v2" id="resource_tabs">
-        <ul class="nav nav-tabs">
-          <li class="active"><h4><a data-toggle="tab" href="#recent">Recent Updates</a></h4></li>
-          <li><h4><a data-toggle="tab" href="#popular">Popular Resources</a></h4></li>
-        </ul>
-        <div class="tab-content">
-          <div id="popular" class="tab-pane fade">
-            <!-- Latest Resources -->
-            <div class="blog-twitter">
-              <% if @resources_viewed.nil? or @resources_viewed.blank? %>
-                  No Resources Found
-              <% else %>
-                  <% @resources_viewed[1..4].each do |resource| %>
-                      <div class="blog-twitter-inner">
-                        <i class="<%= resource.resource_icon %>"></i>&nbsp;
-                        <% str_title = resource.name.truncate(55) %>
-                        <% if resource.private == true %>
-                            <% str_title = str_title + ' <i class="fa fa-eye-slash"></i>' %>
-                        <% end %>
-                        <%= link_to raw(str_title), resource_path(resource) %>
-                        <div class="twitter-time text-right" style="font-size: 0.8em; margin-right: 10px;">
-                          <%#= raw resource.tag_list[0..1].map { |t| link_to raw('<span class="btn-u btn-u-xs btn-primary rounded"><i class="fa fa-tag"></i> ' + t + '</span>'), update_search_path(:tags=>[t]) }.join(' ') %>
-                          <%#= link_to raw('...more tags'), resource_path(resource) if resource.tag_list.size > 1 %>
-
-                          Updated <%= time_ago_in_words resource.updated_at %> ago
+          <!-- Slide 2 -->
+          <div class="carousel-item active" style="background-image: url(/img/amman_bg_2.jpg)">
+            <div class="carousel-container">
+              <div class="carousel-content">
+              <div class="row">
+                <div class="col-4 pt-5">
+                  <div class="card card-body border-0 home-about-box">
+                    <h2>Welcome to the <span>Jordan Knowledge Management Portal</span></h2>
+                  
+                    <div class="ps-5 pb-2">
+                      This portal is a repository of development resources designed to improve sharing of data and information between the USAID/Jordan Mission, local implementing partners and development organizations within Jordan.
+                      <br/> <%= link_to raw('Read more  &raquo;'), about_index_path %> 
+                    </div>
+                  </div>
+                </div>
+                <div class="col-8">
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="hero-box border-danger card">
+                        <div class="card-body">
+                          <h3 class="card-title text-danger">Find Resources</h3>
+                          <p class="card-text">
+                             <% if @search.nil? %>
+                                <%  search = Search.new %>
+                            <% else %>
+                                <% search = @search %>
+                            <% end %>
+                            <%= render partial: 'searches/form', locals: { search: search } %>
+                            <div class="row pt-4 d-flex align-items-center text-secondary">
+                              <div class="col d-flex justify-content-center">
+                                <%= Resource.all.count %> Resources
+                              </div>
+                              <div class="col d-flex justify-content-center text-secondary">
+                                <%= Collection.all.count %> Collections
+                              </div>
+                            </div>
+                          </p>
                         </div>
                       </div>
-                  <% end %>
-              <% end %>
-            </div><!--/blog-twitter-->
-            <!-- End Latest Resources -->
-          </div>
-          <div id="recent" class="tab-pane fade  in active">
-            <!-- Latest Resources -->
-            <div class="blog-twitter">
-              <% if @resources.nil? or @resources.blank? %>
-                  No Resources Found
-              <% else %>
-                  <% @resources.each do |resource| %>
-                      <div class="blog-twitter-inner">
-                        <i class="<%= resource.resource_icon %>"></i>&nbsp;
-                        <% str_title = resource.name.truncate(45) %>
-                        <% if resource.private == true %>
-                            <% str_title = str_title + ' <i class="fa fa-eye-slash"></i>' %>
-                        <% end %>
-                        <%= link_to raw(str_title), resource_path(resource) %>
-                        <%#= raw resource.tag_list[0..1].map { |t| link_to raw('<span class="btn-u btn-u-xs btn-primary rounded"><i class="fa fa-tag"></i> ' + t + '</span>'), update_search_path(:tags=>[t]) }.join(' ') %>
-                        <%#= link_to raw('...more'), resource_path(resource) if resource.tag_list.size > 1 %>
-
-                        <div class="twitter-time text-right muted" style="font-size: 0.8em; margin-right: 10px;">Updated <%= time_ago_in_words resource.updated_at %> ago</div>
+                    </div>
+                    <div class="col-6">
+                      <% if @announcements.length != 0 %>
+                        <%= render  'layouts/announcements' %>
+                      <% end %>
+                    </div>
+                  </div>
+                   <div class="row">
+                    <div class="col-6">
+                      <% if @events.length != 0 %>
+                        <%= render  'layouts/events' %>
+                      <% end %>
+                    </div>
+                    <div class="col-6">
+                      <div class="hero-box border-success card">
+                        <div class="card-body">
+                          <%= render  'layouts/cops' %>
+                        </div>
                       </div>
-                  <% end %>
-              <% end %>
-            </div><!--/blog-twitter-->
-            <!-- End Latest Resources -->
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-4" data-intro="Find Resources By Tag" data-position="top">
-      <div class="services-item-desc">
-        <h4 class="primary-font"><i class="fa fa-tags"></i> Find Resources By Topic</h4>
-      </div>
-      <div class=" well well-xs">
-        <p style="color: #999;">Click any tag to find all resources in that topic.</p>
-        <blockquote id="tag_cloud">
-          <% if !@tags.empty? %>
-              <% tag_cloud(@tags, %w(btn-xs btn-sm btn-md btn-lg)) do |tag, css_class| %>
-                  <%= link_to raw(tag.name), update_search_path(:tags=>[tag.id.to_s]), :class => css_class + ' ' %>
-              <% end %>
-          <% else %>
-              <div class="info-board info-board-red">
-                <p class="text-muted">No Tags Added Yet :(</p>
-              </div>
-          <% end %>
-        </blockquote>
-        <% if !@tags.empty? %>
-            <div class="text-right"><%= link_to new_search_path(more_tags: true) do %><em>More Tags <i class="fa fa-arrow-right"></i></em><% end %></div>
-        <% end %>
-      </div>
-    </div>
-  </div> <!-- / .row -->
-
-  <% if @collections.count > 0 %>
-  <div class="row one-page-inner one-default">
-    <div class="container" id="collections_block">
-      <div class="headline">
-        <h3><%= link_to new_search_path(:collections_only => true) do %>Browse Our Resource Collections<% end %></h3>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <% if !@collections.first.nil? %>
-              <%= link_to collection_path(@collections.first) do %>
-                  <img src="<%= @collections.first.image.expiring_url(10) %>" class="img-responsive" width="555" alt=" <%= @collections.first.title %> content preview image"><br>
-              <% end %>
-          <% end %>
-        </div>
-        <div class="col-md-6">
-          <% if !@collections.first.nil? %>
-              <h4><%= link_to @collections.first.title.truncate(50), collection_path(@collections.first) %> <small>(<%= @collections.first.resources.count %> Resource<%= 's' if @collections.first.resources.count > 1 %>)</small></h4>
-              <p><%= @collections.first.description.truncate(250) %>...</p>
-              <%= link_to raw('<i class="fa fa-arrow-right"></i> Read More'), collection_path(@collections.first), class: "pull-right" %>
-              <%= raw @collections.first.tag_list[0..2].map { |t| link_to raw('<span class="btn-u btn-u-xs btn-primary rounded"><i class="fa fa-tag"></i> ' + t + '</span>'), update_search_path(:tags=>[t]) }.join(' ') %>
-              &nbsp;&nbsp;
-
-              <br clear="all"/>
-              <br clear="all"/>
-              <div class="funny-boxes funny-boxes-top-sea">
-                <h5>Recently Updated Collections</h5>
-                <div class="row margin-bottom-20">
-                  <% @collections[1..5].each do |collection| %>
-                      <div class="col-md-3">
-                        <%= link_to collection_path(collection), class: "thumbnail fancybox-button zoomer" do %>
-                        <span class="overlay-zoom">
-                            <img src="<%= collection.image.expiring_url(10) %>" class="img-responsive" alt="<%= collection.title %>" width="120" title="<%= collection.title %>">
-                            <div class="zoom-icon"></div>
-                        </span>
-                            <h6><%= collection.title.truncate(40) %></h6>
-                        <% end %>
-                      </div>
-                  <% end %>
+                    </div>
+                  </div>
                 </div>
               </div>
+                
+              </div>
+            </div>
+          </div>
 
+
+        </div>
+
+      </div>
+    </div>
+  </section><!-- End Hero -->
+
+  <main id="main">
+
+    <!-- ======= Featured Section ======= -->
+    <section id="featured" class="featured">
+      <div class="container">
+
+        <div class="row">
+          <% @featured_searches.each do |fs| %>
+            <div class="col">
+              <div class="icon-box">
+                <h3><a href="<%= fs.get_url %>">
+                  <i class="<%= fs.icon_identifier %>"></i>
+                  Learn About <br/>
+                  <%= fs.name %>
+                </a>
+              </h3>
+              </div>
+            </div>
           <% end %>
         </div>
+
       </div>
-    </div>
-  </div>
-
-  <% end %>
-</div><!--/container-->
-<!-- End Content Part -->
-
-<!--=== Content Part ===-->
-<div class="container content">
-  <!-- Begin Service Block -->
-  <div class="row margin-bottom-40">
-    <div class="col-md-4 col-sm-6">
-      <div class="service-block service-block-sea service-or">
-        <div class="service-bg"></div>
-        <%= link_to new_search_path(:resource_type => "Document") do %><i class="icon-custom icon-color-light icon-bg-light-grey rounded-x fa fa-file-word-o" alt="Search for Word Documents"></i><% end %>
-        <%= link_to new_search_path(:resource_type => "CSV") do %><i class="icon-custom icon-color-light icon-bg-light-grey rounded-x fa fa-file-excel-o" alt="Search for Excel Spreadsheets"></i><% end %>
-        <%= link_to new_search_path(:resource_type => "PDF") do %><i class="icon-custom icon-color-light icon-bg-light-grey rounded-x fa fa-file-pdf-o" alt="Search for PDF Documents"></i><% end %>
-        <%= link_to new_search_path(:resource_type => "GeoJSON") do %><i class="icon-custom icon-color-light icon-bg-light-grey rounded-x fa fa-map-marker" alt="Search for Geo-Spatial data"></i><% end %>
-        <h2 class="heading-md">Resource Formats</h2>
-        <p>Multiple file formats offer users a number of different ways to interact with resources. Click on a file type above to find more</p>
-      </div>
-    </div>
-    <div class="col-md-4 col-sm-6">
-      <div class="service-block service-block-red service-or">
-        <div class="service-bg"></div>
-        <%= link_to new_search_path(:collections_only => true) do %><i class="icon-custom icon-color-light icon-bg-light-grey rounded-x fa fa-file-zip-o" alt="Search Collections"></i><% end %>
-        <h2 class="heading-md">Collections</h2>
-        <p>Creating a collection of resources lets users group together information spread across different resources into one related series.</p>
-      </div>
-    </div>
-    <div class="col-md-4 col-sm-12">
-      <div class="service-block service-block-blue service-or">
-        <div class="service-bg"></div>
-        <i class="icon-custom icon-color-light icon-bg-light-grey rounded-x fa fa-search-plus"></i>
-        <h2 class="heading-md">Previews</h2>
-        <p>Resources show previews of their contents without any downloading so you can be sure you've got exactly what you need.</p>
-      </div>
-    </div>
-  </div>
-  <!-- End Service Block -->
-</div>
+    </section><!-- End Featured Section -->
 
 
-
-<% content_for :page_javascript do %>
-    <script>
-
-
-        function createCookie(name,value,days) {
-            var expires = "";
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days*24*60*60*1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + value + expires + "; path=/";
-        }
-
-        function readCookie(name) {
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for(var i=0;i < ca.length;i++) {
-                var c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-            }
-            return null;
-        }
-
-        function eraseCookie(name) {
-            createCookie(name,"",-1);
-        }
-
-        function startIntro(){
-            var intro = introJs();
-            intro.setOptions({
-                steps: [
-                    {
-                        intro: "<h3>New To The KaMP?</h3> How about a quick walkthrough?"
-                    },
-                    {
-                        element: document.querySelector('#header_search_form'),
-                        intro: "There are a number of ways to find things on the KaMP<br>Search for an item by keyword here"
-                    },
-                    {
-                        element: document.querySelector('#resource_tabs'),
-                        intro: "You can find new or popular resources here",
-                        position: 'top'
-                    },
-                    {
-                        element: '#tag_cloud',
-                        intro: 'Most used tags show up here',
-                        position: 'left'
-                    },
-                    {
-                        element: '#collections_block',
-                        intro: "Find interesting collections available in the KaMP",
-                        position: 'top'
-                    }
-                ]
-            });
-            intro.start();
-        }
-
-
-        $(document).ready(function () {
-
-            var cookie_data = readCookie('tutorial_prompt');
-
-            if(cookie_data) {
-                // do something with cookie
-                createCookie('tutorial_prompt',1,100);
-            }
-            else {
-                createCookie('tutorial_prompt','1',100);
-                startIntro();
-            }
-
-          var $el, $ps, $up, totalHeight;
-
-          $(".competition-about .button").click(function() {
-
-            totalHeight = 150;
-
-            $el = $(this);
-            $p  = $el.parent();
-            $up = $p.parent();
-            $ps = $up.find("p:not('.read-more')");
-
-            // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
-            $ps.each(function() {
-              totalHeight += $(this).outerHeight();
-              console.log(totalHeight);
-            });
-
-            $up
-              .css({
-                // Set height to prevent instant jumpdown when max height is removed
-                "height": $up.height(),
-                "max-height": 9999
-              })
-              .animate({
-                "height": totalHeight
-              });
-
-            // fade out read-more
-            $p.fadeOut();
-
-            // prevent jump-down
-            return false;
-
-          });
-
-        });
-    </script>
-<% end %>
-
+  </main><!-- End #main -->
