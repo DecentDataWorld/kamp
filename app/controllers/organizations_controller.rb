@@ -266,15 +266,19 @@ class OrganizationsController < ApplicationController
     @organization = Organization.find_by_url(params[:organization])
 
     if cannot? :approve, @organization
-      redirect_to organizations_no_access_path, notice: 'You do not have sufficient rights to perform that action.'
+      flash[:notice] = 'You do not have sufficient rights to perform that action.'
+      return redirect_back(fallback_location: organizations_path)
     end
 
     @organization.approved = true
-    @organization.save
-
-    AdminMailer.notify_organization_admins_of_org_approval(@organization).deliver
-
-    redirect_to organizations_path, notice: 'Organization was successfully approved.'
+    if @organization.save
+      AdminMailer.notify_organization_admins_of_org_approval(@organization).deliver
+      flash[:notice] = 'Organization was successfully approved.'
+      redirect_back(fallback_location: organizations_path)
+    else
+      flash[:error] = 'Could not approve organization.'
+      redirect_back(fallback_location: organizations_path)
+    end
   end
 
   def apply
@@ -321,12 +325,21 @@ class OrganizationsController < ApplicationController
         @organization = Organization.find_by_id(params[:id])
       end
       if @organization.nil?
-        redirect_to organization_not_found_path
+        flash[:error] = "Could not find organization"
+        redirect_back(fallback_location: organizations_path)
       end
     end
 
     def authorized?
-      unless (can? :manage, :all)
+      @organization = Organization.find_by_url(params[:id])
+      if @organization.nil?
+        @organization = Organization.find_by_id(params[:id])
+      end
+      if @organization.nil?
+        @organization = Organization.find_by_url(params[:organization])
+      end
+
+      unless can? :manage, :all or @organization.can_manage_users(current_user)
         flash[:error] = "You are not authorized to view that page."
         redirect_to root_path
       end
@@ -337,7 +350,7 @@ class OrganizationsController < ApplicationController
       params.require(:organization).permit(:url, :name, :description, :status, :logo, :users, :domain, :organization_type_id)
     end
     # Never trust parameters from the scary internet, only allow the white list through.
-  def users_organization_params
-    params.permit(:organization_id, :user_id, :role, :organization_type_id)
-  end
+    def users_organization_params
+      params.permit(:organization_id, :user_id, :role, :organization_type_id)
+    end
 end

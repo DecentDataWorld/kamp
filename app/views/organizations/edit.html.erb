@@ -14,13 +14,13 @@
   <div class="container">
     <div class="row">
       <div class="col-3 border-end">
-        <%= render partial: 'organizations/info', locals: { :short=>true } %>
+        <%= render partial: 'organizations/info', locals: { :editing => true } %>
       </div>
 
       <div class="col-9">
         <div class="border-bottom pb-2"><span class="fs-5">Edit Organization</span></div>
         <div class="row pb-1 mt-2">
-          <%= render 'form' %>
+          <%= render partial: 'form', locals: { :show_org => params[:show_org] } %>
         </div>
       </div>
     </div>

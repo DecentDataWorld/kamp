@@ -40,7 +40,7 @@
                 <h5>Existing User</h5>
                 <p>If you wish to add an existing user, search for their username below.</p>
                 <label for="username">Username</label>
-                <%= f.input_field :user_id, :collection => User.all.order('name'), :class => "form-control", :label => false, :label_method => lambda { |user| "#{user.name.capitalize} (#{user.email})".html_safe } %>
+                <%= f.input_field :user_id, :collection => User.where(deactivated_at: nil).order('name'), :class => "form-control", :label => false, :label_method => lambda { |user| "#{user.name.capitalize} (#{user.email})".html_safe } %>
               </div>
               <div class="row-fluid">
                 <label for="role">Add to Organization as a:</label>
