@@ -85,7 +85,7 @@
             <p>
               No resources available in this collection,
               <% if @collection.can_add_resources(current_user) %>
-                  <%= link_to 'add some', new_resource_path(:collection_id => @collection) if can? :add, @collection and @collection.can_add_resources(current_user) %>
+                  <%= link_to 'add some', new_collection_resourcing_path(@collection) if can? :add, @collection and @collection.can_add_resources(current_user) %>
               <% end %>
             </p>
             <% else %>
