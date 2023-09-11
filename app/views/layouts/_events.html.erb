@@ -5,7 +5,7 @@
     <div class="row ps-2 pe-2 d-flex text-secondary">
       <% @events.each do |e| %>
         <div class="border-bottom p-2">
-          <span class="text-danger"><%= e.name %></span><br>
+          <span class="text-danger"><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></span><br>
           <small>event date <%= e.start_date.strftime("%Y-%m-%d") %></small>
         </div>
       <% end %>
