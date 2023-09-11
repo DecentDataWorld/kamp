@@ -21,12 +21,12 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-8">
-                  <div class="row">
+                <div class="col-8 align-middle">
+                  <div class="row <% if @announcements.length != 0 || @events.length != 0 %>small-home<% end %>">
                     <div class="col-6">
                       <div class="hero-box border-danger card">
                         <div class="card-body">
-                          <h3 class="card-title text-danger">Find Resources</h3>
+                          <h3 class="card-title text-danger pb-3">Find Resources</h3>
                           <p class="card-text">
                              <% if @search.nil? %>
                                 <%  search = Search.new %>
@@ -47,23 +47,23 @@
                       </div>
                     </div>
                     <div class="col-6">
-                      <% if @announcements.length != 0 %>
-                        <%= render  'layouts/announcements' %>
-                      <% end %>
-                    </div>
-                  </div>
-                   <div class="row">
-                    <div class="col-6">
-                      <% if @events.length != 0 %>
-                        <%= render  'layouts/events' %>
-                      <% end %>
-                    </div>
-                    <div class="col-6">
                       <div class="hero-box border-success card">
                         <div class="card-body">
                           <%= render  'layouts/cops' %>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                   <div class="row <% if @announcements.length == 0 && @events.length == 0 %>small-home<% end %>">
+                    <div class="col-6">
+                      <% if @announcements.length != 0 %>
+                        <%= render  'layouts/announcements' %>
+                      <% end %>
+                    </div>
+                    <div class="col-6">
+                      <% if @events.length != 0 %>
+                        <%= render  'layouts/events' %>
+                      <% end %>
                     </div>
                   </div>
                 </div>

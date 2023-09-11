@@ -2,16 +2,19 @@
 <div class="hero-box border-success card">
   <div class="card-body">
     <h3 class="card-title text-success">Announcements</h3>
-    <div class="row ps-2 pe-2 d-flex text-secondary">
-      <% @announcements.each do |a| %>
-        <div class="border-bottom p-2">
-          <span class="text-danger"><%= link_to a.name, show_announcement_path(a), data: { turbo_frame: "modal" } %></span><br>
-          <small>posted <%= a.created_at.strftime("%Y-%m-%d") %></small>
-        </div>
-      <% end %>
-      <div class="pt-2">
-       <%= link_to raw('more  &raquo;'), public_announcements_path %> 
+    <div class="scrollable">
+      <div class="row ps-2 pe-2 text-secondary card-text">
+        <% @announcements.each do |a| %>
+          <div class="border-bottom p-2">
+            <span class="text-danger"><%= link_to a.name, show_announcement_path(a), data: { turbo_frame: "modal" } %></span><br>
+            <small>posted <%= a.created_at.strftime("%Y-%m-%d") %></small>
+          </div>
+        <% end %>
       </div>
+    </div>
+
+    <div class="pt-2 card-link  d-flex flex-row-reverse">
+      <%= link_to raw('more  &raquo;'), public_announcements_path %> 
     </div>
   </div>
 </div>
