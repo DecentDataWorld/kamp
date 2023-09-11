@@ -25,7 +25,7 @@ class OrganizationsController < ApplicationController
     params[:id] = @organization.id
 
     # decide if we have to hide private and pending resources from this user
-    if !@organization.can_add_collections(current_user)
+    if current_user && !@organization.can_add_collections(current_user)
       hide_private = true
       @hide_pending = true
     else
@@ -66,7 +66,7 @@ class OrganizationsController < ApplicationController
      # end
 
     # get all private resources for this organization
-    if current_user.organizations.exists?(@organization.id) or can? :manage, :all
+    if (current_user && current_user.organizations.exists?(@organization.id)) or can? :manage, :all
       @private_resources = @organization.private_resources.paginate(:page => params[:page]).per_page(20)
     end
 
