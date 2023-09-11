@@ -106,6 +106,7 @@ class CollectionsController < ApplicationController
         format.html { redirect_to @collection, notice: 'Collection was successfully created.' }
         format.json { render action: 'show', status: :created, location: @collection }
       else
+        flash[:error] = "Could not add collection"
         format.html { render action: 'new' }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end

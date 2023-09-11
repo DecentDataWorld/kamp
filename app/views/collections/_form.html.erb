@@ -56,7 +56,6 @@
                           :multiple => true,
                           :class => "form-control",
                           data: {controller: "multiselect", placeholder: "Begin typing to search for tags"} %>
-
       </div>
     </div> 
 
@@ -71,9 +70,9 @@
 
     <div class="row p-2">
       <% if current_user.organizations.count > 1 && @collection.id.nil? %>
-          <div class="form-group">
-            <label for="attachment">Organization</label>
-            <%= f.select :organization_id, current_user.organizations.all.collect {|x| [x.name, x.id]}, label: false %>
+          <div class="col-md-12">
+            <%= f.label :organization %><br>
+            <%= f.select :organization_id, current_user.organizations.all.collect {|x| [x.name, x.id]}, { include_blank: true}, {class: 'form-select'}%>
           </div>
       <% elsif current_user.organizations.count == 1 && @collection.id.nil? %>
         <%= f.input_field :organization_id, :value => current_user.organizations.first.id, :as => "hidden" %>
