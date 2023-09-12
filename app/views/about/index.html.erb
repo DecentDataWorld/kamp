@@ -1,102 +1,67 @@
-<% content_for :title do %><%= @page_title %><% end %>
-<!--=== Content Part ===-->
-<div class="container content">
-  <!-- About Description -->
-  <div class="row">
-    <div class="col-xs-12 col-sm-6">
-      <p>USAID/Jordan created the Jordan Development KaMP – a web-based repository of development information resources designed to improve sharing of data and information between the USAID/Jordan Mission, local implementing partners and development organizations within Jordan.</p>
-      <p>The KaMP will be available to all interested development partners in Jordan and is populated with resources identified and uploaded by staff from USAID/Jordan, MESP, Implementing Partners and other portal users.</p>
-      <p> Resources contained and/or referenced on the portal will include:</p>
-      <ul>
-        <li>USAID/Jordan templates for Implementing Partners' use in M&E and other areas</li>
-        <li>Training materials and presentations developed by MESP and other organizations</li>
-        <li>Assessments and evaluations conducted in Jordan and the region</li>
-        <li>Geospatial data and maps</li>
-        <li>Other relevant materials in a variety of formats and topics.</li>
-      </ul>
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+          <li><%= link_to root_path do %>Home<% end %></li>
+          <li>About</li>
+      </ol>
     </div>
-    <div class="col-xs-12 col-sm-6">
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/x1nj7fPxQT4" frameborder="0" allowfullscreen></iframe>
-    </div>
-  </div>
-  <!-- About Description -->
-</div>
-<!--=== End Content Part ===-->
-<div class="bg-color-light">
-  <div class="container content-sm">
+</section><!-- End Breadcrumbs -->
+
+
+<!-- ======= Services Section ======= -->
+<section id="services" class="services">
+  <div class="container">
     <div class="row">
-      <div class="col-md-6 md-margin-bottom-50">
-        <img class="img-responsive" src="/briefer/Briefer-Arabic-Front.png" alt="Arabic Front View of Briefer">
-      </div>
-      <div class="col-md-6">
-        <h2><span class="color-red">KaMP Briefers</span></h2>
-        <p>Looking for a short introduction to the portal features? <br>
-          Download one of our <strong>KaMP Briefers</strong> below. </p>
-        <div class="row">
-          <div class="col-xs-1">&nbsp;</div>
-          <ul class="col-xs-10 list-unstyled lists-v1">
-            <li><a href="/briefer/KaMP_Arabic_Briefer.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i> Arabic (PDF)</a></li>
-            <li><a href="/briefer/KaMP_English_Briefer.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i> English (PDF)</a></li>
-          </ul>
-        </div>
-        <div class="col-xs-1">&nbsp;</div>
-      </div>
-    </div><!--/end row-->
-  </div>
-</div>
+      <div class="col-12">
+        <h5 class="border-bottom pb-2 mb-5"><i class="bi bi-envelope"></i> About This Portal</h5>
 
-
-<!--=== Parallax About Block ===-->
-<div class="parallax-bg parallaxBg1">
-  <div class="container content parallax-about">
-    <div class="title-box-v2">
-      <h2>Resource Types</h2>
-      <p>The Jordan Development KaMP supports uploading of a large variety of resource types.</p>
-    </div>
-
-    <div class="row">
-      <div class="col-md-6 text-center">
-        <img class="img-responsive" src="/document_preview.png" width="80%" alt="Sample Preview of Document" />
-      </div>
-      <div class="col-md-6">
-
-        <div class="banner-info light margin-bottom-10">
-          <i class="rounded-x fa fa-folder-open-o"></i>
-          <div class="overflow-h">
-            <p>Resources like documents, spreadsheets, spatial files and other file types will generate previews of their contents offering additional ways for users to interact with that data online.</p>
+      <div class="container">
+        <div class="row border-bottom pb-3 mb-3">
+          <div class="col-6">
+            <p>USAID/Jordan created the Jordan Development KaMP – a web-based repository of development information resources designed to improve sharing of data and information between the USAID/Jordan Mission, local implementing partners and development organizations within Jordan.</p>
+            <p>The KaMP will be available to all interested development partners in Jordan and is populated with resources identified and uploaded by staff from USAID/Jordan, MESP, Implementing Partners and other portal users.</p>
+            <p> Resources contained and/or referenced on the portal will include:</p>
+            <ul>
+              <li>USAID/Jordan templates for Implementing Partners' use in M&E and other areas</li>
+              <li>Training materials and presentations developed by MESP and other organizations</li>
+              <li>Assessments and evaluations conducted in Jordan and the region</li>
+              <li>Geospatial data and maps</li>
+              <li>Other relevant materials in a variety of formats and topics.</li>
+            </ul>
+          </div>
+          <div class="col-6">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/x1nj7fPxQT4" frameborder="0" allowfullscreen></iframe>
           </div>
         </div>
+      </div>
 
-        <div class="banner-info light margin-bottom-10">
-          <i class="rounded-x fa fa-map-marker"></i>
-          <div class="overflow-h">
-            <p>Geo-spatial format resources or spreadsheets with latitude/longitude can present the data on a map</p>
-          </div>
+
+      <div class="container">
+        <div class="row border-bottom pb-3 mb-3">
+          <h4>Resource Types</h4>
+          <p>The Jordan Development KaMP supports uploading of a large variety of resource types, including: Documents and Spreadsheets, Comma Delimited (.csv) Files, GeoJSON Files, PDF Files, Videos and Photos.</p>
+
         </div>
-<br/>
-        <%= link_to raw("<i class='fa fa-arrow-right'></i> Read More ") , about_resource_types_path, class: "btn-u btn-u-red one-page-btn margin-left-10" %>
+      </div>
+
+
+      <!--=== Contact Us ===-->
+      <div class="container">
+        <div>
+          <h4>Got Questions?</h4>
+          <p>If you have any questions about how the portal works, check out our <%= link_to raw("Frequently Asked Questions") , faq_path, class: "btn-u btn-u-blue one-page-btn" %> section or use the "Help" button at the top left of the screen.</p>
+          <p><i class="bi bi-envelope"></i> Email us at <a href="mailto:contact@jordanmela.com" class="">contact@jordanmela.com</a></p>
+        </div>
+      </div>
+
       </div>
     </div>
-  </div><!--/container-->
-</div>
-<!--=== End Parallax About Block ===-->
 
-<!--=== Contact Us ===-->
-<div class="container content our-location">
-  <div class="title-box-v2">
-    <h2>Got <span class="color-green">Questions?</span></h2>
-    <p>If you have any questions about how the portal works,<br />check out our 'Frequently Asked Questions' section below or use the "Help" button.</p>
-  </div>
 
-  <div class="row margin-bottom-30">
-    <div class="col-md-4 text-right md-margin-bottom-20">
-        <%= link_to raw("<i class='fa fa-info-circle'></i> Frequently Asked Questions") , faq_path, class: "btn-u btn-u-blue one-page-btn" %>
-      </div>
-      <div class="col-md-8">
-        <p>Communicate with us directly with the green "Help" button on the side of each page.</p>
-        <p><i class="fa fa-envelope"></i> Or email us at <a href="mailto:contact@jordanmela.com" class="">contact@jordanmela.com</a></p>
-      </div>
   </div>
-</div>
+</section><!-- End Services Section -->
+
+
 
 
