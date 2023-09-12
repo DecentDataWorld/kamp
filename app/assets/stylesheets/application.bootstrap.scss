@@ -20,7 +20,7 @@ $enable-negative-margins: true;
   background: rgba(255,255,255,.3);
 }
 
-@media only screen and (max-height: 980px) { 
+@media only screen and (max-height: 800px) { 
   .small-home { 
     display: none; 
   } 
@@ -63,14 +63,14 @@ $enable-negative-margins: true;
 }
 
 .hero-box.card{
-  height: 240px;
+  height: 200px;
 }
 .hero-box .card-text{
   max-width: 100%;
 }
 .hero-box .scrollable{
   overflow-y: auto;
-  max-height: 140px;
+  max-height: 100px;
 }
 
 .available-tags {
