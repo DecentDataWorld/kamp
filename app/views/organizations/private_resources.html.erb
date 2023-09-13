@@ -16,7 +16,9 @@
             <% @resources.each do |resource| %>
                 <%= render partial: 'resources/resource_results', locals: {resource: resource} %>
             <% end %>
-            <%= will_paginate @resources %>
+            <div class="apple_pagination">
+              <%= will_paginate @resources %>
+            </div>
         <% else %>
             <p>None found.</p>
         <% end %>

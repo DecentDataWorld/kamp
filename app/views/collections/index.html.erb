@@ -137,7 +137,9 @@
     <% end %>
     <div class="row">
       <%= render partial: 'collections/collection_results' %>
-      <%= will_paginate @collections %>
+      <div class="apple_pagination">
+        <%= will_paginate @collections %>
+      </div>
     </div>
   </div>
 

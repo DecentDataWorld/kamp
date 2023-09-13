@@ -177,6 +177,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
+      INNER JOIN organizations o ON r.organization_id = o.id 
       WHERE r.cop_private = false "
       query = query + " AND r.approved = true " if only_approved
       query = query + " AND r.private = false " if exclude_private
@@ -226,6 +227,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
+      INNER JOIN organizations o ON r.organization_id = o.id 
       WHERE r.cop_private = false "
       query = query + " AND r.approved = true " if only_approved
       query = query + " AND r.private = false " if exclude_private
@@ -280,6 +282,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
+      INNER JOIN organizations o ON r.organization_id = o.id 
       WHERE r.cop_private = false "
       query = query + " AND r.approved = true " if only_approved
       query = query + " AND r.private = false " if exclude_private
