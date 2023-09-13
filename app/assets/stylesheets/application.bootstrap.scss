@@ -17,7 +17,13 @@ $enable-negative-margins: true;
 
 
 .home-about-box {
-  background: rgba(255,255,255,.4);
+  background: rgba(255,255,255,.3);
+}
+
+@media only screen and (max-height: 800px) { 
+  .small-home { 
+    display: none; 
+  } 
 }
 
 .hero-box {
@@ -54,6 +60,17 @@ $enable-negative-margins: true;
   line-height: 24px;
   font-size: 14px;
   margin-bottom: 0;
+}
+
+.hero-box.card{
+  height: 200px;
+}
+.hero-box .card-text{
+  max-width: 100%;
+}
+.hero-box .scrollable{
+  overflow-y: auto;
+  max-height: 100px;
 }
 
 .available-tags {

@@ -9,16 +9,27 @@
 
 <%  elsif user_signed_in? && current_user.cops.length != 0 %>
   <h3 class="card-title text-success">Communities of Practice</h3>
-  <div class="row p-2 d-flex text-secondary">
-    <ul class="list-group list-group-flush bg-transparent">
-      <% current_user.cops.each do |cop| %>
-        <li class="list-group-item bg-transparent"><%= link_to cop.name, show_cop_path(cop) %></li>
-      <% end %>
-    </ul>
+  <div class="scrollable">
+    <div class="row p-2 d-flex text-secondary card-text">
+      <ul class="list-group list-group-flush bg-transparent">
+        <% current_user.cops.each do |cop| %>
+          <li class="list-group-item bg-transparent"><%= link_to cop.name, show_cop_path(cop) %></li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 <% else %>
   <h3 class="card-title text-success">FAQ</h3>
-  <div class="row p-2 d-flex text-secondary">
-    Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident
+  <div class="scrollable">
+    <div class="row p-2 d-flex text-secondary card-text">
+      <ul>
+        <li>Resources can be any file with data and/or information that is relevant to the Jordan M&E community.</li>
+        <li>Documents, spreadsheets, PDFs and other file types all offer a preview of the file contents prior to downloading.</li>
+        <li>While registration for the portal is open to anyone, being part of an organization requires an organizational email address.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pt-2 d-flex flex-row-reverse">
+    <%= link_to raw('more  &raquo;'), faq_path %> 
   </div>
 <% end %>
