@@ -50,18 +50,17 @@
 
 <div class="row p-2">
   <div class="col-md-12">
-    <%= f.label :tags %><br>
+  <span class="text-danger">*</span> <%= f.label :tags %><br>
     <%= f.input_field :tags,
-                          :label => false,
-                          :id => "multiselect",
-                          :as => :grouped_select,
-                          :collection => grouped_tags,
-                          :group_method => :last,
-                          :multiple => true,
-                          :class => "form-control",
-                          data: {controller: "multiselect", placeholder: "Begin typing to search for tags"} %>
-
-</div>
+                      :label => false,
+                      :id => "multiselect",
+                      :as => :grouped_select,
+                      :collection => grouped_tags,
+                      :group_method => :last,
+                      :multiple => true,
+                      :class => "form-control",
+                      data: {controller: "multiselect", placeholder: "Begin typing to search for tags"} %>
+  </div>
 </div>  
 
 <div class="row p-2">

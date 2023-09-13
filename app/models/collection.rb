@@ -11,6 +11,7 @@ class Collection < ActiveRecord::Base
 
   validates_presence_of :title, :message => "Title is required"
   validates_presence_of :description, :message => "A description is required"
+  validates_presence_of :tag_list, :message => "Choose at least one tag"
 
   #has_many :resources, :class_name => "Resource", :foreign_key => "collection_id"
   has_many :resourcings, :as => :resourceable

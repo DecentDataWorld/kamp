@@ -201,6 +201,17 @@ class UsersController < ApplicationController
     redirect_back(fallback_location: users_path)
   end
 
+  def remove_cop_membership
+    user = User.find_by_id(params[:user_id])
+    cop = user.cops.find_by_id(params[:cop_id])
+    if cop && user.cops.delete(cop)
+      flash[:notice] = "Successfully removed user from COP."
+    else
+      flash[:error] = "Could not remove user from COP."
+    end
+    redirect_back(fallback_location: users_path)
+  end
+
   def export
     @page_title = "Export Users"
     @users = User.all

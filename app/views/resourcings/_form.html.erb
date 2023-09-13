@@ -15,9 +15,10 @@
     <%= f.input :resourceable_id, :as => "hidden" %>
     <%= f.input :resourceable_type, :as => "hidden" %>
 
+    <div class="border-bottom border-top bg-light p-2"><i class="fa fa-search"></i> Locate an existing resource that you want to include in this collection</div>
     <div class="row p-2">
       <div class="col-md-12">
-        <%= f.label "Search for an existing resource" %><br>
+        <%= f.label "Search for a resource" %><br>
         <%= f.input_field :resource_id, :collection => Resource.order('name'), :class => "form-select", :label => false, :label_method => lambda { |resource| "#{resource.name}".html_safe }, :prompt => 'Type Resource Name' %>
       </div>
     </div>
@@ -28,9 +29,9 @@
       </div>
     </div>
 
-    <div class="border-bottom border-top bg-light p-2">Or Add A New One Below</div>
+    <div class="border-bottom border-top bg-light p-2"><i class="fa-regular fa-file"></i> Or create a new resource below</div>
     <%= f.fields_for :resource, @resource do |r| %>
-        <%= render partial: 'resources/form_fields', locals: { f: r, resource: @resourcing.resource } %>
+      <%= render partial: 'resources/form_fields', locals: { f: r, resource: @resourcing.resource } %>
     <% end %>
 
     <div class="row p-2">

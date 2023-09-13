@@ -117,7 +117,6 @@ class ResourcesController < ApplicationController
 # POST /resources
 # POST /resources.json
   def create
-
     @full_tags_list = ActsAsTaggableOn::Tag.all
     @resource = Resource.new(resource_params)
     @resource.tag_list = params[:resource][:tags]
@@ -128,10 +127,8 @@ class ResourcesController < ApplicationController
 
     respond_to do |format|
       if @resource.save
-
         #ModeratorMailer.notify_submitter_of_moderation(@resource, current_user).deliver
         #ModeratorMailer.notify_admins_of_new_submission(@resource, current_user).deliver
-
         format.html {
           if params[:commit] == 'Save & Add Another'
             redirect_to new_resource_path, notice: 'Resource was successfully created.'
@@ -141,11 +138,8 @@ class ResourcesController < ApplicationController
         }
         format.json { render action: 'show', status: :created, location: @resource }
       else
-        format.html {
-          @collections = Collection.where("organization_id in (?)", current_user.organizations.map(&:id)).order("title")
-          #@resource.tags = params[:resource][:tags]
-          render action: 'new'
-        }
+        flash[:error] = "Could not add resource"
+        format.html { render :new }
         format.json { render json: @resource.errors, status: :unprocessable_entity }
       end
     end
@@ -154,7 +148,6 @@ class ResourcesController < ApplicationController
 # PATCH/PUT /resources/1
 # PATCH/PUT /resources/1.json
   def update
-
     @full_tags_list = ActsAsTaggableOn::Tag.all
     respond_to do |format|
       @resource.tag_list = params[:resource][:tags]
@@ -165,7 +158,6 @@ class ResourcesController < ApplicationController
 
         @resource.handle_file_type
 
-
         @resource.save
         format.html {
           if !params[:destination].nil?
@@ -173,8 +165,6 @@ class ResourcesController < ApplicationController
           else
             redirect_to @resource, notice: 'Resource was successfully updated.'
           end
-
-
         }
         format.json { head :no_content }
       else

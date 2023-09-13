@@ -73,11 +73,6 @@
                               <%= will_paginate @resources %>
                             <% else %>
                               <blockquote>No resources found.</blockquote>
-                              <div class="alert alert-info">
-                                <h4>Let Us Know What We're Missing</h4>
-                                <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
-                                <p><%= link_to "Take the Survey", survey_index_path, class: 'btn btn-outline-primary' %></p>
-                              </div>
                             <% end %>
                           </div>
                       
@@ -89,11 +84,6 @@
                               <%= will_paginate @collections, :param_name => 'collection_page' %>
                             <% else %>
                               <blockquote>No collections found.</blockquote>
-                              <div class="alert alert-info">
-                                <h4>Let Us Know What We're Missing</h4>
-                                <p>Didn't find what you were looking for? Take our survey and let us know what you would like to see on the KaMP</p>
-                                <p><%= link_to "Take the Survey", survey_index_path, class: 'btn btn-outline-primary' %></p>
-                              </div>
                             <% end %>
                           </div>
 
