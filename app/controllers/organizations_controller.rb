@@ -25,7 +25,7 @@ class OrganizationsController < ApplicationController
     params[:id] = @organization.id
 
     # decide if we have to hide private and pending resources from this user
-    if current_user && !@organization.can_add_collections(current_user)
+    if !@organization.can_add_collections(current_user)
       hide_private = true
       @hide_pending = true
     else

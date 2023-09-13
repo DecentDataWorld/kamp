@@ -50,7 +50,7 @@ class Organization < ActiveRecord::Base
   end
 
   def can_add_collections(user)
-    if (self.users.exists?(user.id))
+    if user && self.users.exists?(user.id)
       return true
     else
       return false
