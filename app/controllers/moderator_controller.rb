@@ -18,7 +18,7 @@ class ModeratorController < ApplicationController
       @submission.save
 
       # send email notification
-      ModeratorMailer.notify_submitter_of_approval(@submission, @submission.author).deliver
+      # ModeratorMailer.notify_submitter_of_approval(@submission, @submission.author).deliver
 
       return redirect_to moderate_submissions_path, notice: 'Submission was approved'
     else
@@ -53,7 +53,7 @@ class ModeratorController < ApplicationController
       end
 
       # send email notification
-      ModeratorMailer.notify_submitter_of_denial(@submission, @submission.author, @reason).deliver
+      # ModeratorMailer.notify_submitter_of_denial(@submission, @submission.author, @reason).deliver
 
       @submission.destroy
 
