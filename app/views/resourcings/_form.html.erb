@@ -16,11 +16,16 @@
     <%= f.input :resourceable_type, :as => "hidden" %>
 
     <div class="border-bottom border-top bg-light p-2"><i class="fa fa-search"></i> Locate an existing resource that you want to include in this collection</div>
-    <div class="row p-2">
-      <div class="col-md-12">
-        <%= f.label "Search for a resource" %><br>
-        <%= f.input_field :resource_id, :collection => Resource.order('name'), :class => "form-select", :label => false, :label_method => lambda { |resource| "#{resource.name}".html_safe }, :prompt => 'Type Resource Name' %>
-      </div>
+    <div  class="col-md-12 pb-2 pt-2">
+      <%= f.label "Begin typing to search for a resource" %><br>
+      <%= f.input_field :resource_id,
+                      :label => false,
+                      :id => "multiselect",
+                      :as => :select,
+                      :collection => Resource.where(organization_id: @coll.organization_id).order(:name).collect {|r| [r.name, r.id]},#Resource.where(organization_id: @coll.organization_id).or(Resource.where(private: false)).order(:name).collect {|r| [r.name, r.id]},
+                      :multiple => false,
+                      :class => "form-control",
+                      data: {controller: "multiselect", placeholder: "Begin typing to search for a resource"} %>
     </div>
 
     <div class="row p-2">
