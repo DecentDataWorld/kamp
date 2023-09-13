@@ -50,12 +50,14 @@
               <%= @resource.resource_type %>
             </div>
           </li>
-          <li class="list-group-item bg-transparent text-muted">
-            <div class="text-danger">Uploaded By</div>
-            <div class="ms-3">
-              <%= link_to organization_path(@resource.organization) do %><%= @resource.organization.name %><% end %>
-            </div>
-          </li>
+          <% if @resource.organization %>
+            <li class="list-group-item bg-transparent text-muted">
+              <div class="text-danger">Uploaded By</div>
+              <div class="ms-3">
+                <%= link_to organization_path(@resource.organization) do %><%= @resource.organization.name %><% end %>
+              </div>
+            </li>
+          <% end %>
           <li class="list-group-item bg-transparent text-muted">
             <div class="text-danger">Date Added</div>
             <div class="ms-3">
@@ -92,40 +94,43 @@
           <% end %>
         </ul>
      </div>
-     <div class="col-9">
-      <div class="border-bottom pb-2"><span class="fs-5"><%= @resource.name %> &nbsp;</span></div>
-      <div class="border-bottom fw-light bg-light bg-gradient p-2 pt-3">
-        <% if !@resource.attachment.blank? %>
-          <h6><%= link_to download_resource_path(:id => @resource.url), title: "Filename of resource", target: "_blank" do %><i class="bi bi-download"></i> <%= @resource.attachment_file_name %><% end %></h6>
-        <% end %>
-        <% if !@resource.source.blank? %>
-          <h6><%= link_to @resource.source, title: "Source of resource", target: "_blank" do %><i class="bi bi-link"></i> <%= @resource.source %><% end %></h6>
-        <% end %>
-       </div>
-       <% if @resource.tags.count > 0 %>
-        <div class="p-2">
-          <% @resource.tags.each do |tag| %>
-            <a href="<%= new_search_path(:tags => [tag.id]) %>" class="badge rounded-pill bg-dark dark-badge-link" href="#"><i class="fa fa-tags"></i> <%= tag.name %></a>
+      <div class="col-9">
+        <div class="border-bottom pb-2"><span class="fs-5"><%= @resource.name %> &nbsp;</span></div>
+        <div class="border-bottom fw-light bg-light bg-gradient p-2 pt-3">
+          <% if !@resource.attachment.blank? %>
+            <h6><%= link_to download_resource_path(:id => @resource.url), title: "Filename of resource", target: "_blank" do %><i class="bi bi-download"></i> <%= @resource.attachment_file_name %><% end %></h6>
+          <% end %>
+          <% if !@resource.source.blank? %>
+            <h6><%= link_to @resource.source, title: "Source of resource", target: "_blank" do %><i class="bi bi-link"></i> <%= @resource.source %><% end %></h6>
           <% end %>
         </div>
-       <% end %>
-       <div class="card text-bg-light m-2">
-        <div class="card-body">
-          <%= simple_format @resource.description %>
-        </div>
-      </div>
-      <% if !@resource.attachment.blank? && (@resource.resource_type == 'PDF' || @resource.resource_type == 'Image' || @resource.attachment_content_type == 'video/mp4') %>
+        <% if @resource.tags.count > 0 %>
+          <div class="p-2">
+            <% @resource.tags.each do |tag| %>
+              <a href="<%= new_search_path(:tags => [tag.id]) %>" class="badge rounded-pill bg-dark dark-badge-link" href="#"><i class="fa fa-tags"></i> <%= tag.name %></a>
+            <% end %>
+          </div>
+        <% end %>
         <div class="card text-bg-light m-2">
-          <% if @resource.resource_type == 'PDF' %>
-            <iframe src=<%=download_resource_path(id: @resource.url)%> width="100%" height="800px" />
-          <% elsif @resource.resource_type == 'Image' %>
-            <%= image_tag download_resource_path(id: @resource.url) %>
-          <% elsif @resource.attachment_content_type == 'video/mp4' %>
-            <%= video_tag([download_resource_path(id: @resource.url)], :controls => true) %>
-          <% end %>
+          <div class="card-body">
+            <%= simple_format @resource.description %>
+          </div>
         </div>
-      <% end %>
-     </div>
+        <% if @resource.organization %>
+
+          <% if !@resource.attachment.blank? && (@resource.resource_type == 'PDF' || @resource.resource_type == 'Image' || @resource.attachment_content_type == 'video/mp4') %>
+            <div class="card text-bg-light m-2">
+              <% if @resource.resource_type == 'PDF' %>
+                <iframe src=<%=download_resource_path(id: @resource.url)%> width="100%" height="800px" />
+              <% elsif @resource.resource_type == 'Image' %>
+                <%= image_tag download_resource_path(id: @resource.url) %>
+              <% elsif @resource.attachment_content_type == 'video/mp4' %>
+                <%= video_tag([download_resource_path(id: @resource.url)], :controls => true) %>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
    </div>
 
   </div>
