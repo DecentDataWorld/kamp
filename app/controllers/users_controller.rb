@@ -26,7 +26,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @resources = @user.resources.where("private = false and approved = true and newsletter_only = false and organization_id in (select id from organizations)").page(params[:resources_page]).per_page(10).order("updated_at desc")
+    @resources = @user.resources.where("private = false and approved = true and newsletter_only = false").page(params[:resources_page]).per_page(10).order("updated_at desc")
     @collections = @user.collections_authored.where("private = false and approved = true and newsletter_only = false").page(params[:collections_page]).per_page(10).order("updated_at desc")
     @organizations = @user.organizations.page(params[:organizations_page]).per_page(10).order("updated_at desc")
     @cops = @user.cops.page(params[:cops_page]).per_page(10).order('updated_at desc')
