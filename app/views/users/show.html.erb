@@ -49,7 +49,9 @@
                             <% end %>
                           <% end %>
 
-                          <%= will_paginate @resources, :param_name => 'resources_page' %>
+                          <div class="apple_pagination">
+                            <%= will_paginate @resources, :param_name => 'resources_page' %>
+                          </div>
                           <% if @resources.empty? %>
                             <% if @user == @current_user %> You have <% else %> This user has <% end %> no resources.
                           <% end %>
@@ -61,8 +63,9 @@
                               <%= render collection %>
                             <% end %>
                           <% end %>
-
-                          <%= will_paginate @collections, :param_name => 'collections_page' %>
+                          <div class="apple_pagination">
+                            <%= will_paginate @collections, :param_name => 'collections_page' %>
+                          </div>
                           <% if @collections.empty? %>
                             <% if @user == @current_user %> You have <% else %> This user has <% end %> no collections.
                           <% end %>

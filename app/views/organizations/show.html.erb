@@ -70,7 +70,9 @@
                               <% @resources.each do |resource| %>
                                 <%= render resource %>
                               <% end %>
-                              <%= will_paginate @resources %>
+                              <div class="apple_pagination">
+                                <%= will_paginate @resources %>
+                              </div>
                             <% else %>
                               <blockquote>No resources found.</blockquote>
                             <% end %>
@@ -81,7 +83,9 @@
                               <% @collections.each do |resource| %>
                                 <%= render resource %>
                               <% end %>
-                              <%= will_paginate @collections, :param_name => 'collection_page' %>
+                              <div class="apple_pagination">
+                                <%= will_paginate @collections, :param_name => 'collection_page' %>
+                              </div>
                             <% else %>
                               <blockquote>No collections found.</blockquote>
                             <% end %>
@@ -92,7 +96,9 @@
                               <% @private_resources.each do |resource| %>
                                 <%= render resource %>
                               <% end %>
-                              <%= will_paginate @private_resources, :param_name => 'private_resource_page' %>
+                              <div class="apple_pagination">
+                                <%= will_paginate @private_resources, :param_name => 'private_resource_page' %>
+                              </div>
                             <% else %>
                               <blockquote>No private resources.</blockquote>
                             <% end %>

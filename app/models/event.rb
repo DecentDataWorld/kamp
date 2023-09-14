@@ -1,3 +1,4 @@
+require 'uri'
 class Event < ActiveRecord::Base
 
   belongs_to :user
@@ -10,4 +11,12 @@ class Event < ActiveRecord::Base
 
   validates_presence_of :name, :message => "Name is required"
   validates_presence_of :start_date, :message => "Date is required"
+
+  def valid_url?(uri)
+    uri = URI.parse(uri)
+    uri.host.present?
+  rescue URI::InvalidURIError
+    false
+  end
+
 end

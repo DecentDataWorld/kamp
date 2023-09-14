@@ -9,7 +9,9 @@
     <% @resources.each do |resource| %>
         <%= render partial: 'resources/resource_results', locals: {resource: resource} %>
     <% end %>
-    <%= will_paginate @resources %>
+    <div class="apple_pagination">
+      <%= will_paginate @resources %>
+    </div>
 <% else %>
     <%= raw '<blockquote><i class="fa fa-thumbs-down"></i> No resources found with that combination</blockquote>' %>
 <% end %>
