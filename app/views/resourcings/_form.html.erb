@@ -22,7 +22,7 @@
                       :label => false,
                       :id => "multiselect",
                       :as => :select,
-                      :collection => Resource.where(organization_id: @coll.organization_id).order(:name).collect {|r| [r.name, r.id]},#Resource.where(organization_id: @coll.organization_id).or(Resource.where(private: false)).order(:name).collect {|r| [r.name, r.id]},
+                      :collection => Resource.where(organization_id: @coll.organization_id).or(Resource.where(private: false)).order(:name).collect {|r| [r.name, r.id]},
                       :multiple => false,
                       :class => "form-control",
                       data: {controller: "multiselect", placeholder: "Begin typing to search for a resource"} %>
