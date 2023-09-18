@@ -49,7 +49,7 @@
                     <div class="col-6">
                       <div class="hero-box border-success card">
                         <div class="card-body">
-                          <%= render  'layouts/cops' %>
+                          <%= render  'cops' %>
                         </div>
                       </div>
                     </div>
@@ -57,12 +57,12 @@
                    <div class="row <% if @announcements.length == 0 && @events.length == 0 %>small-home<% end %>">
                     <div class="col-6">
                       <% if @announcements.length != 0 %>
-                        <%= render  'layouts/announcements' %>
+                        <%= render  'announcements' %>
                       <% end %>
                     </div>
                     <div class="col-6">
                       <% if @events.length != 0 %>
-                        <%= render  'layouts/events' %>
+                        <%= render  'events' %>
                       <% end %>
                     </div>
                   </div>
