@@ -1,14 +1,10 @@
-FROM ruby:3.0.4-alpine3.14
+FROM ruby:3.0.4-alpine3.14 AS builder
 
 # Minimal requirements to run a Rails app
 RUN apk add --no-cache --virtual --update build-base \
   linux-headers \
   git \
   postgresql-dev \
-  # Rails SQL schema format requires `pg_dump(1)` and `psql(1)`
-  postgresql \
-  # Install same version of pg_dump
-  postgresql-client \
   nodejs \
   yarn \
   # Needed for nodejs / node-gyp
@@ -17,9 +13,7 @@ RUN apk add --no-cache --virtual --update build-base \
   shared-mime-info \
   # Needed for nokogiri to run on mac dev
   gcompat \
-  # needed for paperclip/image processing
-  file \
-  php8-pecl-imagick
+  nano
 
 ENV LANG=C.UTF-8 \
   BUNDLE_JOBS=4 \
@@ -31,23 +25,58 @@ ENV NODE_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true
 ENV PORT=80
+ENV APP_PATH /kamp
 
-RUN mkdir /kamp
-WORKDIR /kamp
-COPY Gemfile /kamp/Gemfile
-COPY Gemfile.lock /kamp/Gemfile.lock
-RUN gem update --system && gem install bundler -v $BUNDLER_VERSION
-RUN bundle config frozen true \
- && bundle config jobs 4 \
- && bundle config deployment true \
- && bundle config without 'development test' \
- && bundle install
+WORKDIR $APP_PATH
 
-COPY . /kamp
+# Gems installation
+COPY Gemfile Gemfile.lock ./
 
-# Precompile assets
+RUN gem install bundler -v $BUNDLER_VERSION
+
+RUN bundle config --global frozen 1 && \
+  bundle install && \
+  rm -rf /usr/local/bundle/cache/*.gem && \
+  find /usr/local/bundle/gems/ -name "*.c" -delete && \
+  find /usr/local/bundle/gems/ -name "*.o" -delete
+
+# NPM packages installation
+COPY package.json yarn.lock ./
+
+RUN yarn install --frozen-lockfile --non-interactive --production
+
+ADD . $APP_PATH
+
+RUN yarn cache clean && \
+  rm -rf node_modules tmp/cache vendor/assets test
+
 RUN bin/rails assets:clobber && bundle exec rails assets:precompile
+
+
+FROM ruby:3.0.4-alpine3.14
+
+RUN mkdir -p /kamp
+WORKDIR /kamp
+
+ENV RACK_ENV production
+ENV RAILS_ENV production
+ENV NODE_ENV production
+ENV RAILS_SERVE_STATIC_FILES true
+ENV RAILS_LOG_TO_STDOUT true
+ENV PORT 80
+# Some native extensions required by gems such as pg or mysql2.
+COPY --from=builder /usr/lib /usr/lib
+COPY --from=builder /usr/bin /usr/bin
+
+# Timezone data is required at runtime
+COPY --from=builder /usr/share/zoneinfo/ /usr/share/zoneinfo/
+
+# Ruby gems
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+
+COPY --from=builder /kamp /kamp
 
 EXPOSE 3000
 
+# Start the main process.
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
