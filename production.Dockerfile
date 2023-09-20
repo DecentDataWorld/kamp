@@ -70,6 +70,8 @@ COPY --from=builder /usr/bin /usr/bin
 
 # Timezone data is required at runtime
 COPY --from=builder /usr/share/zoneinfo/ /usr/share/zoneinfo/
+# needed for mimemagic gem (?)
+COPY --from=builder /usr/share/mime/ /usr/share/mime/
 
 # Ruby gems
 COPY --from=builder /usr/local/bundle /usr/local/bundle
