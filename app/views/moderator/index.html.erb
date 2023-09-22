@@ -29,7 +29,7 @@
       <div class="col-9">
         <%= render :partial => 'admin/show_pending_submissions', :locals => { :pending_submissions => @pending_submissions} %>
         <div class="apple_pagination">
-          <%= will_paginate @pending_collections %>
+          <%= will_paginate @pending_submissions %>
         </div>
       </div>
     </div>
