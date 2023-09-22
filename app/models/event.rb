@@ -20,8 +20,10 @@ class Event < ActiveRecord::Base
   end
 
   def https_url
-    unless self.url.match(/^https:\/\//)
-      return "https://#{self.url}"
+    pattern1 = "https://"
+    pattern2 = "http://"
+    unless self.url.match(/^(#{pattern1}|#{pattern2})/)
+      return "http://#{self.url}"
     end
     self.url
   end
