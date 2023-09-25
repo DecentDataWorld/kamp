@@ -1,4 +1,4 @@
-<%= simple_form_for(@organization, :html => { role: "form", multipart: true }, data: { turbo: false }) do |f| %>
+<%= simple_form_for(@organization, :html => { role: "form", multipart: true }) do |f| %>
   <% if @organization.errors.any? %>
     <div id="error_explanation">
       <h2>
