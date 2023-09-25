@@ -67,10 +67,19 @@ class OrganizationTypesController < ApplicationController
   # DELETE /organization_types/1
   # DELETE /organization_types/1.json
   def destroy
-    @organization_type.destroy
     respond_to do |format|
-      format.html { redirect_to organization_types_url }
-      format.json { head :no_content }
+    if @organization_type.organizations.count > 0
+      flash[:error] =  "Organization Type has associated Organizations and cannot be deleted."
+      format.html { redirect_back(fallback_location: edit_organization_type_path(@organization)) }
+      format.json { render json: @organization_type.errors, status: :unprocessable_entity}
+    else
+      if @organization_type.destroy
+        format.html { redirect_to organization_types_url }
+        format.json { head :no_content }
+      else
+        format.html { render :edit }
+        format.json { render json: @organization_type.errors, status: :unprocessable_entity }
+      end
     end
   end
 

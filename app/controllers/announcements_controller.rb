@@ -74,12 +74,16 @@ class AnnouncementsController < ApplicationController
   # DELETE /admin/announcements/1
   # DELETE /admin/announcements/1.json
   def destroy
-    
     respond_to do |format|
-      @announcement.destroy
-      flash[:notice] = I18n.t("notices.delete_success")
-      format.html { redirect_to announcements_path }
-      format.json { head :no_content }
+      if @announcement.destroy
+        flash[:notice] = I18n.t("notices.delete_success")
+        format.html { redirect_to announcements_path }
+        format.json { head :no_content }
+      else
+        flash[:notice] = I18n.("notices.delete_failure")
+        format.html { redirect_back(fallack_location: announcements_path) }
+        format.json { render json: @announcement.errors, status: :unprocessable_entity}
+      end
     end
   end
 
