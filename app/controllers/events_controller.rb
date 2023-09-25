@@ -50,7 +50,7 @@ class EventsController < ApplicationController
         format.html { redirect_to events_path }
         format.json { render :show, status: :created, location: @event }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
@@ -65,7 +65,7 @@ class EventsController < ApplicationController
         format.html { redirect_to events_path }
         format.json { render :show, status: :ok, location: @event }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
@@ -74,11 +74,16 @@ class EventsController < ApplicationController
   # DELETE /admin/events/1
   # DELETE /admin/events/1.json
   def destroy
-    @event.destroy
-    flash[:notice] = I18n.t("notices.delete_success")
     respond_to do |format|
-      format.html { redirect_to events_path }
-      format.json { head :no_content }
+      if @event.destroy
+        flash[:notice] = I18n.t("notices.delete_success")
+        format.html { redirect_to events_path }
+        format.json { head :no_content }
+      else
+        flash[:notice] = I18n.t("notices.delete_failure")
+        format.html { redirect_back(fallback_location: events_path) }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
     end
   end
 

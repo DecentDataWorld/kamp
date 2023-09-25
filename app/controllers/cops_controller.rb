@@ -47,7 +47,7 @@ class CopsController < ApplicationController
         format.html { redirect_to cops_path }
         format.json { render :show, status: :created, location: @cop }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @cop.errors, status: :unprocessable_entity }
       end
     end
@@ -62,7 +62,7 @@ class CopsController < ApplicationController
         format.html { redirect_to cops_path }
         format.json { render :show, status: :ok, location: @cop }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @cop.errors, status: :unprocessable_entity }
       end
     end
