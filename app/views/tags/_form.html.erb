@@ -15,12 +15,12 @@
 
   <div class="row g-3">
     <div class="col-md-12">
-      <%= form.label :name %><span class="text-danger">*</span><br>
+      <span class="text-danger">*</span><%= form.label :name %><br>
       <%= form.text_field :name, class: "form-control" %>
     </div>
 
     <div class="form-group col-md-12">
-      <%= form.label :tag_type %><br>
+      <span class="text-danger">*</span><%= form.label :tag_type %><br>
       <%= form.collection_select :tag_type_id, TagType.order(:name),:id,:name, {}, { class: "form-control" } %>
     </div>
 

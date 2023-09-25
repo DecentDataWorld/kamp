@@ -15,7 +15,7 @@
 
   <div class="row g-3 p-2">
     <div class="col-md-12">
-      <%= form.label :search_name %><span class="text-danger">*</span><br>
+      <span class="text-danger">*</span><%= form.label :search_name %><br>
       <%= form.text_field :name, class: "form-control" %>
     </div>
   </div>
@@ -32,7 +32,7 @@
   </div>
   <div class="row g-3 p-2">
     <div  class="col-md-12 pb-2">
-      <%= form.label :tags %><span class="text-danger">*</span><br>
+      <span class="text-danger">*</span><%= form.label :tags %><br>
       <%= form.input_field :tags,
                               :label => false,
                               :id => "multiselect",
