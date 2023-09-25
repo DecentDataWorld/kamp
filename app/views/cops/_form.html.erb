@@ -1,5 +1,5 @@
 
-<%= simple_form_for(@cop, :html => { role: "form", multipart: true }, data: { turbo: false }) do |form| %>
+<%= simple_form_for(@cop, :html => { role: "form", multipart: true }) do |form| %>
   <% if @cop.errors.any? %>
     <div id="error_explanation">
       <h2>
