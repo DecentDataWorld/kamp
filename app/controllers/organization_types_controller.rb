@@ -44,7 +44,7 @@ class OrganizationTypesController < ApplicationController
         format.html { redirect_to organization_types_path, notice: 'Organization type was successfully created.' }
         format.json { render :show, status: :created, location: @organization_type }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @organization_type.errors, status: :unprocessable_entity }
       end
     end
@@ -58,7 +58,7 @@ class OrganizationTypesController < ApplicationController
         format.html { redirect_to organization_types_path, notice: 'Organization type was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @organization_type.errors, status: :unprocessable_entity }
       end
     end

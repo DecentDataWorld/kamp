@@ -33,7 +33,7 @@ class TagTypesController < ApplicationController
           format.html { redirect_to tag_types_path }
           format.json { render :show, status: :created, location: @tag_type }
         else
-          format.html { render :new }
+          format.html { render :new, status: :unprocessable_entity }
           format.json { render json: @tag_type.errors, status: :unprocessable_entity }
         end
       end
@@ -48,7 +48,7 @@ class TagTypesController < ApplicationController
           format.html { redirect_to tag_types_path  }
           format.json { render :show, status: :ok, location: @tag_type }
         else
-          format.html { render :edit }
+          format.html { render :edit, status: :unprocessable_entity }
           format.json { render json: @tag_type.errors, status: :unprocessable_entity }
         end
       end
