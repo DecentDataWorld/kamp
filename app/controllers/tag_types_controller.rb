@@ -68,6 +68,7 @@ class TagTypesController < ApplicationController
             format.html { redirect_to tag_types_path }
             format.json { head :no_content }
           else
+            flash[:notice] = I18n.t("notices.delete_failure")
             format.html { render :edit }
             format.json { render json: @tag_type.errors, status: :unprocessable_entity }
           end
