@@ -1,9 +1,22 @@
-<%= simple_form_for(@denial_reason) do |f| %>
-  <%= f.error_notification %>
+<%= form_with model: @denial_reason, local: true do |f| %>
+  <% if @denial_reason.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@denial_reason.errors.count, t('errors.error')) %>
+        <%= t('errors.prohibited') %>
+      </h2>
+      <ul>
+        <% @denial_reason.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
 
   <div class="row p-2">
     <div class="col-md-12">
-      <%= f.label "Reason for Denial" %><br>
+      <span class="text-danger">*</span><%= f.label :reason, "Reason for Denial" %><br>
       <%= f.text_area :reason, label: false, class: 'form-control', :rows => 10 %>
     </div>
   </div>
@@ -12,12 +25,11 @@
   <div class="row p-2">
     <div class="col-md-12">
       <% if (current_page?(new_denial_reason_path) || @denial_reason.id == nil) || (can? :manage, :all) %>
-        <%= f.button :submit, class: 'btn btn-outline-primary ' %>
+        <%= f.submit t("helpers.submit.#{@denial_reason.id ? 'update' : 'create'}", model: DenialReason.model_name.human.titleize), class: 'btn btn-outline-primary ' %>
       <% end %>
-      <% if (!current_page?(new_denial_reason_path) || @denial_reason.id != nil) && (can? :manage, :all) %>
-          <span class="float-end"><%= link_to t('navigation.delete'), denial_reason_path(@denial_reason),
-            method: :delete,
-            data: { turbo_confirm: "Are you sure?", turbo_method: :delete }, class: "btn btn-outline-danger" %></span>
+      <% if (@denial_reason.id != nil) && (can? :manage, :all) %>
+        <span class="float-end"><%= link_to t('navigation.delete'), denial_reason_path(@denial_reason),
+          data: { turbo_confirm: "Are you sure you want to delete this Denial Reason?", turbo_method: :delete }, class: "btn btn-outline-danger" %></span>
       <% end %>
       <%= link_to t('navigation.cancel'), denial_reasons_path, class: "btn btn-outline-secondary" %>
     </div>
