@@ -28,11 +28,7 @@
       url:
     </div>
     <div class="col-md-9">
-    <% if event.valid_url?(event.url) %>
-      <a href=<%= event.url %> target="_blank"><%= event.url %> </a>
-    <% else %>
-      <%= event.url %>
-    <% end %>
+      <a href=<%= event.https_url %> target="_blank"><%= event.url %> </a>
     </div>
   </div>
 <% end %>
