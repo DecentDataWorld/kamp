@@ -115,7 +115,7 @@ class OrganizationsController < ApplicationController
         format.html { redirect_to @organization, notice: 'Organization was successfully created.' }
         format.json { render action: 'show', status: :created, location: @organization }
       else
-        format.html { render action: 'new' }
+        format.html { render action: 'new', status: :unprocessable_entity }
         format.json { render json: @organization.errors, status: :unprocessable_entity }
       end
     end
@@ -137,7 +137,7 @@ class OrganizationsController < ApplicationController
         format.html { redirect_to @organization, notice: 'Organization was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: 'edit', status: :unprocessable_entity }
         format.json { render json: @organization.errors, status: :unprocessable_entity }
       end
     end
@@ -153,7 +153,7 @@ class OrganizationsController < ApplicationController
 
     @organization.destroy
     respond_to do |format|
-      format.html { redirect_to admin_index_path }
+      format.html { redirect_to organizations_path }
       format.json { head :no_content }
     end
   end
@@ -331,6 +331,8 @@ class OrganizationsController < ApplicationController
     end
 
     def authorized?
+      return true if can? :manage, :all
+
       @organization = Organization.find_by_url(params[:id])
       if @organization.nil?
         @organization = Organization.find_by_id(params[:id])
@@ -339,7 +341,7 @@ class OrganizationsController < ApplicationController
         @organization = Organization.find_by_url(params[:organization])
       end
 
-      unless can? :manage, :all or @organization.can_manage_users(current_user)
+      unless (!organization.nil? && @organization.can_manage_users(current_user))
         flash[:error] = "You are not authorized to view that page."
         redirect_to root_path
       end
