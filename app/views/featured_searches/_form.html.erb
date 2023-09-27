@@ -1,4 +1,4 @@
-<%= simple_form_for(@featured_search, :html => { role: "form", multipart: true, autocomplete: 'off'}, data: { turbo: false }) do |form| %>
+<%= simple_form_for(@featured_search, :html => { role: "form", multipart: true, autocomplete: 'off'}) do |form| %>
   <% if @featured_search.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -15,7 +15,7 @@
 
   <div class="row g-3 p-2">
     <div class="col-md-12">
-      <%= form.label :search_name %><span class="text-danger">*</span><br>
+      <span class="text-danger">*</span><%= form.label :search_name %><br>
       <%= form.text_field :name, class: "form-control" %>
     </div>
   </div>
@@ -32,7 +32,7 @@
   </div>
   <div class="row g-3 p-2">
     <div  class="col-md-12 pb-2">
-      <%= form.label :tags %><span class="text-danger">*</span><br>
+      <span class="text-danger">*</span><%= form.label :tags %><br>
       <%= form.input_field :tags,
                               :label => false,
                               :id => "multiselect",
@@ -69,9 +69,9 @@
 
     <div class="col-md-12">
       <% if current_page?(new_featured_search_path) || @featured_search.id == nil %>
-        <%= form.submit t('helpers.submit.create', model: FeaturedSearch.model_name.human), class: "btn btn-outline-primary" %>
+        <%= form.submit t('helpers.submit.create', model: FeaturedSearch.model_name.human.titleize), class: "btn btn-outline-primary" %>
       <% else %>
-        <%= form.submit t('helpers.submit.update', model: FeaturedSearch.model_name.human), class: "btn btn-outline-primary" %>
+        <%= form.submit t('helpers.submit.update', model: FeaturedSearch.model_name.human.titleize), class: "btn btn-outline-primary" %>
           <span class="float-end"><%= link_to t('navigation.delete'), featured_search_path(@featured_search),
             method: :delete,
             data: { turbo_confirm: "Are you sure you want to delete this Featured Search?", turbo_method: :delete }, class: "btn btn-outline-danger" %></span>

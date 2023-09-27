@@ -1,4 +1,4 @@
-<%= simple_form_for(@event, :html => { role: "form", multipart: true, class: "sky-form" }, data: { turbo: false }) do |form| %>
+<%= simple_form_for(@event, :html => { role: "form", multipart: true, class: "sky-form" }) do |form| %>
   <% if @event.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -35,7 +35,7 @@
 
   <div class="row p-2">
     <div class="col-md-3">
-      <%= form.label :date %><br>
+      <span class="text-danger">*</span><%= form.label :date %><br>
       <div data-controller="datepicker" class="input-group mb-3">
         <%= form.text_field :start_date, value: @event.start_date ? @event.start_date.strftime("%Y-%m-%d") : "", class: "form-control", data: {"datepicker-target": "input"} %>
         <button class="btn btn-outline-secondary" type="button" id="button-addon2" data-datepicker-target="toggle"><i class="bi bi-calendar3"></i></button>

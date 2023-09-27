@@ -1,4 +1,4 @@
-<%= form_with model: @tag_type, data: { turbo: false }, local: true do |form| %>
+<%= form_with model: @tag_type, local: true do |form| %>
   <% if @tag_type.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -15,7 +15,7 @@
 
   <div class="row g-3">
     <div class="col-md-12">
-      <%= form.label :name %><span class="text-danger">*</span><br>
+      <span class="text-danger">*</span><%= form.label :name %><br>
       <%= form.text_field :name, class: "form-control" %>
     </div>
     <div class="col-md-12">

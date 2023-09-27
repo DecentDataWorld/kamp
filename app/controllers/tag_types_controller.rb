@@ -33,7 +33,7 @@ class TagTypesController < ApplicationController
           format.html { redirect_to tag_types_path }
           format.json { render :show, status: :created, location: @tag_type }
         else
-          format.html { render :new }
+          format.html { render :new, status: :unprocessable_entity }
           format.json { render json: @tag_type.errors, status: :unprocessable_entity }
         end
       end
@@ -48,7 +48,7 @@ class TagTypesController < ApplicationController
           format.html { redirect_to tag_types_path  }
           format.json { render :show, status: :ok, location: @tag_type }
         else
-          format.html { render :edit }
+          format.html { render :edit, status: :unprocessable_entity }
           format.json { render json: @tag_type.errors, status: :unprocessable_entity }
         end
       end
@@ -59,8 +59,8 @@ class TagTypesController < ApplicationController
     def destroy
       respond_to do |format|
         if @tag_type.tags.count > 0
-          flash[:error] = I18n.t("warnings.tag_type_has_tags")
-          format.html { render :edit }
+          flash[:error] = "Tag Type has associated Tags and cannot be deleted."
+          format.html { redirect_back(fallback_location: edit_tag_type_path(@tag_type)) }
           format.json { render json: @tag_type.errors, status: :unprocessable_entity}
         else
           if @tag_type.destroy
@@ -68,6 +68,7 @@ class TagTypesController < ApplicationController
             format.html { redirect_to tag_types_path }
             format.json { head :no_content }
           else
+            flash[:notice] = I18n.t("notices.delete_failure")
             format.html { render :edit }
             format.json { render json: @tag_type.errors, status: :unprocessable_entity }
           end

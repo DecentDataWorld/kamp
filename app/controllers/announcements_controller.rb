@@ -50,7 +50,7 @@ class AnnouncementsController < ApplicationController
         format.html { redirect_to announcements_path }
         format.json { render :show, status: :created, location: @announcement }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @announcement.errors, status: :unprocessable_entity }
       end
     end
@@ -65,7 +65,7 @@ class AnnouncementsController < ApplicationController
         format.html { redirect_to announcements_path  }
         format.json { render :show, status: :ok, location: @announcement }
       else
-        format.html { render :edit }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @announcement.errors, status: :unprocessable_entity }
       end
     end
@@ -74,12 +74,16 @@ class AnnouncementsController < ApplicationController
   # DELETE /admin/announcements/1
   # DELETE /admin/announcements/1.json
   def destroy
-    
     respond_to do |format|
-      @announcement.destroy
-      flash[:notice] = I18n.t("notices.delete_success")
-      format.html { redirect_to announcements_path }
-      format.json { head :no_content }
+      if @announcement.destroy
+        flash[:notice] = I18n.t("notices.delete_success")
+        format.html { redirect_to announcements_path }
+        format.json { head :no_content }
+      else
+        flash[:notice] = I18n.t("notices.delete_failure")
+        format.html { redirect_back(fallback_location: announcements_path) }
+        format.json { render json: @announcement.errors, status: :unprocessable_entity}
+      end
     end
   end
 

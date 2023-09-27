@@ -43,7 +43,7 @@ class FeaturedSearchesController < ApplicationController
           format.html { redirect_to featured_searches_path }
           format.json { render :show, status: :created, location: @featured_search }
         else
-          format.html { render :new }
+          format.html { render :new, status: :unprocessable_entity }
           format.json { render json: @featured_search.errors, status: :unprocessable_entity }
         end
       end
@@ -59,7 +59,7 @@ class FeaturedSearchesController < ApplicationController
           format.html { redirect_to featured_searches_path  }
           format.json { render :show, status: :ok, location: @featured_search }
         else
-          format.html { render :edit }
+          format.html { render :edit, status: :unprocessable_entity }
           format.json { render json: @featured_search.errors, status: :unprocessable_entity }
         end
       end
@@ -69,10 +69,15 @@ class FeaturedSearchesController < ApplicationController
     # DELETE /featured_searches/1.json
     def destroy
       respond_to do |format|
-        @featured_search.destroy
-        flash[:notice] = I18n.t("notices.delete_success")
-        format.html { redirect_to featured_searches_path }
-        format.json { head :no_content }
+        if @featured_search.destroy
+          flash[:notice] = I18n.t("notices.delete_success")
+          format.html { redirect_to featured_searches_path }
+          format.json { head :no_content }
+        else
+          flash[:notice] = I18n.t("notices.delete_failure")
+          format.html { redirect_back(fallback_location: featured_searches_path) }
+          format.json { render json: @featured_search.errors, status: :unprocessable_entity }
+        end
       end
     end
   

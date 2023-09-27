@@ -31,20 +31,30 @@ class DenialReasonsController < ApplicationController
 
   def create
     @denial_reason = DenialReason.new(denial_reason_params)
-    @denial_reason.save
-
-    redirect_to denial_reasons_path, notice: 'Reason created successfully'
+    if @denial_reason.save
+      flash[:notice] = "Reason created successfully"
+      redirect_to denial_reasons_path
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def update
-    @denial_reason.update(denial_reason_params)
-
-    redirect_to denial_reasons_path, notice: 'Reason edited successfully'
+    if @denial_reason.update(denial_reason_params)
+      redirect_to denial_reasons_path, notice: 'Reason edited successfully'
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
-    @denial_reason.destroy
-    respond_with(@denial_reason)
+    if @denial_reason.destroy
+      flash[:notice] = I18n.t("notices.delete_success")
+      respond_with(@denial_reason)
+    else
+      flash[:notice] = "Could not delete Reason."
+      redirect_back(fallback_location: denial_reasons_path)
+    end
   end
 
   private

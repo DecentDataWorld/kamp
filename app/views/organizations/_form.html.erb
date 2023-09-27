@@ -1,4 +1,4 @@
-<%= simple_form_for(@organization, :html => { role: "form", multipart: true }, data: { turbo: false }) do |f| %>
+<%= simple_form_for(@organization, :html => { role: "form", multipart: true }) do |f| %>
   <% if @organization.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -31,7 +31,7 @@
 
     <div class="form-group mb-3 col-6">
       <label for="attachment">Organization Type</label>
-      <%= f.select :organization_type_id, OrganizationType.all.collect {|x| [x.organization_type, x.id]}, {label: false, :include_blank => true}, {class: "form-select"} %>
+      <%= f.select :organization_type_id, OrganizationType.all.collect {|x| [x.organization_type, x.id]}, {label: false, prompt: "Select"}, {class: "form-select"} %>
     </div>
   </div>
 
