@@ -341,7 +341,7 @@ class OrganizationsController < ApplicationController
         @organization = Organization.find_by_url(params[:organization])
       end
 
-      unless (!organization.nil? && @organization.can_manage_users(current_user))
+      unless (!@organization.nil? && @organization.can_manage_users(current_user))
         flash[:error] = "You are not authorized to view that page."
         redirect_to root_path
       end
