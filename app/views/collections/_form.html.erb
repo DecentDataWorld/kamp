@@ -46,7 +46,7 @@
 
     <div class="row p-2">
       <div class="col-md-12">
-      <span class="text-danger">*</span> <%= f.label :tags %><span>&nbsp;<%= link_to '<i class="fa-regular fa-rectangle-list"></i>'.html_safe, show_guide_path, data: { turbo_frame: "modal" } %></span><br>
+      <span class="text-danger">*</span> <%= f.label :tags %><br>
         <%= f.input_field :tags,
                           :label => false,
                           :id => "multiselect",
