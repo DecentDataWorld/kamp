@@ -82,7 +82,8 @@ group :development, :test do
 end
 gem 'dotenv-rails', groups: [:development, :test]
 group :production do
-  # gem 'cloudflare-rails'
+  gem 'lograge'
+  gem 'logstash-event'
 end
 group :test do
   gem 'shoulda-matchers'

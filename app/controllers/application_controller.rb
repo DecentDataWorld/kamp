@@ -17,6 +17,28 @@ class ApplicationController < ActionController::Base
     redirect_to main_app.root_path, :alert => exception.message
   end
 
+  # Lograge method for adding extra info to Logging
+  def append_info_to_payload(payload)
+    super
+    payload[:remote_ip] = request.remote_ip
+    payload[:user_id] = if current_user.present?
+      current_user.try(:id)
+    else
+      :guest
+    end
+  end
+
+  #used to prevent routing errors from raising fatal exceptions in production
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found if Rails.env.production?
+
+  def record_not_found
+    not_found
+  end
+
+  def not_found(message = nil)
+    raise ActionController::RoutingError.new(message)
+  end
+
   private
 
   def get_current_user
