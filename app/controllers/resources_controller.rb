@@ -139,7 +139,7 @@ class ResourcesController < ApplicationController
         format.json { render action: 'show', status: :created, location: @resource }
       else
         flash[:error] = "Could not add resource"
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @resource.errors, status: :unprocessable_entity }
       end
     end
@@ -170,7 +170,7 @@ class ResourcesController < ApplicationController
       else
         format.html {
           @collections = Collection.where("organization_id in (?)", current_user.organizations.map(&:id)).order("title")
-          render action: 'edit' }
+          render action: 'edit', status: :unprocessable_entity }
         format.json { render json: @resource.errors, status: :unprocessable_entity }
       end
     end
@@ -181,6 +181,7 @@ class ResourcesController < ApplicationController
   def destroy
     @resource.destroy
     respond_to do |format|
+      flash[:notice] = I18n.t('notices.delete_success')
       format.html { redirect_to resources_url }
       format.json { head :no_content }
     end

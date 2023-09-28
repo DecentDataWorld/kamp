@@ -1,4 +1,4 @@
-<%= simple_form_for(resource, :html => { role: "form", multipart: true }, data: { turbo: false }) do |f| %>
+<%= simple_form_for(resource, :html => { role: "form", multipart: true }) do |f| %>
     <% if !destination.blank? %>
         <input type="hidden" name="destination" value="<%= destination %>">
     <% end %>

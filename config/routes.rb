@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   #resources :batches
   #resources :categories
   resources :tags, path: 'admin/tags'
+  get 'tags/guide', to: 'tags#show_guide', as: :show_guide
   resources :tag_types, path: 'admin/tag_types'
   resources :featured_searches
   resources :announcements, path: 'admin/announcements'
