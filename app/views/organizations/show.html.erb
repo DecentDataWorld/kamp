@@ -222,7 +222,7 @@
                                           </button>
                                           <ul class="dropdown-menu">
                                             <% UsersOrganization.role.values.excluding("editor").each do |r| %>
-                                              <li><%= link_to r.capitalize, update_org_role_path(id: uo.first.id, role: r), data: { turbo_method: :put }, class: "dropdown-item" %></li>
+                                              <li><%= link_to r.capitalize, update_org_role_path(id: uo.where(organization_id: @organization.id).first.id, role: r), data: { turbo_method: :put }, class: "dropdown-item" %></li>
                                             <% end %>
                                           </ul>
                                         </div>
