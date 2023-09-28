@@ -3,7 +3,7 @@
   <div class="container">
     <ol>
       <li><%= link_to root_path do %>Home<% end %></li>
-      <li><%= link_to admin_index_path do %>Administration<% end %></li>
+      <% if can? :manage, :all %><li><%= link_to admin_index_path do %>Administration<% end %></li><% end %>
       <li><%= link_to organizations_path(:page => params[:page]) do %>Organizations<% end%></li>
       <li><%= @organization.name %></li>
     </ol>
@@ -26,7 +26,7 @@
             <nav>
               <ul class="nav nav-tabs pb-2">
                 <li class="pe-4 ps-2"><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources">Uploads&nbsp;<span class="badge rounded-pill bg-dark dark-badge-link align-text-bottom"><%= @resource_count %></span></a></li>
-                <% if (!@resources_pending.nil? and @resources_pending.count > 0) || (!@collections_pending.nil? and @collections_pending.count > 0) %>
+                <% if (@organization.can_edit_organization(current_user) or can? :manage, :all) && ((!@resources_pending.nil? and @resources_pending.count > 0) || (!@collections_pending.nil? and @collections_pending.count > 0)) %>
                   <li class="pe-4"><a href="#resources_pending" data-bs-toggle="tab" data-bs-target="#resources_pending">Pending Approval</a></li>
                 <% end %>
                 <li class="pe-4"><a href="#members" data-bs-toggle="tab" data-bs-target="#members">Members</a></li>
@@ -111,7 +111,7 @@
               </div><!--- END RESOURCES TAB --->
 
               <!--- PENDING TAB --->
-              <% if (@organization.can_edit_organization(current_user)  or can? :manage, :all) && (!@resources_pending.nil? and @resources_pending.count > 0)  || (!@collections_pending.nil? and @collections_pending.count > 0) %>
+              <% if (@organization.can_edit_organization(current_user) or can? :manage, :all) && ((!@resources_pending.nil? and @resources_pending.count > 0) || (!@collections_pending.nil? and @collections_pending.count > 0)) %>
                 <div class="tab-pane fade" id="resources_pending">
                   <div class="row-fluid">
                     <div class="col-sm-12">
