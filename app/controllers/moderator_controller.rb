@@ -84,13 +84,13 @@ class ModeratorController < ApplicationController
   private
 
   def authorize_moderator
-    if !can? :approve, Resource and !can? :approve, Collection and !current_user.users_organizations.pluck(:role).include?("admin")
+    if !can? :approve, Resource and !can? :approve, Collection
       return redirect_to root_path, alert: 'You do not have the ability to moderate submissions'
     end
   end
 
   def handle_pending_submissions
-    @pending_submissions = Resource.where(:approved => false).paginate(page: params[:page], per_page: 5)
+    @pending_submissions = Resource.where(:approved => false).paginate(page: params[:page], per_page: 5) 
     @pending_collections = Collection.where(:approved => false).paginate(page: params[:page], per_page: 5)
     # this does sort of work, but...
     # TODO: use sql query to retrieve resources and collections with required fields to use pagination properly?
