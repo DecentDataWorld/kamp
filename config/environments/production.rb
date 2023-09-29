@@ -82,8 +82,8 @@ Rails.application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   # Use a different logger for distributed setups.
-  # require "syslog/logger"
-  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
+  # require 'syslog/logger'
+  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
@@ -106,4 +106,14 @@ Rails.application.configure do
         secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
     }
   }
+
+  config.lograge.enabled = true
+  config.lograge.formatter = Lograge::Formatters::Logstash.new
+  config.lograge.ignore_actions = ['HealthcheckController#check_db','Devise::SessionsController#new','Devise::SessionsController#destroy']
+  config.lograge.custom_options = lambda do |event|
+    {remote_ip: event.payload[:remote_ip], user_id: event.payload[:user_id], params: event.payload[:params].except('controller', 'action', 'format', 'utf8')}
+  end
+  config.lograge.ignore_custom = lambda do |event|
+    event.payload[:user_id] == :guest || event.payload[:user_id] == "guest"
+  end
 end
