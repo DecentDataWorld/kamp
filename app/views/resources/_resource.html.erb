@@ -17,7 +17,7 @@
     <div class="card border-top-0 border-end-0 border-bottom-0 border-primary border-4">
       <div class="card-body">
       <!-- Begin Inner Results -->
-      <% if can? :approve, resource and resource.approved != true %>
+      <% if ((can? :approve, resource) || resource.organization.can_edit_organization(current_user)) and resource.approved != true %>
         <div class="float-end">
           <%= link_to "Approve", approve_submission_path(:submission_id => resource.id, :submission_type => "resource"), class: "btn btn-outline-primary btn-sm" %>
           <%= link_to "Deny", denial_submission_path(:submission_id => resource.id, :submission_type => "resource"), :class => "btn btn-outline-danger btn-sm" %>
