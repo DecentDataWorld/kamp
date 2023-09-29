@@ -20,7 +20,7 @@
       <% end %>
       <% if user_signed_in? %>
         <% if @current_user.has_approved_org %>
-          <%= link_to organization_path(@current_user.organizations.first), :class=> "toolbar-item" do %><i class="fa fa-building"></i> My Organization<% end %>
+          <%= link_to organization_path(@current_user.organizations.order(:name).first), :class=> "toolbar-item" do %><i class="fa fa-building"></i> My Organization<% end %>
         <% else %>
           <%= link_to organization_apply_path, :class=> "toolbar-item" do %><i class="fa fa-building"></i> My Organization<% end %>
         <% end %>
