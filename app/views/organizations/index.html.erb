@@ -62,7 +62,7 @@
                   <% if can? :manage, :all %>
                     <td class="text-center"><%= link_to edit_organization_path(o), class: 'btn btn-outline-primary btn-sm', role: "button" do %>Edit<% end %></td>
                     <% if o.approved %>
-                      <td class="text-center"><%= button_to deactivate_organization_path(o.id), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', style: 'width:87px;', role: "button" do %>Deactivate<% end %></td>
+                      <td class="text-center"><%= button_to deactivate_organization_path(o.id), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deactivate<% end %></td>
                     <% else %>
                       <td class="text-center"><%= link_to("Delete", organization_path(o), :data => { turbo_method: :delete, turbo_confirm: "Are you sure?" }, :method => :delete, :class => 'btn btn-outline-danger btn-sm', :style => 'width:87px;') %></td>
                     <% end %>
