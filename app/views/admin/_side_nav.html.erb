@@ -17,14 +17,14 @@
     <a href="<%= featured_searches_url %>" class="<%= 'active' if current_page?(featured_searches_url) %>">Featured Searches</a>
   </li>
   <% if user_signed_in? and (can? :approve, Resource or can? :approve, Collection or can? :manage, :all) %>
-    <li class="list-group-item available-tags ps-1">
-      <a href="<%= organizations_url %>" class="<%= 'active' if current_page?(organizations_url) %>"><%=t('navigation.organizations')%></a>
-    </li>
     <% if current_user.organizations.count > 1 %>
       <li class="list-group-item available-tags ps-1">
         <a href="<%= user_orgs_index_url %>" class="<%= 'active' if current_page?(user_orgs_index_url) %>"><%=t('navigation.my_organizations')%></a>
       </li>
     <% end %>
+    <li class="list-group-item available-tags ps-1">
+      <a href="<%= organizations_url %>" class="<%= 'active' if current_page?(organizations_url) %>"><%=t('navigation.organizations')%></a>
+    </li>
   <% end %>
   <% if user_signed_in? and can? :manage, :all %>
     <li class="list-group-item available-tags ps-1">
