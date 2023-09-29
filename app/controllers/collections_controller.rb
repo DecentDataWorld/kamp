@@ -107,7 +107,7 @@ class CollectionsController < ApplicationController
         format.json { render action: 'show', status: :created, location: @collection }
       else
         flash[:error] = "Could not add collection"
-        format.html { render action: 'new' }
+        format.html { render action: 'new', status: :unprocessable_entity }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
     end
@@ -129,7 +129,7 @@ class CollectionsController < ApplicationController
         format.html { redirect_to @collection, notice: 'Collection was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: 'edit', status: :unprocessable_entity }
         format.json { render json: @collection.errors, status: :unprocessable_entity }
       end
     end
@@ -144,6 +144,7 @@ class CollectionsController < ApplicationController
 
     @collection.destroy
     respond_to do |format|
+      flash[:notice] = I18n.t('notices.delete_success')
       format.html { redirect_to collections_url }
       format.json { head :no_content }
     end

@@ -2,6 +2,10 @@ class TagsController < ApplicationController
   before_action :set_tag, only: [:edit, :update, :destroy]
   before_action :authorized?
 
+  def show_guide
+    @tags = Tag.includes(:tag_type).order('tag_types.name, tags.name')
+  end
+
   # GET /tags
   # GET /tags.json
   def index

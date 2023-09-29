@@ -1,4 +1,4 @@
-<%= simple_form_for(@collection, :html => { role: "form", multipart: true }, data: { turbo: false }) do |f| %>
+<%= simple_form_for(@collection, :html => { role: "form", multipart: true }) do |f| %>
     <%= f.input :url, :as => "hidden" %>
     <%= f.input :author_id, :as => "hidden" %>
     <%= f.input :maintainer_id, :as => "hidden" %>

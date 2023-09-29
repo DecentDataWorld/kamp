@@ -32,7 +32,7 @@
   </div>
   <div class="row g-3 p-2">
     <div  class="col-md-12 pb-2">
-      <span class="text-danger">*</span><%= form.label :tags %><br>
+      <span class="text-danger">*</span><%= form.label :tags %>&nbsp;&nbsp;<%= link_to 'Index of Available Tags', show_guide_path, data: { turbo_frame: "modal"}, style:"font-weight: bold; font-size: small", class: "float-end" %><br>
       <%= form.input_field :tags,
                               :label => false,
                               :id => "multiselect",
