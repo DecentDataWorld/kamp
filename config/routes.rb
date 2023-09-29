@@ -110,6 +110,7 @@ Rails.application.routes.draw do
   resources :organizations, path: '/admin/organizations'
   put 'organizations/deactivate/:id', to: 'organizations#deactivate', as: 'deactivate_organization'
   put 'organizations/reactivate/:id', to: 'organizations#reactivate', as: 'reactivate_organization'
+  get 'user_orgs_index', to: 'organizations#user_orgs_index', as: 'user_orgs_index'
 
   root :to => 'home#index'
   get 'home/error', to: 'home#error', as: :error_page

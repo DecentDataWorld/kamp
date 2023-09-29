@@ -315,6 +315,11 @@ class OrganizationsController < ApplicationController
     redirect_to organizations_process_user_path(params[:organization_id]), notice: 'Invitation was successfully sent.'
   end
 
+  # GET /user_orgs_index
+  def user_orgs_index
+    @organizations = current_user.organizations.where(deactivated_at: nil).order(name: :asc)
+  end
+
 
   private
 
