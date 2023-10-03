@@ -1,12 +1,12 @@
 <!-- ======= Breadcrumbs ======= -->
 <section id="breadcrumbs" class="breadcrumbs">
-    <div class="container">
-      <ol>
-        <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
-        <li><%= link_to admin_index_path do %><%=t('navigation.administration')%><% end %></li>
-        <li>Organizations</li>
-      </ol>
-    </div>
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+      <% if can? :manage, :all %><li><%= link_to admin_index_path do %><%=t('navigation.administration')%><% end %></li><% end %>
+      <li>Organizations</li>
+    </ol>
+  </div>
 </section><!-- End Breadcrumbs -->
 
 <!-- ======= About Section ======= -->
