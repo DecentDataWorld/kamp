@@ -1,4 +1,4 @@
-if Rails.application.config.lograge.enabled
+if Rails.env.production? && Rails.application.config.lograge.enabled
   module ActionDispatch
     class DebugExceptions
       alias old_log_error log_error
