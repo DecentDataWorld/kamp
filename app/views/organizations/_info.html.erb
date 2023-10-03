@@ -1,42 +1,55 @@
 <div class="row border-bottom pb-2 me-1">
-  <div class="col fs-5"><i class="bi bi-buildings"></i> Orgs</div>
-
-    <div class="col d-flex flex-row-reverse available-tags">
-      <% if (can? :manage, :all || (can? :approve, @organization && !@organization.approved)) && !local_assigns[:editing] %>
-        <div class="dropdown">
-          <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa fa-cog"></i>
-          </button>
-          <ul class="dropdown-menu">
-          <% if can? :manage, :all %>
-            <li><%= link_to "Edit Organization", edit_organization_path(@organization, show_org: true), class: "dropdown-item", data: {:show_org => true} %></li>
-          <% end %>
-          <% if (can? :approve, @organization) && (!@organization.approved) %>
-            <li><%= link_to "Approve Organization", organization_approve_path(@organization.url), :class => "dropdown-item" %></li>
-            <li><%= link_to("Delete Organization", organization_path(@organization), :data => { turbo_method: :delete, turbo_confirm: "Are you sure?" }, :method => :delete, :class => "dropdown-item") %></li>
-          <% end %>
-          </ul>
-        </div>
-      <% end %>
+  <% if current_user.organizations.count > 1 %>
+    <div class="col fs-5 dropdown">
+      <button class="btn btn-link btn-lg p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-buildings"></i>
+      </button> Orgs
+      <ul class="dropdown-menu">
+        <% current_user.organizations.each do |o| %>
+          <li><%= link_to o.name, organization_path(o), class: "dropdown-item" %></li>
+        <% end %>
+      </ul>
     </div>
-  </div>
-  <div>
+  <% else %>
+    <div class="col fs-5"><i class="bi bi-buildings"></i> Orgs</div>
+  <% end %>
 
-    <ul class="list-group list-group-flush bg-transparent">
-    <% if !@organization.organization_type.blank? %>
-      <li class="list-group-item bg-transparent text-muted">
-        <div class="text-danger">Organization Type</div>
-        <div class="ms-3"><%= @organization.organization_type.organization_type %></div>
-      </li>
+  <div class="col d-flex flex-row-reverse available-tags">
+    <% if (can? :manage, :all || (can? :approve, @organization && !@organization.approved)) && !local_assigns[:editing] %>
+      <div class="dropdown">
+        <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa fa-cog"></i>
+        </button>
+        <ul class="dropdown-menu">
+        <% if can? :manage, :all %>
+          <li><%= link_to "Edit Organization", edit_organization_path(@organization, show_org: true), class: "dropdown-item", data: {:show_org => true} %></li>
+        <% end %>
+        <% if (can? :approve, @organization) && (!@organization.approved) %>
+          <li><%= link_to "Approve Organization", organization_approve_path(@organization.url), :class => "dropdown-item" %></li>
+          <li><%= link_to("Delete Organization", organization_path(@organization), :data => { turbo_method: :delete, turbo_confirm: "Are you sure?" }, :method => :delete, :class => "dropdown-item") %></li>
+        <% end %>
+        </ul>
+      </div>
     <% end %>
-    <% if !@organization.description.blank? %>
-      <li class="list-group-item bg-transparent text-muted">
-        <div class="text-danger">Description</div>
-        <div class="ms-3">
-          <%= simple_format @organization.description %>
-        </div>
-      </li>
-    <% end %>
-    </ul>
+  </div>
+</div>
+
+<div>
+  <ul class="list-group list-group-flush bg-transparent">
+  <% if !@organization.organization_type.blank? %>
+    <li class="list-group-item bg-transparent text-muted">
+      <div class="text-danger">Organization Type</div>
+      <div class="ms-3"><%= @organization.organization_type.organization_type %></div>
+    </li>
+  <% end %>
+  <% if !@organization.description.blank? %>
+    <li class="list-group-item bg-transparent text-muted">
+      <div class="text-danger">Description</div>
+      <div class="ms-3">
+        <%= simple_format @organization.description %>
+      </div>
+    </li>
+  <% end %>
+  </ul>
 </div>
 
