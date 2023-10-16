@@ -66,7 +66,8 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = { :host => 'jordankmportal.com' }
+  # TODO: CHANGE THIS BACK AT CUTOVER!!
+  config.action_mailer.default_url_options = { :host => 'staging.jordankmportal.com' }
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :ses
   config.action_mailer.perform_deliveries = true
