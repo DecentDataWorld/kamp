@@ -29,7 +29,9 @@
                 <% if (@organization.can_edit_organization(current_user) or can? :manage, :all) && ((!@resources_pending.nil? and @resources_pending.count > 0) || (!@collections_pending.nil? and @collections_pending.count > 0)) %>
                   <li class="pe-4"><a href="#resources_pending" data-bs-toggle="tab" data-bs-target="#resources_pending">Pending Approval</a></li>
                 <% end %>
-                <li class="pe-4"><a href="#members" data-bs-toggle="tab" data-bs-target="#members">Members</a></li>
+                <% if (current_user && current_user.organizations.include?(@organization) or can? :manage, :all) %>
+                  <li class="pe-4"><a href="#members" data-bs-toggle="tab" data-bs-target="#members">Members</a></li>
+                <% end %>
               </ul>
             </nav>
 
@@ -60,7 +62,7 @@
                         <ul class="nav nav-tabs">
                           <li class="nav-item"><a href="#inner_resources" class="nav-link nav-link-large <%= !@show_collections ? 'active' : ''%>" data-bs-toggle="tab" data-bs-target="#inner_resources">Resources</a></li>
                           <li class="nav-item"><a href="#inner_collections" class="nav-link nav-link-large  <%= @show_collections ? 'active' : ''%>" data-bs-toggle="tab" data-bs-target="#inner_collections">Collections</a></li>
-                          <% if @organization.can_manage_users(current_user) or can? :manage, :all %>
+                          <% if current_user && current_user.organizations.include?(@organization) or can? :manage, :all %>
                             <li class="nav-item"><a href="#inner_private_resources" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#inner_private_resources">Private Resources</a></li>
                           <% end %>
                         </ul>
