@@ -261,8 +261,26 @@ import introJs from "intro.js"
       }
     });
 
+    const getCookie = (key) => {
+      var cookieArr = document.cookie.split(";");
+      for(var i = 0; i < cookieArr.length; i++) {
+          var cookiePair = cookieArr[i].split("=");
+          if(key == cookiePair[0].trim()) {
+              return decodeURIComponent(cookiePair[1]);
+          }
+      }
+      return null;
+    }
+
     // start help tour on home page load if no cookie saved
-    introJs().start();
+    const autoStartTour = () => {
+      let sawTour = getCookie("sawTour")
+      if (!sawTour) {
+        introJs().start();
+        document.cookie = "sawTour = true"
+      }
+    }
+    autoStartTour()
 
     // start help tour on click 'help' in top toolbar
     document.getElementById('help_link').addEventListener("click", ()=>{introJs().start()})
