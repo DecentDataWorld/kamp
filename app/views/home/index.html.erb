@@ -47,7 +47,7 @@
                       </div>
                     </div>
                     <div class="col-6">
-                      <div class="hero-box border-success card">
+                      <div class="hero-box border-success card" data-intro="Register for a free account here. You can access all public resources and collections without having an account on the KaMP, but to join an organization or a Community of Practice, or contribute resources to the KaMP repository, you will need to create an account. Click the envelope to begin the simple registration process.">
                         <div class="card-body">
                           <%= render  'cops' %>
                         </div>
@@ -84,7 +84,7 @@
 
     <!-- ======= Featured Section ======= -->
     <section id="featured" class="featured">
-      <div class="container">
+      <div class="container" data-intro="Click on a topic to be taken to a list of relevant resources and collections.">
 
         <div class="row">
           <% @featured_searches.each do |fs| %>

@@ -4,7 +4,7 @@ import "@hotwired/turbo-rails"
 import "./controllers"
 import "@fortawesome/fontawesome-free/js/all"
 import Swiper from 'swiper'
-
+import introJs from "intro.js"
 
 /**
 * Template Name: Eterna
@@ -260,6 +260,13 @@ import Swiper from 'swiper'
         clickable: true
       }
     });
+
+    // start help tour on home page load if no cookie saved
+    introJs().start();
+
+    // start help tour on click 'help' in top toolbar
+    document.getElementById('help_link').addEventListener("click", ()=>{introJs().start()})
+
   
   
   })()
