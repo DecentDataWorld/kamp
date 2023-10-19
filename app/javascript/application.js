@@ -284,6 +284,8 @@ import introJs from "intro.js"
 
     // start help tour on click 'help' in top toolbar
     document.getElementById('help_link').addEventListener("click", ()=>{introJs().start()})
+    // // after signing out, clicking the help link does nothing, for some reason.
+    // // adding the window load listener did not help! bit of an edge case but i would like to fix.
 
   
   

@@ -33,7 +33,9 @@
                             <% else %>
                                 <% search = @search %>
                             <% end %>
-                            <%= render partial: 'searches/form', locals: { search: search } %>
+                            <div data-intro="Use this to box to search for resources and collections from the KaMP home page. Beneath the search bar, note the number of resources and collections uploaded to this repository, which is constantly increasing.">
+                              <%= render partial: 'searches/form', locals: { search: search } %>
+                            </div>
                             <div class="row pt-4 d-flex align-items-center text-secondary">
                               <div class="col d-flex justify-content-center">
                                 <%= Resource.all.count %> Resources
@@ -47,7 +49,10 @@
                       </div>
                     </div>
                     <div class="col-6">
-                      <div class="hero-box border-success card" data-intro="Register for a free account here. You can access all public resources and collections without having an account on the KaMP, but to join an organization or a Community of Practice, or contribute resources to the KaMP repository, you will need to create an account. Click the envelope to begin the simple registration process.">
+                      <div class="hero-box border-success card" <% if !user_signed_in? %>
+                        data-intro="Register for a free account here. You can access all public resources and collections without having an account on the KaMP, but to join an organization or a Community of Practice, or contribute resources to the KaMP repository, you will need to create an account. Click the envelope to begin the simple registration process."
+                        <% end %>
+                      >
                         <div class="card-body">
                           <%= render  'cops' %>
                         </div>

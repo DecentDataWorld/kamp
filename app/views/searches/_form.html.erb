@@ -9,7 +9,7 @@
     <% if !params[:organization_id].nil? %>
         <input type="hidden" name="organization_id" value="<%= params[:organization_id] %>">
     <% end %>
-    <div class="input-group" data-title="Welcome to the Jordan KaMP!" data-intro="Search for resources and collections here.">
+    <div class="input-group">
       <%= text_field_tag :query, params[:query], id: 'header_search_form', class: "form-control", role: 'text', placeholder: 'Discover something', title: 'What are you looking for?', maxlength: '250' %>
         <button type="submit"  class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
         <% if !search.id.blank? %>
