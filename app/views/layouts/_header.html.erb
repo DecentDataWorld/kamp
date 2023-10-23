@@ -14,9 +14,10 @@
         <% else %>
             <% search = @search %>
         <% end %>
-        <%= render partial: 'searches/form', locals: { search: search } %>
+        <div data-title="Welcome to the KaMP" data-intro="You can kick off a search from any page on the site using this bar.">
+          <%= render partial: 'searches/form', locals: { search: search } %>
+        </div>
       </div>
-
       <div class="col-2 d-flex flex-row-reverse">
       <nav id="navbar" class="navbar">
         <ul>
