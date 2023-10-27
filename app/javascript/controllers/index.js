@@ -7,18 +7,17 @@ import { application } from "./application"
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
-import { TableSortController } from "stimulus-library"
-application.register("table-sort", TableSortController)
-
-import MultiselectController from "./multiselect_controller.js"
-application.register("multiselect", MultiselectController)
-
-import { Datepicker } from 'stimulus-datepicker'
-application.register('datepicker', Datepicker)
-
-import ModalController from "./modal_controller.js"
-application.register("modal", ModalController)
-
-import IconpickerController from "./iconpicker_controller.js"
+import IconpickerController from "./iconpicker_controller"
 application.register("iconpicker", IconpickerController)
 
+import IntroController from "./intro_controller"
+application.register("intro", IntroController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
+
+import MultiselectController from "./multiselect_controller"
+application.register("multiselect", MultiselectController)
+
+import { TableSortController } from "stimulus-library"
+application.register("table-sort", TableSortController)
