@@ -32,7 +32,8 @@ class Resource < ActiveRecord::Base
   belongs_to :cop, :class_name => "Cop", :foreign_key => "cop_id",  :optional => true
 
   has_attached_file :attachment
-  do_not_validate_attachment_file_type :attachment
+  # do_not_validate_attachment_file_type :attachment
+  validates_attachment_content_type :attachment, content_type: /\Aapplication/
 
   has_and_belongs_to_many :cops
 
