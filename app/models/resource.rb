@@ -31,7 +31,7 @@ class Resource < ActiveRecord::Base
   belongs_to :batch, :class_name => "Batch", :foreign_key => "batch_id",  :optional => true
   belongs_to :cop, :class_name => "Cop", :foreign_key => "cop_id",  :optional => true
 
-  has_attached_file :attachment
+  has_attached_file :attachment, validate_media_type: false
   do_not_validate_attachment_file_type :attachment
 
   has_and_belongs_to_many :cops
