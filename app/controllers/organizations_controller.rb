@@ -1,7 +1,7 @@
 class OrganizationsController < ApplicationController
   load_and_authorize_resource :only => [:edit, :update, :destroy], :find_by => :url
   before_action :set_organization, only: [:show, :edit, :update, :destroy, :deactivate, :private_resources]
-  before_action :authorized?, :except => [:index, :show, :not_found]
+  before_action :authorized?, :except => [:index, :show, :not_found, :apply]
 
   # GET /organizations
   def index
