@@ -3,7 +3,7 @@
     <div class="container">
       <ol>
           <li><%= link_to root_path do %>Home<% end %></li>
-          <li>Organization Membership Pending</li>
+          <li>No Organization Memberships</li>
       </ol>
     </div>
 </section><!-- End Breadcrumbs -->
@@ -13,9 +13,7 @@
   <div class="container">
     <div class="row">
       <% if @has_pending %>
-          <div class="headline">
-            <h2>Application for Organization Pending</h2>
-          </div>
+          <h5 class="border-bottom pb-2 mb-3">Application for Organization Pending</h5>
           <p>Thanks for applying to be a partner organization. Your organization request is still pending.</p>
           <p>You will be notified by email once administrators have made a decision about your organization.</p>
       <% else %>
