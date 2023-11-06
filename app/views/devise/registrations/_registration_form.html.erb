@@ -1,13 +1,13 @@
 <div class="row d-flex justify-content-center">
   <div class="col-md-9">
-    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :role => 'form', :class=>'reg-page'}) do |f| %>
+    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :role => 'form', :class=>'reg-page'}, data: { turbo: false }) do |f| %>
       <div class="reg-header">
         <h2>Register a new account</h2>
-        <div class="well well-sm"><p>All users, whether registering as part of an existing or new organization, will receive an automatically generated acknowledgement email. The acknowledgment will be sent to the email address they provided as a security measure in order to confirm they have the necessary access and authority to use the given address. Once the email address is confirmed by the user by following the link provided in the email, the System Administrator (SA) will automatically receive a notification of a new user. The SA is then tasked with reviewing the information provided before approving or rejecting the registration/request.</p></div>
+        <div class="well well-sm"><p>All users, whether registering as part of an existing or new organizationz, will receive an automatically generated acknowledgement email. The acknowledgment will be sent to the email address they provided as a security measure in order to confirm they have the necessary access and authority to use the given address. Once the email address is confirmed by the user by following the link provided in the email, the System Administrator (SA) will automatically receive a notification of a new user. The SA is then tasked with reviewing the information provided before approving or rejecting the registration/request.</p></div>
         <p>Already signed up? Click <%= link_to 'Sign in', new_user_session_path %> to log in your account.</p>
       </div>
 
-      <%= devise_error_messages! %>
+      <%= render "devise/shared/error_messages", resource: resource %>
       <label>Name</label>
         <%= f.text_field :name, :autofocus => true, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "name", placeholder: "Your name" %>
         <br/>
@@ -19,10 +19,8 @@
       <label>Or Apply for a New Organization</label>
         <%= f.text_field :organization_entered, :id => "organization_name", autocomplete: 'off', class: 'form-control margin-bottom-20', placeholder: "Organization Name" %>
         <br/>
-
-      <label>Email Address <span class="color-red">*</span></label>
-        <%= f.text_field :email, :autofocus => true, autocomplete: 'off', class: 'form-control margin-bottom-20', id: "email", placeholder: "Your email", value: params[:email_address]  %>
-        <br/>
+        
+        <%= f.hidden_field :email, value: params[:email_address]  %>
 
       <div class="row">
         <div class="col-sm-6 mb-4">
