@@ -9,7 +9,7 @@
     </div>
     <div class="social-links d-none d-md-flex align-items-center">
       <% if user_signed_in? and (can? :approve, Resource or can? :approve, Collection) %>
-        <%= link_to moderate_submissions_path, :class=> "toolbar-item" do %><i class="fa-solid fa-list-check"></i></i> Moderate Submissions<% end %>
+        <%= link_to moderate_submissions_path, :class=> "toolbar-item" do %><i class="fa-solid fa-list-check"></i></i> Moderate Submissions&nbsp;<span class="badge rounded-pill bg-secondary secondary-badge-link align-text-bottom"><%= Resource.pending_count %></span><% end %>
       <% end %>
 
       <% if user_signed_in? and can? :manage, :all %>

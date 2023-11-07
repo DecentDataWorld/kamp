@@ -319,6 +319,9 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, language=nil, days_back
     return results.to_ary
   end
 
+  def self.pending_count
+    Resource.where(approved: false).count + Collection.where(approved: false).count
+  end
 
   private
 
