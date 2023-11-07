@@ -127,8 +127,8 @@ class ResourcesController < ApplicationController
 
     respond_to do |format|
       if @resource.save
-        #ModeratorMailer.notify_submitter_of_moderation(@resource, current_user).deliver
-        #ModeratorMailer.notify_admins_of_new_submission(@resource, current_user).deliver
+        ModeratorMailer.notify_submitter_of_moderation(@resource, current_user).deliver
+        ModeratorMailer.notify_admins_of_new_submission(@resource, current_user).deliver
         format.html {
           if params[:commit] == 'Save & Add Another'
             redirect_to new_resource_path, notice: 'Resource was successfully created.'
