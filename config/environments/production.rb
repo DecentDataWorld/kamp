@@ -114,7 +114,4 @@ Rails.application.configure do
   config.lograge.custom_options = lambda do |event|
     {remote_ip: event.payload[:remote_ip], user_id: event.payload[:user_id], params: event.payload[:params].except('controller', 'action', 'format', 'utf8')}
   end
-  config.lograge.ignore_custom = lambda do |event|
-    event.payload[:user_id] == :guest || event.payload[:user_id] == "guest"
-  end
 end

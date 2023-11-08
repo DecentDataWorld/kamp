@@ -6,13 +6,7 @@ class ApplicationController < ActionController::Base
 
   before_action :get_current_user
   before_action :get_blank_search
-  # before_action :set_cache_buster
 
-  def set_cache_buster
-    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
-  end
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to main_app.root_path, :alert => exception.message
   end

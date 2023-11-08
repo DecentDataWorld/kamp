@@ -96,3 +96,5 @@ pickle-email-*.html
 !/app/assets/builds/.keep
 
 yarn-error.log
+
+/public/assets
