@@ -11,7 +11,7 @@
             <div class="carousel-container">
               <div class="carousel-content">
               <div class="row">
-                <div class="col-4 pt-5">
+                <div class="col-md-4 pt-5">
                   <div class="card card-body border-0 home-about-box">
                     <h2>Welcome to the <span>Jordan Knowledge Management Portal</span></h2>
                   
@@ -21,9 +21,9 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-8 align-middle">
+                <div class="col-md-8 align-middle">
                   <div class="row <% if @announcements.length != 0 || @events.length != 0 %>small-home<% end %>">
-                    <div class="col-6">
+                    <div class="col-lg-6">
                       <div class="hero-box border-danger card">
                         <div class="card-body">
                           <h3 class="card-title text-danger pb-3">Find Resources</h3>
@@ -48,7 +48,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-6">
+                    <div class="col-lg-6">
                       <div class="hero-box border-success card" <% if !user_signed_in? %>
                         data-intro="Register for a free account here. You can access all public resources and collections without having an account on the KaMP, but to join an organization or a Community of Practice, or contribute resources to the KaMP repository, you will need to create an account. Click the envelope to begin the simple registration process."
                         <% end %>
@@ -60,12 +60,12 @@
                     </div>
                   </div>
                    <div class="row <% if @announcements.length == 0 && @events.length == 0 %>small-home<% end %>">
-                    <div class="col-6">
+                    <div class="col-lg-6">
                       <% if @announcements.length != 0 %>
                         <%= render  'announcements' %>
                       <% end %>
                     </div>
-                    <div class="col-6">
+                    <div class="col-lg-6">
                       <% if @events.length != 0 %>
                         <%= render  'events' %>
                       <% end %>
@@ -93,7 +93,7 @@
 
         <div class="row">
           <% @featured_searches.each do |fs| %>
-            <div class="col">
+            <div class="col-lg-3 pb-3">
               <div class="icon-box">
                 <h3><a href="<%= fs.get_url %>">
                   <i class="<%= fs.icon_identifier %>"></i>
