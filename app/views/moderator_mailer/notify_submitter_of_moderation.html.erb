@@ -1,11 +1,11 @@
-<p>Thank you for contributing to the Jordan Knowledge Management Portal (KaMP), the following resource you have submitted is currently pending approval.</p>
+<p>Thank you for contributing to the Jordan Knowledge Management Portal (KaMP). The following resource you have submitted is currently pending approval:</p>
 
 <p><strong><%= @submission.class.name %> Name: <% if @submission.is_a? Collection %><a href="<%= collection_url(@submission) %>"><%= @submission.title %></a><% end %>
-  <% if @submission.is_a? Resource %><a href="<%= resource_url(@submission) %>"><%= @submission.name  %></a><% end %></strong></p>
+  <% if @submission.is_a? Resource %><a href="<%= resource_url(@submission) %>"><%= @submission.name %></a><% end %></strong></p>
 
-<p>You will be notified when the submission has been reviewed by the system administrator.</p>
+<p>You will be notified when the submission has been reviewed by a system administrator.</p>
 
-<p>If this resource was not added by you or you need any further support, please email <a href="mailto:contact@jordanmela.com">contact@jordanmela.com</a>.</p>
+<p>If this resource was not added by you, or if you need any further support, please email <a href="mailto:contact@jordanmela.com">contact@jordanmela.com</a>.</p>
 
-<p>Best Regards,<br>
+<p>Best regards,<br>
 Jordan KaMP</p>

@@ -18,7 +18,7 @@ class ModeratorController < ApplicationController
       @submission.save
 
       # send email notification
-      # ModeratorMailer.notify_submitter_of_approval(@submission, @submission.author).deliver
+      ModeratorMailer.notify_submitter_of_approval(@submission, @submission.author).deliver
 
       return redirect_back(fallback_location: moderate_submissions_path), notice: 'Submission was approved'
     else
@@ -53,7 +53,7 @@ class ModeratorController < ApplicationController
       end
 
       # send email notification
-      # ModeratorMailer.notify_submitter_of_denial(@submission, @submission.author, @reason).deliver
+      ModeratorMailer.notify_submitter_of_denial(@submission, @submission.author, @reason).deliver
 
       @submission.destroy
 
@@ -90,13 +90,9 @@ class ModeratorController < ApplicationController
   end
 
   def handle_pending_submissions
-    @pending_submissions = Resource.where(:approved => false).paginate(page: params[:page], per_page: 5)
-    @pending_collections = Collection.where(:approved => false).paginate(page: params[:page], per_page: 5)
-    # this does sort of work, but...
-    # TODO: use sql query to retrieve resources and collections with required fields to use pagination properly?
-    # https://stackoverflow.com/questions/1091713/using-will-paginate-with-multiple-models-rails
-    # @pending_submissions = @pending_submissions.paginate(page: params[:page], per_page: 10) (where submissions is both types) doesn't really work
-    # could also make a resources tab and a collections tab
+    if can? :approve, Resource or can? :approve, Collection
+      @pending_submissions = Resource.where(:approved => false) + Collection.where(:approved => false)
+    end
   end
 
 

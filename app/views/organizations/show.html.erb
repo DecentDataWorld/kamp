@@ -27,7 +27,7 @@
               <ul class="nav nav-tabs pb-2">
                 <li class="pe-4 ps-2"><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources">Uploads&nbsp;<span class="badge rounded-pill bg-dark dark-badge-link align-text-bottom"><%= @resource_count %></span></a></li>
                 <% if (@organization.can_edit_organization(current_user) or can? :manage, :all) && ((!@resources_pending.nil? and @resources_pending.count > 0) || (!@collections_pending.nil? and @collections_pending.count > 0)) %>
-                  <li class="pe-4"><a href="#resources_pending" data-bs-toggle="tab" data-bs-target="#resources_pending">Pending Approval</a></li>
+                  <li class="pe-4"><a href="#resources_pending" data-bs-toggle="tab" data-bs-target="#resources_pending">Pending Approval&nbsp;<span class="badge rounded-pill bg-dark dark-badge-link align-text-bottom"><%= @resources_pending.count + @collections_pending.count %></span></a></li>
                 <% end %>
                 <% if (current_user && current_user.organizations.include?(@organization) or can? :manage, :all) %>
                   <li class="pe-4"><a href="#members" data-bs-toggle="tab" data-bs-target="#members">Members</a></li>
