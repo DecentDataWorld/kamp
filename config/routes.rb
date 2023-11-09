@@ -116,7 +116,7 @@ Rails.application.routes.draw do
   get 'home/error', to: 'home#error', as: :error_page
   get 'tags/:tag', to: 'tags#index', as: :collection_tags
   post 'users/save_subscriptions/:id', to: 'users#save_subscriptions', as: :user_save_subscriptions
-  get 'users/remove_subscription/:id', to: 'users#remove_subscription', as: :user_remove_subscription
+  post 'users/remove_subscription/:id', to: 'users#remove_subscription', as: :user_remove_subscription
   get 'users/unlock_user/:id', to: 'users#unlock_user', as: :unlock_user
   get 'users/get_users', to: 'users#get_users', as: :get_users
   get 'users/export', to: 'users#export', as: :users_export

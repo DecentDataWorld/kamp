@@ -27,6 +27,7 @@
               <ul class="nav nav-tabs pb-2">
                 <li class="pe-4 ps-2"><a href="#resources" class="active" data-bs-toggle="tab" data-bs-target="#resources">Uploads&nbsp;<span class="badge rounded-pill bg-dark dark-badge-link align-text-bottom"><%= @user.resources.count %></span></a></li>
                 <li class="pe-4"><a href="#organizations" data-bs-toggle="tab" data-bs-target="#organizations">Memberships</a></li>
+                <li class="pe-4"><a href="#subscriptions" data-bs-toggle="tab" data-bs-target="#subscriptions">Subscriptions</a></li>
               </ul>
             </nav>
 
@@ -106,6 +107,28 @@
                   </div>
                 </div>
               </div><!--- END MEMBERSHIPS TAB --->
+
+              <!--- SUBSCRIPTIONS TAB --->
+              <div class="tab-pane fade" id="subscriptions">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="tab-v1">
+                      <ul class="nav nav-tabs">
+                        <li class="nav-item"><a href="#inner_org_subscriptions" class="nav-link nav-link-large active" data-bs-toggle="tab" data-bs-target="#inner_org_subscriptions">Organizations</a><li>
+                      </ul>
+                      <div class="tab-content">
+                        <div id="inner_org_subscriptions" class="tab-pane show fade active">
+                          <%= link_to "New Organization", new_organization_path, class: 'btn btn-outline-primary float-end mb-2' %>
+                          <%= render partial: 'user_subscriptions/table_list', locals: { user_id: @user.id } %>
+                          <% if @subscriptions.empty? %>
+                            <% if @user == @current_user %> You are <% else %> This user is <% end %> not subscribed to any organizations.
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div><!--- END SUBSCRIPTIONS TAB --->
             </div>
           </div>
         </div>

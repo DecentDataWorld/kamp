@@ -30,6 +30,7 @@ class UsersController < ApplicationController
     @collections = @user.collections_authored.where("private = false and approved = true and newsletter_only = false").page(params[:collections_page]).per_page(10).order("updated_at desc")
     @organizations = @user.organizations.page(params[:organizations_page]).per_page(10).order("updated_at desc")
     @cops = @user.cops.page(params[:cops_page]).per_page(10).order('updated_at desc')
+    @subscriptions = @user.subscriptions.where(subscribed_to: 'organization')
     @page_title = @user.name
 
     # if user is current user can view pending submissions, query for them
@@ -168,7 +169,6 @@ class UsersController < ApplicationController
   end
 
   def remove_subscription
-
     @user = User.find(params[:id])
 
     if current_user != @user
@@ -177,11 +177,14 @@ class UsersController < ApplicationController
 
     if !params[:subscribed_to_id].nil?
       subscription = UserSubscriptions.find_by(user_id: @user.id, subscribed_to: params[:subscribed_to], subscribed_to_id: params[:subscribed_to_id])
-      subscription.delete
+      if subscription.delete
+        flash[:notice] = "Successfully unsubscribed."
+      else
+        flash[:notice] = "Could not unsubscribe."
+      end
     end
 
-    redirect_to @user, :notice => "Subscription Removed."
-
+    redirect_back(fallback_location: @user)
   end
 
   def remove_membership
