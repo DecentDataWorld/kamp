@@ -152,15 +152,15 @@ class UsersController < ApplicationController
     elsif params[:subscribed_to] == 'organization'
       respond_to do |format|
         organization = Organization.find_by_id(params[:subscribed_to_id])
-        user_sub = UserSubscription.new(user_id: params[:user_id], subscribed_to_id: params[:subscribed_to_id], subscribed_to: 'organization')
+        subscription = UserSubscription.new(user_id: params[:id], subscribed_to_id: params[:subscribed_to_id], subscribed_to: 'organization')
 
-        if organization && user_sub.save
+        if organization && subscription.save
           flash[:notice] = "Subscription added."
-          format.html { redirect_back(fallback_location: organization_path(params[:organization])) }
+          format.html { redirect_back(fallback_location: params[:destination]) }
           format.json { head :no_content }
         else
           flash[:notice] = "Could not add subscription."
-          format.html { redirect_back(fallback_location: organization_path(params[:organization])) }
+          format.html { redirect_back(fallback_location: params[:destination]) }
           format.json { render json: user_sub.errors, status: :unprocessable_entity }
         end
       end
