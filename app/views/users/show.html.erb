@@ -118,7 +118,9 @@
                       </ul>
                       <div class="tab-content">
                         <div id="inner_org_subscriptions" class="tab-pane show fade active">
-                          <%= render partial: 'user_subscriptions/search_orgs', locals: { user_id: @user.id, subscribed_ids: @subscriptions.pluck(:subscribed_to_id) } %>
+                          <% if @user == @current_user %>
+                            <%= render partial: 'user_subscriptions/search_orgs', locals: { user_id: @user.id, subscribed_ids: @subscriptions.pluck(:subscribed_to_id) } %>
+                          <% end %>
                           <%= render partial: 'user_subscriptions/table_list', locals: { user_id: @user.id } %>
                           <% if @subscriptions.empty? %>
                             <% if @user == @current_user %> You are <% else %> This user is <% end %> not subscribed to any organizations.
