@@ -118,7 +118,7 @@
                       </ul>
                       <div class="tab-content">
                         <div id="inner_org_subscriptions" class="tab-pane show fade active">
-                          <%= link_to "New Organization", new_organization_path, class: 'btn btn-outline-primary float-end mb-2' %>
+                          <%= render partial: 'user_subscriptions/search_orgs', locals: { user_id: @user.id, subscribed_ids: @subscriptions.pluck(:subscribed_to_id) } %>
                           <%= render partial: 'user_subscriptions/table_list', locals: { user_id: @user.id } %>
                           <% if @subscriptions.empty? %>
                             <% if @user == @current_user %> You are <% else %> This user is <% end %> not subscribed to any organizations.
