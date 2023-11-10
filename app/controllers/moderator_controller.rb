@@ -19,6 +19,7 @@ class ModeratorController < ApplicationController
 
       # send email notification
       ModeratorMailer.notify_submitter_of_approval(@submission, @submission.author).deliver
+      ModeratorMailer.notify_subscribers(@submission).deliver
 
       return redirect_back(fallback_location: moderate_submissions_path), notice: 'Submission was approved'
     else

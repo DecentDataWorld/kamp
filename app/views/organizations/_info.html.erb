@@ -36,20 +36,31 @@
 
 <div>
   <ul class="list-group list-group-flush bg-transparent">
-  <% if !@organization.organization_type.blank? %>
+    <% if !@organization.organization_type.blank? %>
+      <li class="list-group-item bg-transparent text-muted">
+        <div class="text-danger">Organization Type</div>
+        <div class="ms-3"><%= @organization.organization_type.organization_type %></div>
+      </li>
+    <% end %>
+    <% if !@organization.description.blank? %>
+      <li class="list-group-item bg-transparent text-muted">
+        <div class="text-danger">Description</div>
+        <div class="ms-3">
+          <%= simple_format @organization.description %>
+        </div>
+      </li>
+    <% end %>
     <li class="list-group-item bg-transparent text-muted">
-      <div class="text-danger">Organization Type</div>
-      <div class="ms-3"><%= @organization.organization_type.organization_type %></div>
+      <% if @subscribed %>
+        <span class="label label-success rounded-2x"><i class="fa-solid fa-bell"></i> You are subscribed to this organization</span>
+      <% elsif @logged_in %>
+        <div class="btn-group">
+          <%= link_to user_save_subscriptions_url(id: current_user.id.to_s, subscribed_to: 'organization', subscribed_to_id: @organization.id.to_s, destination: organizations_path(@organization)), :data => { turbo_method: :post }, method: "post" do %>
+            <i class="fa-solid fa-bell"></i>&nbsp;Subscribe to Updates
+          <% end %>
+        </div>
+      <% end %>
     </li>
-  <% end %>
-  <% if !@organization.description.blank? %>
-    <li class="list-group-item bg-transparent text-muted">
-      <div class="text-danger">Description</div>
-      <div class="ms-3">
-        <%= simple_format @organization.description %>
-      </div>
-    </li>
-  <% end %>
   </ul>
 </div>
 

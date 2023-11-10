@@ -30,6 +30,7 @@ class UsersController < ApplicationController
     @collections = @user.collections_authored.where("private = false and approved = true and newsletter_only = false").page(params[:collections_page]).per_page(10).order("updated_at desc")
     @organizations = @user.organizations.page(params[:organizations_page]).per_page(10).order("updated_at desc")
     @cops = @user.cops.page(params[:cops_page]).per_page(10).order('updated_at desc')
+    @subscriptions = @user.subscriptions.where(subscribed_to: 'organization')
     @page_title = @user.name
 
     # if user is current user can view pending submissions, query for them
@@ -128,7 +129,6 @@ class UsersController < ApplicationController
   end
 
   def save_subscriptions
-
     @user = User.find(params[:id])
 
     if current_user != @user
@@ -151,35 +151,24 @@ class UsersController < ApplicationController
       end
 
     elsif params[:subscribed_to] == 'organization'
-      get_org = Organization.find_by(:name => params[:organization].strip)
-      if !get_org.nil?
-        subscribed_to_id = get_org.id
-        check_if_exists = UserSubscriptions.where("user_id = ? and subscribed_to = ? and subscribed_to_id = ?", @user.id, params[:subscribed_to].strip, subscribed_to_id)
-        if check_if_exists.count == 0
-          user_sub = UserSubscriptions.new(:user_id => params[:user_id], :subscribed_to_id => subscribed_to_id, :subscribed_to => 'organization')
-          user_sub.save
+      respond_to do |format|
+        organization = Organization.find_by_id(params[:subscribed_to_id])
+        subscription = UserSubscription.new(user_id: params[:id], subscribed_to_id: params[:subscribed_to_id], subscribed_to: 'organization')
+
+        if organization && subscription.save
+          flash[:notice] = "Subscription added."
+          format.html { redirect_back(fallback_location: params[:destination]) }
+          format.json { head :no_content }
+        else
+          flash[:notice] = "Could not add subscription."
+          format.html { redirect_back(fallback_location: params[:destination]) }
+          format.json { render json: user_sub.errors, status: :unprocessable_entity }
         end
-      else
-        error_msg = "Organization not found"
       end
-
     end
-
-    if error_msg == ""
-      if params[:destination].nil?
-        redirect_to @user, :notice => "Subscription Added."
-      else
-        redirect_to params[:destination], :notice => "Subscription Added."
-      end
-    else
-      redirect_to @user, :alert => error_msg
-    end
-
-
   end
 
   def remove_subscription
-
     @user = User.find(params[:id])
 
     if current_user != @user
@@ -188,11 +177,14 @@ class UsersController < ApplicationController
 
     if !params[:subscribed_to_id].nil?
       subscription = UserSubscriptions.find_by(user_id: @user.id, subscribed_to: params[:subscribed_to], subscribed_to_id: params[:subscribed_to_id])
-      subscription.delete
+      if subscription.delete
+        flash[:notice] = "Successfully unsubscribed."
+      else
+        flash[:notice] = "Could not unsubscribe."
+      end
     end
 
-    redirect_to @user, :notice => "Subscription Removed."
-
+    redirect_back(fallback_location: @user)
   end
 
   def remove_membership
