@@ -42,7 +42,7 @@
                 <%= user.roles.pluck(:name).first || "Select" %>
               </button>
               <ul class="dropdown-menu">
-                <% Role.all.each do |r| %>
+                <% Role.where(name: ['admin', 'member']).each do |r| %>
                   <li><%= link_to r.name.capitalize, update_role_path(id: user.id, role_ids: r.id), data: { turbo_method: :put, turbo_confirm: "Assign #{r.name.capitalize} role to #{user.name}?"}, class: "dropdown-item" %></li>
                 <% end %>
               </ul>
