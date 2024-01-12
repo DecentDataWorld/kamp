@@ -13,43 +13,59 @@
   <div class="container">
 
    <div class="row">
-     <div class="col-3 border-end">
-      <h5 class="border-bottom pb-2">Community of Practice</h5>
-        <ul class="list-group list-group-flush bg-transparent">
+    <div class="col-3 border-end">
+    <h5 class="border-bottom pb-2">Community of Practice</h5>
+      <ul class="list-group list-group-flush bg-transparent">
+        <li class="list-group-item bg-transparent text-muted">
+          <div class="text-danger">Description</div>
+          <div class="ms-3"><%= @cop.description %></div>
+        </li>
+        <li class="list-group-item bg-transparent text-muted">
+          <div class="text-danger">Contact</div>
+          <div class="ms-3">
+            <%= link_to @cop.admin.name, user_path(@cop.admin) %> <br/>
+            <%= mail_to @cop.admin.email %>
+          </div>
+        </li>
+        <li class="list-group-item bg-transparent text-muted">
+          <div class="text-danger">Members</div>
+          <ul class="list-group border-0 bg-transparent">
+            <% @cop.users.each do |m| %>
+              <li class="list-group-item bg-transparent border-0"><%= link_to m.name, user_path(m) %></li>
+            <% end %>
+          </ul>
+        </li>
+        <% if @cop.admin == current_user || (current_user.has_role? :admin) %>
           <li class="list-group-item bg-transparent text-muted">
-            <div class="text-danger">Description</div>
-            <div class="ms-3"><%= @cop.description %></div>
-          </li>
-          <li class="list-group-item bg-transparent text-muted">
-            <div class="text-danger">Contact</div>
-            <div class="ms-3">
-              <%= link_to @cop.admin.name, user_path(@cop.admin) %> <br/>
-              <%= mail_to @cop.admin.email %>
-            </div>
-          </li>
-          <li class="list-group-item bg-transparent text-muted">
-            <div class="text-danger">Members</div>
+            <div class="text-danger">Administration</div>
             <ul class="list-group border-0 bg-transparent">
-              <% @cop.users.each do |m| %>
-                <li class="list-group-item bg-transparent border-0"><%= link_to m.name, user_path(m) %></li>
-              <% end %>
+              <li class="list-group-item bg-transparent border-0"><%= link_to "Edit COP/Members", edit_cop_path(@cop) %></li>
+              <li class="list-group-item bg-transparent border-0"><%= link_to "Relevant Searches", featured_searches_path %></li>
+              <li class="list-group-item bg-transparent border-0"><%= link_to "Announcements", announcements_path %></li>
+              <li class="list-group-item bg-transparent border-0"><%= link_to "Events", events_path %></li>
             </ul>
           </li>
-          <% if @cop.admin == current_user || (current_user.has_role? :admin) %>
-            <li class="list-group-item bg-transparent text-muted">
-              <div class="text-danger">Administration</div>
-              <ul class="list-group border-0 bg-transparent">
-                <li class="list-group-item bg-transparent border-0"><%= link_to "Edit COP/Members", edit_cop_path(@cop) %></li>
-                <li class="list-group-item bg-transparent border-0"><%= link_to "Relevant Searches", featured_searches_path %></li>
-                <li class="list-group-item bg-transparent border-0"><%= link_to "Announcements", announcements_path %></li>
-                <li class="list-group-item bg-transparent border-0"><%= link_to "Events", events_path %></li>
-              </ul>
-            </li>
-          <% end %>
-        </ul>
-     </div>
-     <div class="col-9">
+        <% end %>
+      </ul>
+    </div>
+    <div class="col-9">
       <div class="border-bottom"><h5><%= @cop.name %> &nbsp;</h5></div>
+      <!--- Resource search and add (if permitted) within cop --->
+        <div class="col-12 pt-2">
+          <%= form_for @cop, method: 'get', role: 'form', class: 'form-inline text-center pb-2' do %>
+            <div class="input-group">
+              <%= text_field_tag :resource_query, params[:resource_query], class: 'form-control', placeholder: 'Search ' + @cop.name + '\'s Resources', id: 'shop-search' %>
+              <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+              <% if !params[:resource_query].nil? %>
+                <%= link_to cop_path(@cop), class: 'btn btn-outline-primary', role: "button" do %><i class="fa fa-refresh"></i><% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <h5 class="pt-2 ps-3"><% if !params[:resource_query].nil? %> <%= @resource_count %> resources <%= 'found with "' + params[:resource_query] + '"' %><% else %>&nbsp; <% end %> </h6>
+        <!--- End resource search and add --->
+
 
       <% if @cop.featured_searches.length > 0 %>
         <div class="border-bottom p-1 mt-3">
@@ -126,7 +142,7 @@
 
       <% if @cop.resources.length > 0 %>
         <div class="border-bottom p-1">
-          <% @cop.resources.each do |resource| %>
+          <% @resources.each do |resource| %>
               <%= render resource %>
           <% end %>
         </div>

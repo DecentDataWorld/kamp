@@ -30,10 +30,38 @@ class CopsController < ApplicationController
 
   # GET /admin/admin/cops/1
   def show
+    hide_cop_private = !current_user.cops.include?(@cop)
+    # get all submissions for this cop
+    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=nil, cop=@cop.id, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=hide_cop_private)
+    @resource_count = resource_results[:count]
+    @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
+
+    # collection_results = Collection.search_kmp(search_terms=params[:resource_query], tags="", cop=@cop.id, days_back=nil, only_approved=true, exclude_private=hide_private)
+    # @collection_count = collection_results[:count]
+    # @collections = Collection.where(id: collection_results[:ids]).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
+
+    # get all private resources for this cop
+    if (current_user && current_user.cops.exists?(@cop.id)) or can? :manage, :all
+      @private_resources = @cop.private_resources.paginate(:page => params[:page]).per_page(20)
+    end
   end
 
   # GET /cops/1
   def show_cop
+    hide_cop_private = !current_user.cops.include?(@cop)
+    # get all submissions for this cop
+    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=nil, cop=@cop.id, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=hide_cop_private)
+    @resource_count = resource_results[:count]
+    @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
+
+    # collection_results = Collection.search_kmp(search_terms=params[:resource_query], tags="", cop=@cop.id, days_back=nil, only_approved=true, exclude_private=hide_private)
+    # @collection_count = collection_results[:count]
+    # @collections = Collection.where(id: collection_results[:ids]).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
+
+    # get all private resources for this cop
+    if (current_user && current_user.cops.exists?(@cop.id)) or can? :manage, :all
+      @private_resources = @cop.private_resources.paginate(:page => params[:page]).per_page(20)
+    end
   end
 
   # POST /admin/cops
