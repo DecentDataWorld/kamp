@@ -101,6 +101,12 @@ class SearchesController < ApplicationController
       @search.tags = nil
     end
 
+    if !params[:cop_id].nil?
+      @search.cop_id = params[:cop_id]
+    else
+      @search.cop_id = nil
+    end
+
     @search.save
 
   end
@@ -126,6 +132,10 @@ class SearchesController < ApplicationController
       params[:tags] = @search.tags
     end
 
+    if !@search.cop_id.blank?
+      params[:cop_id] = @search.cop_id
+    end
+
   end
 
   def get_pg_results
@@ -134,8 +144,8 @@ class SearchesController < ApplicationController
     @days_back = params[:days_back] || nil
     @languages = {:arabic => 'Arabic', :english => 'English'}
     @days_backs = {7 => 'Less Than a Week Ago', 30 => 'Less Than a Month Ago', 183 => 'Less Than Six Months Ago', 365 => 'Less Than a Year Ago'}
-    if params[:query] || params[:tags] || params[:organization_id] || params[:language] || params[:days_back]
-      resource_results = Resource.search_kmp(params[:query], params[:tags], params[:organization_id], nil, params[:language], params[:days_back])
+    if params[:query] || params[:tags] || params[:organization_id] || params[:language] || params[:days_back] || params[:cop_id]
+      resource_results = Resource.search_kmp(params[:query], params[:tags], params[:organization_id], params[:cop_id], params[:language], params[:days_back])
       @resource_count = resource_results[:count]
       @resources = Resource.where(id: resource_results[:ids]).order(Arel.sql("array_position(ARRAY[#{resource_results[:ids].join(',')}], resources.id)")).paginate(page: params[:page], per_page: 10)
       @tags = Resource.search_tags(params[:query], params[:tags], params[:organization_id], params[:cop_id], params[:language], params[:days_back])
@@ -147,6 +157,14 @@ class SearchesController < ApplicationController
         @orgs = Resource.search_orgs(params[:query], params[:tags], params[:language], params[:days_back])
       end
 
+      @cops = []
+      @cop = nil
+      if params[:cop_id].present? and Cop.where(id: params[:cop_id]).exists?
+        @cop =  Cop.find(params[:cop_id])
+      else
+        @cops = Resource.search_cops(params[:query], params[:tags], params[:language], params[:days_back])
+      end
+
       collection_results = Collection.search_kmp(params[:query], params[:tags], params[:organization_id], params[:days_back])
       @collection_count = collection_results[:count]
       @collections = Collection.where(id: collection_results[:ids]).order(Arel.sql("array_position(ARRAY[#{collection_results[:ids].join(',')}], collections.id)")).paginate(page: params[:collection_page], per_page: 10)
@@ -155,6 +173,7 @@ class SearchesController < ApplicationController
       @resource_count = Resource.where(:private => false).where(:approved => true).length
       @tags = Resource.search_tags
       @orgs = Resource.search_orgs
+      @cops = Resource.search_cops
 
       @collections = Collection.where(:private => false).where(:approved => true).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
     end

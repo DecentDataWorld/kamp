@@ -323,6 +323,56 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, cop=nil, language=nil, 
     return results.to_ary
   end
 
+  def self.search_cops(search_terms=nil, tags=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=true)
+    target_date = Date.today - days_back.to_i if !days_back.nil?
+    query = "
+    WITH resources_search AS (
+      SELECT 
+        r.id,
+        r.cop_id,
+        setweight(to_tsvector('english', r.name), 'A') || 
+        setweight(to_tsvector('english', r.description), 'B') as document
+      FROM resources r 
+      WHERE 0 = 0 "
+      query = query + " AND r.approved = true " if only_approved
+      query = query + " AND r.private = false " if exclude_private
+      query = query + " AND r.cop_private = false " if exclude_cop_private
+      query = query + "
+    ),
+    filtered_resources_tags AS (
+      SELECT r.id 
+      FROM resources r 
+      INNER JOIN taggings tg on r.id = tg.taggable_id and tg.taggable_type = 'Resource'
+      INNER JOIN tags t on tg.tag_id = t.id"
+      query = query + "
+      WHERE 0=0 "
+      query = query + " AND r.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
+      query = query + " AND r.language = '" + language + "'" if !language.nil?  && language.length > 0
+      query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
+      query = query + " GROUP BY r.id "
+      query = query + " HAVING COUNT( r.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
+      query = query + "
+    )
+    SELECT 
+      c.id, 
+      c.name,
+      count(distinct rs.id) as cop_count
+    FROM resources_search rs
+    INNER JOIN cops c on rs.cop_id = c.id
+    INNER JOIN filtered_resources_tags frt on rs.id = frt.id
+    INNER JOIN taggings tg on rs.id = tg.taggable_id and tg.taggable_type = 'Resource'
+    INNER JOIN tags t on tg.tag_id = t.id
+    WHERE 0=0 "
+    if !search_terms.nil? && search_terms.length > 0
+      query = query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+    end
+    query = query + " GROUP BY c.name, c.id ORDER BY cop_count desc"
+
+    results = ActiveRecord::Base.connection.exec_query(query)
+
+    return results.to_ary
+  end
+
   def self.pending_count
     Resource.where(approved: false).count + Collection.where(approved: false).count
   end

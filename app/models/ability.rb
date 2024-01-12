@@ -9,6 +9,10 @@ class Ability
     can :log_event, Resource
 
     if user.has_role? :member
+      puts "user has approved org?"
+      puts "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+      puts user.has_approved_org
+      puts "######################################33"
       if user.has_approved_org
         can :add, Organization
         can :edit, Organization
@@ -22,6 +26,7 @@ class Ability
         can :read, Cop
         can :edit, Cop
         can :update, Cop
+        can :search, Cop
       end
     end
 

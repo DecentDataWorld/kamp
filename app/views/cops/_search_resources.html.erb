@@ -1,13 +1,13 @@
 
   <%= form_for search, role: 'form', html: { method: :post } do %>
     <% if !params[:cop_id].nil? %>
-        <input type="hidden" name="cop_id" value="<%= params[:cop_id] %>">
+      <input type="hidden" name="cop_id" value="<%= params[:cop_id] %>">
     <% end %>
     <div class="input-group">
       <%= text_field_tag :query, params[:query], id: 'header_search_form', class: "form-control", role: 'text', placeholder: 'Discover something', title: 'What are you looking for?', maxlength: '250' %>
         <button type="submit"  class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
         <% if !search.id.blank? %>
-            <%= link_to new_search_path, class: 'btn btn-outline-primary',  role: "button" do %><i class="fa fa-refresh"></i><% end %>
+          <%= link_to new_search_path, class: 'btn btn-outline-primary',  role: "button" do %><i class="fa fa-refresh"></i><% end %>
         <% end %>
     </div>
   <% end %>
