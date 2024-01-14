@@ -52,7 +52,7 @@
       <div class="border-bottom"><h5><%= @cop.name %> &nbsp;</h5></div>
       <!--- Resource search and add (if permitted) within cop --->
         <div class="col-12 pt-2">
-          <%= form_for @cop, method: 'get', role: 'form', class: 'form-inline text-center pb-2' do %>
+          <%= form_for @cop, method: 'get', url: show_cop_url, role: 'form', class: 'form-inline text-center pb-2' do %>
             <div class="input-group">
               <%= text_field_tag :resource_query, params[:resource_query], class: 'form-control', placeholder: 'Search ' + @cop.name + '\'s Resources', id: 'shop-search' %>
               <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
