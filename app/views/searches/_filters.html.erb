@@ -98,7 +98,7 @@
         <ul class="list-group list-group-flush">
           <% @orgs.each do |o| %>
             <li class="list-group-item available-tags">
-              <%= link_to o["name"], update_search_path(request.parameters.merge(:organization_id => o["id"]).merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").except(:page)) %> (<%= o["org_count"] %>) 
+              <%= link_to o["name"], update_search_path(request.parameters.merge(:organization_id => o["id"]).merge(:cop_id => params[:cop_id]).merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").except(:page)) %> (<%= o["org_count"] %>) 
             </li>
           <% end %>
         </ul>
