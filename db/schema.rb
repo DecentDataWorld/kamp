@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_08_125818) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_17_135505) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -138,6 +138,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_125818) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cop_id", "user_id"], name: "cops_users_unique_index", unique: true
     t.index ["cop_id", "user_id"], name: "index_cops_users_on_cop_id_and_user_id"
     t.index ["user_id", "cop_id"], name: "index_cops_users_on_user_id_and_cop_id"
   end
@@ -342,6 +343,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_08_125818) do
     t.boolean "collections_only"
     t.boolean "resources_only"
     t.integer "days_back"
+    t.integer "cop_id"
   end
 
   create_table "survey_logs", id: :serial, force: :cascade do |t|
