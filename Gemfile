@@ -40,6 +40,7 @@ gem 'negative_captcha'
 gem "recaptcha", require: "recaptcha/rails"
 gem 'puma', '~> 5.0'
 gem 'ckeditor'
+gem "simple_calendar", "~> 2.4"
 
 # Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
 gem "jsbundling-rails"
