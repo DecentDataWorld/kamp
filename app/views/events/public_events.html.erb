@@ -18,13 +18,12 @@
       <div class="col-9">
         <% if @current_user %>
           <h5 class="float-end mt-n3 mb-0 pb-1">
-          <%= mail_to 'kampadmin@jordanmela.com', name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %>
+          <%= mail_to 'kampadmin@jordanmela.com', name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
         <% end %>
       </div>
     </div>
 
-    <div class="row p-2 pb-4 border-bottom">
-
+    <div class="row p-2 pb-4">
       <% @featured_events.each do |e| %>
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
           <div class="icon-box w-100">
@@ -36,32 +35,61 @@
           </div>
         </div>
       <% end %>
-
     </div>
 
-    <div class="row p-2">
-      <div class="table-responsive">
-          <table class="table table-hover" data-controller="table-sort">
-            <thead>
-              <tr>
-                <th><%=t('activerecord.attributes.event.name')%></th>
-                <th><%=t('activerecord.attributes.event.date') %></th>
-                <th><%=t('activerecord.attributes.event.location') %></th>
-                <th><%=t('activerecord.attributes.event.short_description') %></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @events.each do |e| %>
-                <tr>
-                  <td><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></td>
-                  <td><%= e.start_date.strftime("%Y-%m-%d") %></td>
-                  <td><%= e.location %></td>
-                  <td><%= e.short_description %></td>
-                </tr>
+    <div class="row p-2 pb-4">
+      <div class="tab-v1">
+        <nav>
+          <ul class="nav nav-tabs">
+            <li class="nav-item"><a href="#calendar" class="nav-link nav-link-large active" data-bs-toggle="tab" data-bs-target="#calendar">Calendar</a></li>
+            <li class="nav-item"><a href="#list" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#list">List</a></li>
+          </ul>
+        </nav>
+
+        <div class="tab-content">
+          <!--- CALENDAR TAB --->
+          <div id="calendar" class="tab-pane fade show active">
+            <%= month_calendar(events: @events, attribute: :start_date) do |date, events| %>
+              <%= date.day %>
+              <% events.each do |e| %>
+                <div class="calendar-event">
+                  <%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %><br/>
+                  <hr class="event-divider" />
+                  <%= e.short_description %>
+                  <%= e.cop ? e.cop.name : "" %>
+                </div>
               <% end %>
-            </tbody>
-          </table>
+            <% end %>
+          </div>
+
+          <!--- LIST TAB --->
+          <div id="list" class="tab-pane fade">
+            <div class="table-responsive">
+              <table class="table table-hover" data-controller="table-sort">
+                <thead>
+                  <tr>
+                    <th><%=t('activerecord.attributes.event.name') %></th>
+                    <th><%=t('activerecord.attributes.event.date') %></th>
+                    <th><%=t('activerecord.attributes.event.location') %></th>
+                    <th><%=t('activerecord.attributes.event.short_description') %></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @events.each do |e| %>
+                    <tr>
+                      <td><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></td>
+                      <td><%= e.start_date.strftime("%Y-%m-%d") %></td>
+                      <td><%= e.location %></td>
+                      <td><%= e.short_description %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+
+      </div>
     </div>
 
   </div>

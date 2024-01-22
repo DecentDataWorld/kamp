@@ -13,7 +13,7 @@
   <div class="container">
 
    <div class="row">
-     <div class="col-3 border-end">
+    <div class="col-3 border-end">
       <h5 class="border-bottom pb-2">Community of Practice</h5>
         <ul class="list-group list-group-flush bg-transparent">
           <li class="list-group-item bg-transparent text-muted">
@@ -47,97 +47,157 @@
             </li>
           <% end %>
         </ul>
-     </div>
-     <div class="col-9">
-      <div class="border-bottom"><h5><%= @cop.name %> &nbsp;</h5></div>
+      </div>
 
-      <% if @cop.featured_searches.length > 0 %>
-        <div class="border-bottom p-1 mt-3">
-          <section id="featured" class="featured">
-            <div class="container">
+      <div class="col-9">
+        <div class="border-bottom"><h5><%= @cop.name %> &nbsp;</h5></div>
 
-              <div class="row">
-                <% @cop.featured_searches.each do |fs| %>
-                  <div class="col">
-                    <div class="icon-box">
-                      <h3><a href="<%= fs.get_url %>">
-                        <i class="<%= fs.icon_identifier %>"></i>
-                        Learn About <br/>
-                        <%= fs.name %>
-                      </a>
-                    </h3>
-                    </div>
+          <% if @cop.featured_searches.length > 0 %>
+            <div class="border-bottom p-1 mt-3">
+              <section id="featured" class="featured">
+                <div class="container">
+
+                  <div class="row">
+                    <% @cop.featured_searches.each do |fs| %>
+                      <div class="col">
+                        <div class="icon-box">
+                          <h3><a href="<%= fs.get_url %>">
+                            <i class="<%= fs.icon_identifier %>"></i>
+                            Learn About <br/>
+                            <%= fs.name %>
+                          </a>
+                        </h3>
+                        </div>
+                      </div>
+                    <% end %>
                   </div>
-                <% end %>
-              </div>
 
+                </div>
+              </section>
             </div>
-          </section>
-        </div>
-      <% end %>
-
-      <% if @cop.events.length > 0 %>
-        <div class="border-bottom p-1">
-          Events:
-          <table class="table table-hover" data-controller="table-sort">
-            <thead>
-              <tr>
-                <th><%=t('activerecord.attributes.event.name') %></th>
-                <th><%=t('activerecord.attributes.event.date') %></th>
-                <th><%=t('activerecord.attributes.event.location') %></th>
-                <th><%=t('activerecord.attributes.event.short_description') %></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @cop.events.each do |e| %>
-                <tr>
-                  <td><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></td>
-                  <td><%= e.start_date.strftime("%-d/%-m/%y") %></td>
-                  <td><%= e.location %></td>
-                  <td><%= e.short_description %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
-
-       <% if @cop.announcements.length > 0 %>
-        <div class="border-bottom p-1">
-          Announcements:
-          <table class="table table-hover" data-controller="table-sort">
-            <thead>
-              <tr>
-                <th><%=t('activerecord.attributes.event.name') %></th>
-                <th><%=t('activerecord.attributes.event.short_description') %></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @cop.announcements.each do |a| %>
-                <tr>
-                  <td><%= link_to a.name, show_announcement_path(a), data: { turbo_frame: "modal" } %></td>
-                  <td><%= a.short_description %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
-
-      <% if @cop.resources.length > 0 %>
-        <div class="border-bottom p-1">
-          <% @cop.resources.each do |resource| %>
-              <%= render resource %>
           <% end %>
+
+          <!--- TABS --->
+          <div class="row p-2 pb-4">
+            <div class="tab-v1">
+              <nav>
+                <ul class="nav nav-tabs">
+                  <li class="nav-item"><a href="#calendar" class="nav-link nav-link-large active" data-bs-toggle="tab" data-bs-target="#calendar">Events Calendar</a></li>
+                  <li class="nav-item"><a href="#list" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#list">Events List</a></li>
+                  <li class="nav-item"><a href="#announcements" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#announcements">Announcements</a></li>
+                  <li class="nav-item"><a href="#resources" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#resources">Resources</a></li>
+                </ul>
+              </nav>
+
+              <div class="tab-content">
+                <!--- EVENTS CALENDAR TAB --->
+                <div id="calendar" class="tab-pane fade show active">
+                  <% if @current_user %>
+                    <h5 class="float-end mb-0 pb-1">
+                    <%= mail_to 'kampadmin@jordanmela.com', name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
+                  <% end %>
+                  <% if @cop.events.length > 0 %>
+                    <%= month_calendar(events: @cop.events, attribute: :start_date) do |date, events| %>
+                      <%= date.day %>
+                      <% events.each do |e| %>
+                        <div class="calendar-event">
+                          <%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %><br/>
+                          <hr class="event-divider" />
+                          <%= e.short_description %>
+                          <%= e.cop ? e.cop.name : "" %>
+                        </div>
+                      <% end %>
+                    <% end %>
+                  <% else %>
+                    <div class="pt-3">
+                      No events.
+                    </div>
+                  <% end %>
+                </div>
+
+                <!--- EVENTS LIST TAB --->
+                <div id="list" class="tab-pane fade">
+                  <% if @current_user %>
+                    <h5 class="float-end"><%= mail_to 'kampadmin@jordanmela.com', name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
+                  <% end %>
+                  <div class="pt-3">
+                    <% if @cop.events.length > 0 %>
+                      <div class="table">
+                        <table class="table table-hover" data-controller="table-sort">
+                          <thead>
+                            <tr>
+                              <th><%=t('activerecord.attributes.event.name') %></th>
+                              <th><%=t('activerecord.attributes.event.date') %></th>
+                              <th><%=t('activerecord.attributes.event.location') %></th>
+                              <th><%=t('activerecord.attributes.event.short_description') %></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% @cop.events.each do |e| %>
+                              <tr>
+                                <td><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></td>
+                                <td><%= e.start_date.strftime("%Y-%m-%d") %></td>
+                                <td><%= e.location %></td>
+                                <td><%= e.short_description %></td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                    <% else %>
+                      No events.
+                    <% end %>
+                  </div>
+                </div>
+
+                <!--- ANNOUNCEMENTS TAB --->
+                <div id="announcements" class="tab-pane fade">
+                  <% if @current_user %>
+                    <h5 class="float-end">
+                    <%= mail_to 'kampadmin@jordanmela.com', name='Request New Announcement Posting', html_options = { subject: 'New Announcement Request', body: @new_announcement_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
+                  <% end %>
+                  <div class="pt-3">
+                    <% if @cop.announcements.length > 0 %>
+                      <div class="table">
+                        <table class="table table-hover" data-controller="table-sort">
+                          <thead>
+                            <tr>
+                              <th><%=t('activerecord.attributes.event.name') %></th>
+                              <th><%=t('activerecord.attributes.event.short_description') %></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% @cop.announcements.each do |a| %>
+                              <tr>
+                                <td><%= link_to a.name, show_announcement_path(a), data: { turbo_frame: "modal" } %></td>
+                                <td><%= a.short_description %></td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                    <% else %>
+                      No announcements.
+                    <% end %>
+                  </div>
+                </div>
+
+                <!--- RESOURCES TAB --->
+                <div id="resources" class="tab-pane fade">
+                  <% if @cop.resources.length > 0 %>
+                    <div class="border-bottom p-1">
+                      <% @cop.resources.each do |resource| %>
+                          <%= render resource %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <div class="mt-2">
+          </div>
         </div>
-      <% end %>
-
-       
-       <div class="mt-2">
-        
-       </div>
-     </div>
-   </div>
-
+      </div>
+    </div>
   </div>
 </section><!-- End About Section -->

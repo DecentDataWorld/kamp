@@ -12,7 +12,7 @@ class Announcement < ActiveRecord::Base
 
   def self.request_email_body(requester)
     if requester
-      "Dear Admin,\n\n User #{requester.email} has requested to post a new announcement to the Jordan KAMP. Please review the announcement details below and create the announcement if you approve.\nName: \nShort Description:\nLong Description:\nExpiration Date:\nFeatured on homepage (y/n)?:\nCOP Announcement (y/n):\nCOP (if applicable):\nPrivate to COP (y/n)?: \n\nBest regards,\nJordan KAMP"
+      "<USER NOTE: PLEASE CC THE COR ON THIS EMAIL>\nDear Admin,\n\n User #{requester.email} has requested to post a new announcement to the Jordan KAMP. Please review the announcement details below and create the announcement if you approve.\nName: \nShort Description:\nLong Description:\nExpiration Date:\nFeatured on homepage (y/n)?:\nCOP Announcement (y/n):\nCOP (if applicable):\nPrivate to COP (y/n)?: \n\nBest regards,\nJordan KAMP"
     else
       ""
     end
