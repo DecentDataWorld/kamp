@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, except: [:show, :request_invite, :send_invite]
   before_action :authorize_user_admin, only: [:index, :get_users]
-  rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
   after_action :assign_cop, only: [:create]
+  rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
 
   def index
     authorize! :index, @user, :message => 'Not authorized as an administrator.'
@@ -225,9 +225,8 @@ class UsersController < ApplicationController
 
   private
   def assign_cop
-    if (@user.organizations & Organization.where(organization_type: 'USAID Implementing Partner')).any?
-      @user.cops << Cop.where(name: 'USAID COP').first # this may need to change based on what the actual COP name is
-    end
+    @user = User.find(params[:id])
+    @user.assign_cop
   end
 
   def authorize_user_admin

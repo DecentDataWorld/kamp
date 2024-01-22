@@ -33,6 +33,12 @@ class User < ActiveRecord::Base
 
   # after_update :assign_default_role
 
+  def assign_cop
+    if (self.organizations & Organization.where(organization_type: 'USAID Implementing Partner')).any?
+      self.cops << Cop.where(is_usaid: true).first
+    end
+  end
+
   def cop_admin?
     Cop.where(admin_id: self.id).any?
   end
