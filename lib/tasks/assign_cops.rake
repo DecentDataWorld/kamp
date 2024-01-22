@@ -5,7 +5,7 @@ namespace :assign_cops do
   task assign_usaid_cop: :environment do
     query = "
     insert into cops_users (cop_id, user_id, created_at, updated_at)
-    select distinct (select id from cops where name = \'USAID COP\'), u.id, now(), now()
+    select distinct (select id from cops where is_usaid = true), u.id, now(), now()
     from users u
     join users_organizations uo on u.id = uo.user_id
     join organizations o on uo.organization_id = o.id
