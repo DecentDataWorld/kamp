@@ -18,7 +18,7 @@
       <div class="col-9">
         <% if @current_user %>
           <h5 class="float-end mt-n3 mb-0 pb-1">
-          <%= mail_to 'kampadmin@jordanmela.com', name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
+          <%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
         <% end %>
       </div>
     </div>
