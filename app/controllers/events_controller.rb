@@ -6,6 +6,7 @@ class EventsController < ApplicationController
   def public_events
     @events = Event.active.is_public.order(:start_date => :asc)
     @featured_events = @events.featured
+    @new_event_request_email_body = Event.request_email_body(@current_user)
   end
 
   #GET /events/1

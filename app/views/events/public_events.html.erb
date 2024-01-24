@@ -11,9 +11,15 @@
 <!-- ======= Services Section ======= -->
 <section id="services" class="services">
   <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <h5 class="border-bottom pb-2"><i class="bi bi-calendar-event"></i> Events</h5>
+    <div class="row border-bottom">
+      <div class="col-3">
+        <h5><i class="bi bi-calendar-event"></i> Events</h5>
+      </div>
+      <div class="col-9">
+        <% if @current_user %>
+          <h5 class="float-end mt-n3 mb-0 pb-1">
+          <%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
+        <% end %>
       </div>
     </div>
 

@@ -92,6 +92,10 @@
               <div class="tab-content">
                 <!--- EVENTS CALENDAR TAB --->
                 <div id="calendar" class="tab-pane fade show active">
+                  <% if @current_user %>
+                    <h5 class="float-end mb-0 pb-1">
+                    <%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
+                  <% end %>
                   <% if @cop.events.length > 0 %>
                     <%= month_calendar(events: @cop.events, attribute: :start_date) do |date, events| %>
                       <%= date.day %>
@@ -105,65 +109,77 @@
                       <% end %>
                     <% end %>
                   <% else %>
-                    No events.
+                    <div class="pt-3">
+                      No events.
+                    </div>
                   <% end %>
                 </div>
 
                 <!--- EVENTS LIST TAB --->
                 <div id="list" class="tab-pane fade">
-                  <% if @cop.events.length > 0 %>
-                    <div class="table-responsive">
-                      <table class="table table-hover" data-controller="table-sort">
-                        <thead>
-                          <tr>
-                            <th><%=t('activerecord.attributes.event.name') %></th>
-                            <th><%=t('activerecord.attributes.event.date') %></th>
-                            <th><%=t('activerecord.attributes.event.location') %></th>
-                            <th><%=t('activerecord.attributes.event.short_description') %></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <% @cop.events.each do |e| %>
-                            <tr>
-                              <td><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></td>
-                              <td><%= e.start_date.strftime("%Y-%m-%d") %></td>
-                              <td><%= e.location %></td>
-                              <td><%= e.short_description %></td>
-                            </tr>
-                          <% end %>
-                        </tbody>
-                      </table>
-                    </div>
-                  <% else %>
-                    No events.
+                  <% if @current_user %>
+                    <h5 class="float-end"><%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
                   <% end %>
+                  <div class="pt-3">
+                    <% if @cop.events.length > 0 %>
+                      <div class="table">
+                        <table class="table table-hover" data-controller="table-sort">
+                          <thead>
+                            <tr>
+                              <th><%=t('activerecord.attributes.event.name') %></th>
+                              <th><%=t('activerecord.attributes.event.date') %></th>
+                              <th><%=t('activerecord.attributes.event.location') %></th>
+                              <th><%=t('activerecord.attributes.event.short_description') %></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% @cop.events.each do |e| %>
+                              <tr>
+                                <td><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></td>
+                                <td><%= e.start_date.strftime("%Y-%m-%d") %></td>
+                                <td><%= e.location %></td>
+                                <td><%= e.short_description %></td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                    <% else %>
+                      No events.
+                    <% end %>
+                  </div>
                 </div>
 
                 <!--- ANNOUNCEMENTS TAB --->
                 <div id="announcements" class="tab-pane fade">
-                  <% if @cop.announcements.length > 0 %>
-                    <div class="border-bottom p-1">
-                      Announcements:
-                      <table class="table table-hover" data-controller="table-sort">
-                        <thead>
-                          <tr>
-                            <th><%=t('activerecord.attributes.event.name') %></th>
-                            <th><%=t('activerecord.attributes.event.short_description') %></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <% @cop.announcements.each do |a| %>
-                            <tr>
-                              <td><%= link_to a.name, show_announcement_path(a), data: { turbo_frame: "modal" } %></td>
-                              <td><%= a.short_description %></td>
-                            </tr>
-                          <% end %>
-                        </tbody>
-                      </table>
-                    </div>
-                  <% else %>
-                    No announcements.
+                  <% if @current_user %>
+                    <h5 class="float-end">
+                    <%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Announcement Posting', html_options = { subject: 'New Announcement Request', body: @new_announcement_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
                   <% end %>
+                  <div class="pt-3">
+                    <% if @cop.announcements.length > 0 %>
+                      <div class="table">
+                        <table class="table table-hover" data-controller="table-sort">
+                          <thead>
+                            <tr>
+                              <th><%=t('activerecord.attributes.event.name') %></th>
+                              <th><%=t('activerecord.attributes.event.short_description') %></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% @cop.announcements.each do |a| %>
+                              <tr>
+                                <td><%= link_to a.name, show_announcement_path(a), data: { turbo_frame: "modal" } %></td>
+                                <td><%= a.short_description %></td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                    <% else %>
+                      No announcements.
+                    <% end %>
+                  </div>
                 </div>
 
                 <!--- RESOURCES TAB --->
@@ -178,7 +194,6 @@
                 </div>
               </div>
             </div>
-          </div>
           <div class="mt-2">
           </div>
         </div>

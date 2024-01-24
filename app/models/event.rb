@@ -28,4 +28,12 @@ class Event < ActiveRecord::Base
     self.url
   end
 
+  def self.request_email_body(requester)
+    if requester
+      "<USER NOTE: PLEASE CC THE COR ON THIS EMAIL>\nDear Admin,\n\n User #{requester.email} has requested to post a new event to the Jordan KAMP. Please review the event details below and create the event if you approve.\nName: \nShort Description:\nFull Description:\nDate:\nLocation\nFeatured on homepage (y/n)?:\nVirtual/Online (y/n)?:\nURL:\nCOP Event (y/n):\nCOP (if applicable):\nPrivate to COP (y/n)?: \n\nBest regards,\nJordan KAMP"
+    else
+      ""
+    end
+  end
+
 end
