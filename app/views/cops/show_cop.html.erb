@@ -49,7 +49,7 @@
       </div>
       <div class="col-9">
         <div class="border-bottom"><h5><%= @cop.name %> &nbsp;</h5></div>
-          <h5 class="pt-2 ps-3"><% if !params[:resource_query].nil? %> <%= @resource_count %> resources <%= 'found with "' + params[:resource_query] + '"' %><% else %>&nbsp; <% end %> </h6>
+          <h5 class="pt-2 ps-3"><% if !params[:resource_query].nil? %> <%= @resource_count %> resources <%= 'found with "' + params[:resource_query] + '"' %><% else %>&nbsp; <% end %></h5>
           <% if @cop.featured_searches.length > 0 %>
             <div class="border-bottom p-1 mt-3">
               <section id="featured" class="featured">
@@ -68,7 +68,6 @@
                       </div>
                     <% end %>
                   </div>
-
                 </div>
               </section>
             </div>
@@ -102,9 +101,9 @@
                     <% end %>
                   </div>
                   <!--- End resource search and add --->
-                  <% if @cop.resources.length > 0 %>
+                  <% if @resources.length > 0 %>
                     <div class="border-bottom p-1">
-                      <% @cop.resources.each do |resource| %>
+                      <% @resources.each do |resource| %>
                           <%= render resource %>
                       <% end %>
                     </div>
