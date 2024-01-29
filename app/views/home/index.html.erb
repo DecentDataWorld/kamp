@@ -28,7 +28,7 @@
                         <div class="card-body">
                           <h3 class="card-title text-danger pb-3">Find Resources</h3>
                           <p class="card-text">
-                             <% if @search.nil? %>
+                            <% if @search.nil? %>
                                 <%  search = Search.new %>
                             <% else %>
                                 <% search = @search %>

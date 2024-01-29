@@ -12,8 +12,12 @@
   <div class="scrollable">
     <div class="row p-2 d-flex text-secondary card-text">
       <ul class="list-group list-group-flush bg-transparent">
-        <% current_user.cops.each do |cop| %>
-          <li class="list-group-item bg-transparent"><%= link_to cop.name, show_cop_path(cop) %></li>
+        <% Cop.order(:name).each do |cop| %>
+          <% if current_user.cops.include?(cop) %>
+            <li class="list-group-item bg-transparent"><%= link_to cop.name, show_cop_path(cop) %></li>
+          <% else %>
+            <li class="list-group-item bg-transparent"><%= cop.name %> <a class="btn btn-sm btn-outline-primary float-end" href="mailto:<%=cop.admin.email%>?subject=Jordan KAMP: Request to Join COP&body=Dear Admin,\n KAMP user <%= current_user.name %> (<%=current_user.email %>) would like to join the Community of Practice <%= cop.name %>. Please review their request and admit them if you approve.">Join</a></li>
+          <% end %>
         <% end %>
       </ul>
     </div>
