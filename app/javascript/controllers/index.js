@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import { Datepicker } from "stimulus-datepicker"
+application.register("datepicker", Datepicker)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 

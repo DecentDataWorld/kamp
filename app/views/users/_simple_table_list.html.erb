@@ -22,7 +22,9 @@
         <td>
           <% if !user.organizations.nil? %>
             <% user.users_organizations.each do |userorganization| %>
-              <%= link_to userorganization.organization.name, organization_path(userorganization.organization) %> (<%= userorganization.role %>)<br>
+              <% if userorganization.organization %>
+                <%= link_to userorganization.organization.name, organization_path(userorganization.organization) %> (<%= userorganization.role %>)<br>
+              <% end %>
             <% end %>
           <% end %>
           <% if !user.organization_applications.nil? %>
