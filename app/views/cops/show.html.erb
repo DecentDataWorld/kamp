@@ -78,16 +78,40 @@
           <div class="tab-v1">
             <nav>
               <ul class="nav nav-tabs">
-                <li class="nav-item"><a href="#calendar" class="nav-link nav-link-large active" data-bs-toggle="tab" data-bs-target="#calendar">Events Calendar</a></li>
+                <li class="nav-item"><a href="#resources" class="nav-link nav-link-large active" data-bs-toggle="tab" data-bs-target="#resources">Resources</a></li>
+                <li class="nav-item"><a href="#calendar" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#calendar">Events Calendar</a></li>
                 <li class="nav-item"><a href="#list" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#list">Events List</a></li>
                 <li class="nav-item"><a href="#announcements" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#announcements">Announcements</a></li>
-                <li class="nav-item"><a href="#resources" class="nav-link nav-link-large" data-bs-toggle="tab" data-bs-target="#resources">Resources</a></li>
               </ul>
             </nav>
 
             <div class="tab-content">
+              <!--- RESOURCES TAB --->
+              <div id="resources" class="tab-pane fade show active">
+                <!--- Resource search and add (if permitted) within cop --->
+                <div class="col-12 py-2">
+                  <%= form_for @cop, method: 'get', role: 'form', class: 'form-inline text-center pb-2' do %>
+                    <div class="input-group">
+                      <%= text_field_tag :resource_query, params[:resource_query], class: 'form-control', placeholder: 'Search ' + @cop.name + '\'s Resources', id: 'shop-search' %>
+                      <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+                      <% if !params[:resource_query].nil? %>
+                        <%= link_to cop_path(@cop), class: 'btn btn-outline-primary', role: "button" do %><i class="fa fa-refresh"></i><% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+                <!--- End resource search and add --->
+                <% if @cop.resources.length > 0 %>
+                  <div class="border-bottom p-1">
+                    <% @cop.resources.each do |resource| %>
+                        <%= render resource %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+
               <!--- EVENTS CALENDAR TAB --->
-              <div id="calendar" class="tab-pane fade show active">
+              <div id="calendar" class="tab-pane fade">
                 <% if @current_user %>
                   <h5 class="float-end mb-0 pb-1">
                   <%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
@@ -176,30 +200,6 @@
                     No announcements.
                   <% end %>
                 </div>
-              </div>
-
-              <!--- RESOURCES TAB --->
-              <div id="resources" class="tab-pane fade">
-                <!--- Resource search and add (if permitted) within cop --->
-                <div class="col-12 pt-2">
-                  <%= form_for @cop, method: 'get', role: 'form', class: 'form-inline text-center pb-2' do %>
-                    <div class="input-group">
-                      <%= text_field_tag :resource_query, params[:resource_query], class: 'form-control', placeholder: 'Search ' + @cop.name + '\'s Resources', id: 'shop-search' %>
-                      <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
-                      <% if !params[:resource_query].nil? %>
-                        <%= link_to cop_path(@cop), class: 'btn btn-outline-primary', role: "button" do %><i class="fa fa-refresh"></i><% end %>
-                      <% end %>
-                    </div>
-                  <% end %>
-                </div>
-                <!--- End resource search and add --->
-                <% if @cop.resources.length > 0 %>
-                  <div class="border-bottom p-1">
-                    <% @cop.resources.each do |resource| %>
-                        <%= render resource %>
-                    <% end %>
-                  </div>
-                <% end %>
               </div>
             </div>
           </div>
