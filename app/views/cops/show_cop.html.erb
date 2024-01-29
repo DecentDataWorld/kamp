@@ -11,10 +11,9 @@
 <!-- ======= About Section ======= -->
 <section id="about" class="about">
   <div class="container">
-
-   <div class="row">
-    <div class="col-3 border-end">
-      <h5 class="border-bottom pb-2">Community of Practice</h5>
+    <div class="row">
+      <div class="col-3 border-end">
+        <h5 class="border-bottom pb-2">Community of Practice</h5>
         <ul class="list-group list-group-flush bg-transparent">
           <li class="list-group-item bg-transparent text-muted">
             <div class="text-danger">Description</div>
@@ -38,25 +37,39 @@
           <% if @cop.admin == current_user || (current_user.has_role? :admin) %>
             <li class="list-group-item bg-transparent text-muted">
               <div class="text-danger">Administration</div>
-              <ul class="list-group border-0 bg-transparent">
-                <li class="list-group-item bg-transparent border-0"><%= link_to "Edit COP/Members", edit_cop_path(@cop) %></li>
-                <li class="list-group-item bg-transparent border-0"><%= link_to "Relevant Searches", featured_searches_path %></li>
-                <li class="list-group-item bg-transparent border-0"><%= link_to "Announcements", announcements_path %></li>
-                <li class="list-group-item bg-transparent border-0"><%= link_to "Events", events_path %></li>
-              </ul>
+                <ul class="list-group border-0 bg-transparent">
+                  <li class="list-group-item bg-transparent border-0"><%= link_to "Edit COP/Members", edit_cop_path(@cop) %></li>
+                  <li class="list-group-item bg-transparent border-0"><%= link_to "Relevant Searches", featured_searches_path %></li>
+                  <li class="list-group-item bg-transparent border-0"><%= link_to "Announcements", announcements_path %></li>
+                  <li class="list-group-item bg-transparent border-0"><%= link_to "Events", events_path %></li>
+                </ul>
+              </div>
             </li>
           <% end %>
         </ul>
       </div>
-
       <div class="col-9">
         <div class="border-bottom"><h5><%= @cop.name %> &nbsp;</h5></div>
+        <!--- Resource search and add (if permitted) within cop --->
+          <div class="col-12 pt-2">
+            <%= form_for @cop, method: 'get', url: show_cop_url, role: 'form', class: 'form-inline text-center pb-2' do %>
+              <div class="input-group">
+                <%= text_field_tag :resource_query, params[:resource_query], class: 'form-control', placeholder: 'Search ' + @cop.name + '\'s Resources', id: 'shop-search' %>
+                <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+                <% if !params[:resource_query].nil? %>
+                  <%= link_to cop_path(@cop), class: 'btn btn-outline-primary', role: "button" do %><i class="fa fa-refresh"></i><% end %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+
+          <h5 class="pt-2 ps-3"><% if !params[:resource_query].nil? %> <%= @resource_count %> resources <%= 'found with "' + params[:resource_query] + '"' %><% else %>&nbsp; <% end %> </h6>
+          <!--- End resource search and add --->
 
           <% if @cop.featured_searches.length > 0 %>
             <div class="border-bottom p-1 mt-3">
               <section id="featured" class="featured">
                 <div class="container">
-
                   <div class="row">
                     <% @cop.featured_searches.each do |fs| %>
                       <div class="col">

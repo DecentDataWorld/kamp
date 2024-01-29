@@ -13,4 +13,8 @@ class Cop < ActiveRecord::Base
     return Cop.joins(:users).where("users.id = ? and cops.admin_id = ?", user.id, user.id).first
   end
 
+  def private_resources
+    return Resource.where("cop_id = ?", self.id).where("cop_private = ?", true)
+  end
+
 end
