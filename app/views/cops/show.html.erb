@@ -49,53 +49,11 @@
      </div>
      <div class="col-9">
       <div class="border-bottom"><h5><%= @cop.name %> &nbsp;</h5></div>
-      <!--- Resource search and add (if permitted) within cop --->
-        <div class="col-12 pt-2">
-          <%= form_for @cop, method: 'get', role: 'form', class: 'form-inline text-center pb-2' do %>
-            <div class="input-group">
-              <%= text_field_tag :resource_query, params[:resource_query], class: 'form-control', placeholder: 'Search ' + @cop.name + '\'s Resources', id: 'shop-search' %>
-              <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
-              <% if !params[:resource_query].nil? %>
-                <%= link_to cop_path(@cop), class: 'btn btn-outline-primary', role: "button" do %><i class="fa fa-refresh"></i><% end %>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-
         <h5 class="pt-2 ps-3"><% if !params[:resource_query].nil? %> <%= @resource_count %> resources <%= 'found with "' + params[:resource_query] + '"' %><% else %>&nbsp; <% end %> </h6>
-        <!--- End resource search and add --->
-
-      <% if @cop.events.length > 0 %>
-        <div class="border-bottom p-1">
-          Events:
-          <table class="table table-hover" data-controller="table-sort">
-            <thead>
-              <tr>
-                <th><%=t('activerecord.attributes.event.name') %></th>
-                <th><%=t('activerecord.attributes.event.date') %></th>
-                <th><%=t('activerecord.attributes.event.location') %></th>
-                <th><%=t('activerecord.attributes.event.short_description') %></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @cop.events.each do |e| %>
-                <tr>
-                  <td><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></td>
-                  <td><%= e.start_date.strftime("%-d/%-m/%y") %></td>
-                  <td><%= e.location %></td>
-                  <td><%= e.short_description %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
-
         <% if @cop.featured_searches.length > 0 %>
           <div class="border-bottom p-1 mt-3">
             <section id="featured" class="featured">
               <div class="container">
-
                 <div class="row">
                   <% @cop.featured_searches.each do |fs| %>
                     <div class="col">
@@ -110,7 +68,6 @@
                     </div>
                   <% end %>
                 </div>
-
               </div>
             </section>
           </div>
@@ -223,6 +180,19 @@
 
               <!--- RESOURCES TAB --->
               <div id="resources" class="tab-pane fade">
+                <!--- Resource search and add (if permitted) within cop --->
+                <div class="col-12 pt-2">
+                  <%= form_for @cop, method: 'get', role: 'form', class: 'form-inline text-center pb-2' do %>
+                    <div class="input-group">
+                      <%= text_field_tag :resource_query, params[:resource_query], class: 'form-control', placeholder: 'Search ' + @cop.name + '\'s Resources', id: 'shop-search' %>
+                      <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+                      <% if !params[:resource_query].nil? %>
+                        <%= link_to cop_path(@cop), class: 'btn btn-outline-primary', role: "button" do %><i class="fa fa-refresh"></i><% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+                <!--- End resource search and add --->
                 <% if @cop.resources.length > 0 %>
                   <div class="border-bottom p-1">
                     <% @cop.resources.each do |resource| %>
