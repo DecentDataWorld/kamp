@@ -16,7 +16,7 @@
         <h5><i class="bi bi-megaphone"></i> Announcements</h5>
       </div>
       <div class="col-9">
-        <% if @current_user %>
+        <% if @current_user && !@current_user.has_role?('admin') %>
           <h5 class="float-end mt-n3 mb-0 pb-1">
           <%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Announcement Posting', html_options = { subject: 'New Announcement Request', body: @new_announcement_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %>
         <% end %>

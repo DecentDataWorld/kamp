@@ -112,7 +112,7 @@
 
               <!--- EVENTS CALENDAR TAB --->
               <div id="calendar" class="tab-pane fade">
-                <% if @current_user %>
+                <% if @current_user && !(@current_user.has_role?('admin') || @cop.admin == @current_user) %>
                   <h5 class="float-end mb-0 pb-1">
                   <%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
                 <% end %>
@@ -122,9 +122,6 @@
                     <% events.each do |e| %>
                       <div class="calendar-event">
                         <%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %><br/>
-                        <hr class="event-divider" />
-                        <%= e.short_description %>
-                        <%= e.cop ? e.cop.name : "" %>
                       </div>
                     <% end %>
                   <% end %>
@@ -137,7 +134,7 @@
 
               <!--- EVENTS LIST TAB --->
               <div id="list" class="tab-pane fade">
-                <% if @current_user %>
+                <% if @current_user && !(@current_user.has_role?('admin') || @cop.admin == @current_user)%>
                   <h5 class="float-end"><%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
                 <% end %>
                 <div class="pt-3">
@@ -172,7 +169,7 @@
 
               <!--- ANNOUNCEMENTS TAB --->
               <div id="announcements" class="tab-pane fade">
-                <% if @current_user %>
+                <% if @current_user && !(@current_user.has_role?('admin') || @cop.admin == @current_user) %>
                   <h5 class="float-end">
                   <%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Announcement Posting', html_options = { subject: 'New Announcement Request', body: @new_announcement_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
                 <% end %>
