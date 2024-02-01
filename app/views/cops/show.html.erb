@@ -114,7 +114,7 @@
               <div id="calendar" class="tab-pane fade">
                 <% if @current_user && !(@current_user.has_role?('admin') || @cop.admin == @current_user) %>
                   <h5 class="float-end mb-0 pb-1">
-                  <%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
+                  <%= mail_to @cop.admin.email, name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
                 <% end %>
                 <% if @cop.events.length > 0 %>
                   <%= month_calendar(events: @cop.events, attribute: :start_date) do |date, events| %>
@@ -135,7 +135,7 @@
               <!--- EVENTS LIST TAB --->
               <div id="list" class="tab-pane fade">
                 <% if @current_user && !(@current_user.has_role?('admin') || @cop.admin == @current_user)%>
-                  <h5 class="float-end"><%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
+                  <h5 class="float-end"><%= mail_to @cop.admin.email, name='Request New Event Posting', html_options = { subject: 'New Event Request', body: @new_event_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
                 <% end %>
                 <div class="pt-3">
                   <% if @cop.events.length > 0 %>
@@ -171,7 +171,7 @@
               <div id="announcements" class="tab-pane fade">
                 <% if @current_user && !(@current_user.has_role?('admin') || @cop.admin == @current_user) %>
                   <h5 class="float-end">
-                  <%= mail_to ENV['KAMP_ADMIN_EMAIL'], name='Request New Announcement Posting', html_options = { subject: 'New Announcement Request', body: @new_announcement_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
+                  <%= mail_to @cop.admin.email, name='Request New Announcement Posting', html_options = { subject: 'New Announcement Request', body: @new_announcement_request_email_body, class: 'btn btn-outline-primary mt-1 pt-2'} %></h5>
                 <% end %>
                 <div class="pt-3">
                   <% if @cop.announcements.length > 0 %>

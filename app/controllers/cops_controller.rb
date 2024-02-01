@@ -35,6 +35,8 @@ class CopsController < ApplicationController
     resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=nil, cop=@cop.id, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=hide_cop_private)
     @resource_count = resource_results[:count]
     @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
+    @new_event_request_email_body = Event.request_email_body(@current_user)
+    @new_announcement_request_email_body = Announcement.request_email_body(@current_user)
 
     # collection_results = Collection.search_kmp(search_terms=params[:resource_query], tags="", cop=@cop.id, days_back=nil, only_approved=true, exclude_private=hide_private)
     # @collection_count = collection_results[:count]
@@ -53,6 +55,8 @@ class CopsController < ApplicationController
     resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=nil, cop=@cop.id, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=hide_cop_private)
     @resource_count = resource_results[:count]
     @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
+    @new_event_request_email_body = Event.request_email_body(@current_user)
+    @new_announcement_request_email_body = Announcement.request_email_body(@current_user)
 
     # collection_results = Collection.search_kmp(search_terms=params[:resource_query], tags="", cop=@cop.id, days_back=nil, only_approved=true, exclude_private=hide_private)
     # @collection_count = collection_results[:count]
