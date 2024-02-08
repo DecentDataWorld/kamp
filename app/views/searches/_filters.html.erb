@@ -27,10 +27,6 @@
   if @cop
     @selected_tags << "<span class='badge rounded-pill bg-info dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @cop.name), update_search_path(request.parameters.merge(:cop_id => "").merge(:days_back => @days_back ? @days_back : "").merge(:language => @language ? @language : "").merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]))}</span> &nbsp;"
   end
-
-  puts "***************************************************"
-  puts @last_filter_choice.inspect
-  puts "**************************************************"
 %>
 
 <ul class="nav nav-tabs" id="tagsTab" role="tablist">

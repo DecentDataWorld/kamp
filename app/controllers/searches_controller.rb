@@ -26,7 +26,6 @@ class SearchesController < ApplicationController
   end
 
   def show
-    puts 'and show does happen afer updaeing attributes'
     @search = Search.find(params[:id])
     session[:last_search_id] = @search.id.to_s
 
@@ -39,12 +38,9 @@ class SearchesController < ApplicationController
     session[:page] = params[:page] || nil
     session[:collection_page] = params[:collection_page] || nil
 
-    # session[:last_filter_choice] = ''
     update_params_with_search
-    puts "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^6"
-    puts session[:last_filter_choice]
+
     @last_filter_choice = session[:last_filter_choice].blank? ? 'tags' : session[:last_filter_choice]
-    puts '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
 
     get_pg_results
   end
@@ -79,18 +75,13 @@ class SearchesController < ApplicationController
   private
 
   def update_search_attributes
-    puts params
-    puts session[:last_filter_choice]
-    puts @last_filter_choice
     if !params[:query].nil?
       @search.query = params[:query]
     end
 
     if !params[:organization_id].nil?
-      if params[:organization_id].length > 0 && params[:organization_id].to_i != @search.organization_id #session[:last_filter_choice] != 'orgs'
+      if params[:organization_id].length > 0 && params[:organization_id].to_i != @search.organization_id
         session[:last_filter_choice] = 'orgs'
-        puts 'updated with org'
-        puts session[:last_filter_choice]
       end
       @search.organization_id = params[:organization_id]
     else
@@ -98,10 +89,8 @@ class SearchesController < ApplicationController
     end
 
     if !params[:language].nil?
-      if params[:language].length > 0 && params[:language] != @search.language #session[:last_filter_choice] != 'other'
+      if params[:language].length > 0 && params[:language] != @search.language
         session[:last_filter_choice] = 'other'
-        puts 'updated with lang'
-        puts session[:last_filter_choice]
       end
       @search.language = params[:language]
     else
@@ -109,10 +98,8 @@ class SearchesController < ApplicationController
     end
 
     if !params[:days_back].nil?
-      if params[:days_back].length > 0 && params[:days_back].to_i != @search.days_back #session[:last_filter_choice] != 'other'
+      if params[:days_back].length > 0 && params[:days_back].to_i != @search.days_back
         session[:last_filter_choice] = 'other'
-        puts 'updated with days'
-        puts session[:last_filter_choice]
       end
       @search.days_back = params[:days_back]
     else
@@ -120,10 +107,8 @@ class SearchesController < ApplicationController
     end
 
     if !params[:tags].nil?
-      if params[:tags].length > 0 && params[:tags] != @search.tags #session[:last_filter_choice] != 'tags'
+      if params[:tags].length > 0 && params[:tags] != @search.tags
         session[:last_filter_choice] = 'tags'
-        puts 'updated with tags'
-        puts session[:last_filter_choice]
       end
       @search.tags = params[:tags]
     else
@@ -131,12 +116,8 @@ class SearchesController < ApplicationController
     end
 
     if !params[:cop_id].nil?
-      if params[:cop_id].length > 0 && params[:cop_id].to_i != @search.cop_id #session[:last_filter_choice] != 'cops'
-        puts params[:cop_id].class
-        puts @search.cop_id.class
+      if params[:cop_id].length > 0 && params[:cop_id].to_i != @search.cop_id
         session[:last_filter_choice] = 'cops'
-        puts 'updated with cop'
-        puts session[:last_filter_choice]
       end
       @search.cop_id = params[:cop_id]
     else
@@ -148,7 +129,6 @@ class SearchesController < ApplicationController
     end
   
     @search.save
-
   end
 
   def update_params_with_search
