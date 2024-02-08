@@ -185,7 +185,7 @@ class SearchesController < ApplicationController
         @cops = Resource.search_cops(params[:query], params[:tags], params[:language], params[:days_back])
       end
 
-      collection_results = Collection.search_kmp(params[:query], params[:tags], params[:organization_id], params[:days_back])
+      collection_results = Collection.search_kmp(params[:query], params[:tags], params[:organization_id], params[:cop_id], params[:days_back])
       @collection_count = collection_results[:count]
       @collections = Collection.where(id: collection_results[:ids]).order(Arel.sql("array_position(ARRAY[#{collection_results[:ids].join(',')}], collections.id)")).paginate(page: params[:collection_page], per_page: 10)
     else

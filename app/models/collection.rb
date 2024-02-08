@@ -74,7 +74,7 @@ class Collection < ActiveRecord::Base
 
   end
 
-  def self.search_kmp(search_terms=nil, tags=nil, org=nil, days_back=nil, only_approved=true, exclude_private=true)
+  def self.search_kmp(search_terms=nil, tags=nil, org=nil, cop=nil, days_back=nil, only_approved=true, exclude_private=true)
     target_date = Date.today - days_back.to_i if !days_back.nil?
     query = "
       WITH collections_search AS (
@@ -96,6 +96,7 @@ class Collection < ActiveRecord::Base
         INNER JOIN tags t on tg.tag_id = t.id "
         query = query + "
         WHERE 0=0 "
+        query = query + " AND 1 = 0 " if !cop.nil? # do not search collections if filtering by cop 
         query = query + " AND c.organization_id = " + org.to_s if !org.nil? 
         query = query + " AND c.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
         query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0

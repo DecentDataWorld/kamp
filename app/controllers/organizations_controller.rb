@@ -56,7 +56,7 @@ class OrganizationsController < ApplicationController
     @resource_count = resource_results[:count]
     @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
 
-    collection_results = Collection.search_kmp(search_terms=params[:resource_query], tags="", org=@organization.id, days_back=nil, only_approved=true, exclude_private=hide_private)
+    collection_results = Collection.search_kmp(search_terms=params[:resource_query], tags="", org=@organization.id, cop=nil, days_back=nil, only_approved=true, exclude_private=hide_private)
     @collection_count = collection_results[:count]
     @collections = Collection.where(id: collection_results[:ids]).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
 
