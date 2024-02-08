@@ -27,24 +27,28 @@
   if @cop
     @selected_tags << "<span class='badge rounded-pill bg-info dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @cop.name), update_search_path(request.parameters.merge(:cop_id => "").merge(:days_back => @days_back ? @days_back : "").merge(:language => @language ? @language : "").merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]))}</span> &nbsp;"
   end
+
+  puts "***************************************************"
+  puts @last_filter_choice.inspect
+  puts "**************************************************"
 %>
 
 <ul class="nav nav-tabs" id="tagsTab" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="tags-tab" data-bs-toggle="tab" data-bs-target="#tags" type="button" role="tab" aria-controls="tags" aria-selected="true">Tags</button>
+    <button class="nav-link <% if @last_filter_choice == 'tags' || nil %> active <% end %>" id="tags-tab" data-bs-toggle="tab" data-bs-target="#tags" type="button" role="tab" aria-controls="tags" aria-selected="true">Tags</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="orgs-tab" data-bs-toggle="tab" data-bs-target="#orgs" type="button" role="tab" aria-controls="orgs" aria-selected="false">Organizations</button>
+    <button class="nav-link <% if @last_filter_choice == 'orgs' %> active <% end %>" id="orgs-tab" data-bs-toggle="tab" data-bs-target="#orgs" type="button" role="tab" aria-controls="orgs" aria-selected="false">Organizations</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="cops-tab" data-bs-toggle="tab" data-bs-target="#cops" type="button" role="tab" aria-controls="cops" aria-selected="false">COPs</button>
+    <button class="nav-link <% if @last_filter_choice == 'cops' %> active <% end %>" id="cops-tab" data-bs-toggle="tab" data-bs-target="#cops" type="button" role="tab" aria-controls="cops" aria-selected="false">COPs</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button class="nav-link" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" type="button" role="tab" aria-controls="other" aria-selected="false">Other</button>
+    <button class="nav-link <% if @last_filter_choice == 'other' %> active <% end %>" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" type="button" role="tab" aria-controls="other" aria-selected="false">Other</button>
   </li>
 </ul>
 <div class="tab-content pt-2" id="tagsTabContent">
-  <div class="tab-pane fade <% if !(@organization || @cop) %> show active<% end %>" id="tags" role="tabpanel" aria-labelledby="tags-tab">
+  <div class="tab-pane fade <% if @last_filter_choice == 'tags' %> show active <% end %>" id="tags" role="tabpanel" aria-labelledby="tags-tab">
     <div class="accordion accordion-flush" id="accordionFlushExample">
       <%  
         @tags.each_key do |tag_type| 
@@ -78,7 +82,7 @@
       <% end %>
     </div>
   </div>
-  <div class="tab-pane fade <% if @organization %> show active<% end %>" id="orgs" role="tabpanel" aria-labelledby="orgs-tab">
+  <div class="tab-pane fade <% if @last_filter_choice == 'orgs' %> show active <% end %>" id="orgs" role="tabpanel" aria-labelledby="orgs-tab">
     <div class="pt-3">
       <% if @organization %>
         <% if !@organization.logo.blank? %>
@@ -105,7 +109,7 @@
       <% end %>
     </div>
   </div>
-  <div class="tab-pane fade" id="cops" role="tabpanel" aria-labelledby="cops-tab">
+  <div class="tab-pane fade <% if @last_filter_choice == 'cops' %> show active <% end %>" id="cops" role="tabpanel" aria-labelledby="cops-tab">
     <div class="pt-3">
       <% if @cop %>
         <strong><%= link_to @cop.name, cop_path(@cop) %></strong>
@@ -123,7 +127,7 @@
       <% end %>
     </div>
   </div>
-  <div class="tab-pane fade" id="other" role="tabpanel" aria-labelledby="other-tab">
+  <div class="tab-pane fade <% if @last_filter_choice == 'other' %> show active <% end %>" id="other" role="tabpanel" aria-labelledby="other-tab">
     <div class="pt-3">
       Language:
       <% if @language %> 

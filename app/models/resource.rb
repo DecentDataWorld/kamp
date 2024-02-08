@@ -274,7 +274,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, cop=nil, language=nil, 
     return grouped_results
   end
 
-  def self.search_orgs(search_terms=nil, tags=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true)
+  def self.search_orgs(search_terms=nil, tags=nil, cop=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=true)
     target_date = Date.today - days_back.to_i if !days_back.nil?
     query = "
     WITH resources_search AS (
@@ -287,6 +287,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, cop=nil, language=nil, 
       WHERE r.cop_private = false "
       query = query + " AND r.approved = true " if only_approved
       query = query + " AND r.private = false " if exclude_private
+      query = query + " AND r.cop_private = false " if exclude_cop_private
       query = query + "
     ),
     filtered_resources_tags AS (
@@ -297,6 +298,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, cop=nil, language=nil, 
       query = query + "
       WHERE 0=0 "
       query = query + " AND r.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
+      query = query + " AND r.cop_id =  " + cop.to_s if !cop.nil?
       query = query + " AND r.language = '" + language + "'" if !language.nil?  && language.length > 0
       query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
       query = query + " GROUP BY r.id "
