@@ -1,10 +1,10 @@
 class Cop < ActiveRecord::Base
   has_and_belongs_to_many :users
-  has_many :resources
+  has_many :resources, dependent: :nullify
   belongs_to :admin, :class_name => 'User'
-  has_many :featured_searches
-  has_many :events
-  has_many :announcements
+  has_many :featured_searches, dependent: :destroy
+  has_many :events, dependent: :destroy
+  has_many :announcements, dependent: :destroy
   scope :admin, -> (user_id) { where admin_id: user_id }
 
   validates_presence_of :name
