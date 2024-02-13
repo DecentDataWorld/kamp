@@ -1,7 +1,7 @@
 class OrganizationsController < ApplicationController
   load_and_authorize_resource :only => [:edit, :update, :destroy], :find_by => :url
   before_action :set_organization, only: [:show, :edit, :update, :destroy, :deactivate, :private_resources]
-  before_action :authorized?, :except => [:index, :show, :not_found, :apply]
+  before_action :authorized?, :except => [:index, :show, :not_found, :apply, :new, :create]
 
   # GET /organizations
   def index
@@ -343,7 +343,7 @@ class OrganizationsController < ApplicationController
         @organization = Organization.find_by_id(params[:id])
       end
       if @organization.nil?
-        @organization = Organization.find_by_url(params[:organization])
+        @organization = Organization.find_by_url(params[:organization].to_s)
       end
 
       unless (!@organization.nil? && @organization.can_manage_users(current_user))
