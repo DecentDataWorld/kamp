@@ -23,7 +23,7 @@
                   </div>
                 </div>
                 <div class="col-md-8 align-middle">
-                  <div class="row <% if @announcements.length != 0 || @events.length != 0 %>small-home<% end %>">
+                  <div class="row">
                     <div class="col-lg-6">
                       <div class="hero-box border-danger card">
                         <div class="card-body">
@@ -60,7 +60,7 @@
                       </div>
                     </div>
                   </div>
-                   <div class="row <% if @announcements.length == 0 && @events.length == 0 %>small-home<% end %>">
+                   <div class="row">
                     <div class="col-lg-6">
                       <% if @announcements.length != 0 %>
                         <%= render  'announcements' %>
