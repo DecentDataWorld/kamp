@@ -17,7 +17,7 @@ class OrganizationMailer < ActionMailer::Base
       end
       mail(to: @to_string, subject: '[KaMP] Someone has applied to join your organization: ')
     else
-      site_admins = User.joins(:roles).where(:roles => {name: 'admin'}).pluck(:email)
+      site_admins = User.with_role(:admin).pluck(:email)
       mail(to: site_admins.join(','), subject: '[KaMP] Someone has applied to join an organization: ')
     end
   end
