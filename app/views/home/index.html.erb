@@ -1,7 +1,7 @@
   <!-- ======= Hero Section ======= -->
   <section id="hero">
     <div class="hero-container">
-      <div id="heroCarousel" data-bs-interval="5000" class="carousel" data-bs-ride="carousel">
+      <div id="heroCarousel" class="carousel">
 
         <div class="carousel-inner" role="listbox">
 
@@ -18,9 +18,7 @@
                     <div class="ps-5 pb-2">
                       This portal is a repository of development resources designed to improve sharing of data and information between the USAID/Jordan Mission, local implementing partners and development organizations within Jordan.
                       <br/> <%= link_to raw('Read more  &raquo;'), about_index_path %> 
-                    </div>
-                    <div class="ps-5">
-                      <iframe width="95%" height="130%" src="https://www.youtube.com/embed/EwYX-O1HZHQ?si=qQ6plfbIJAol72hi" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                      &nbsp; &nbsp; <a href="https://www.youtube.com/embed/EwYX-O1HZHQ?si=qQ6plfbIJAol72hi" target="_blank">View introductory video  &raquo;</a>
                     </div>
                   </div>
                 </div>
@@ -80,10 +78,7 @@
               </div>
             </div>
           </div>
-
-
         </div>
-
       </div>
     </div>
   </section><!-- End Hero -->
@@ -111,6 +106,23 @@
 
       </div>
     </section><!-- End Featured Section -->
+
+    <section id="about" class="about">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+              <iframe width="100%" height="500px" src="https://www.youtube.com/embed/EwYX-O1HZHQ?si=qQ6plfbIJAol72hi" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <div class="col-lg-6">
+            <p>USAID/Jordan created the Jordan Development KaMP – a web-based repository of development information resources designed to improve sharing of data and information between the USAID/Jordan Mission, local implementing partners and development organizations within Jordan.</p>
+            <p>The KaMP will be available to all interested development partners in Jordan and is populated with resources identified and uploaded by staff from USAID/Jordan, MESP, Implementing Partners and other portal users.</p>
+            <p> <%= link_to raw('Read more  &raquo;'), about_index_path %> </p>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    
 
 
   </main><!-- End #main -->

@@ -20,11 +20,7 @@ $enable-negative-margins: true;
   background: rgba(255,255,255,.3);
 }
 
-@media only screen and (max-height: 800px) { 
-  .small-home { 
-    display: none; 
-  } 
-}
+
 
 .hero-box {
   margin-right: 30px;
@@ -613,7 +609,7 @@ body {
     background-color: rgba(255, 255, 255, 0.6);
     background-image: linear-gradient(to right, rgba(255, 255, 255, 1.0), rgba(255, 255, 255, 0.7), rgba(0, 47, 108, 0.2), rgba(0, 103, 185, 0.1));
     //--webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0)), linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0));
-    //--webkit-mask-size: 100% 50%;
+    //--webkit-mask-size: 100% 50%;Resources contained and/or referenced on the portal will include:
     //--webkit-mask-repeat: no-repeat;
     //--webkit-mask-position: left top, left bottom;
     position: absolute;
@@ -633,6 +629,7 @@ body {
     left: 0;
     right: 0;
     padding-bottom: 120px;
+    min-height: 600px
   }
   
   #hero .carousel-content {
@@ -644,7 +641,7 @@ body {
     text-align: center;
     color: #2e2e2e;
     margin-bottom: 30px;
-    font-size: 38px;
+    font-size: 30px;
     font-weight: 700;
   }
   
