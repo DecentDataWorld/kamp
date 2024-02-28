@@ -20,11 +20,7 @@ $enable-negative-margins: true;
   background: rgba(255,255,255,.3);
 }
 
-@media only screen and (max-height: 800px) { 
-  .small-home { 
-    display: none; 
-  } 
-}
+
 
 .hero-box {
   margin-right: 30px;
@@ -633,6 +629,7 @@ body {
     left: 0;
     right: 0;
     padding-bottom: 120px;
+    min-height: 600px
   }
   
   #hero .carousel-content {
@@ -644,7 +641,7 @@ body {
     text-align: center;
     color: #2e2e2e;
     margin-bottom: 30px;
-    font-size: 38px;
+    font-size: 30px;
     font-weight: 700;
   }
   
