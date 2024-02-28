@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
   devise :invitable, :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable#, :secure_validatable
 
+  attr_accessor :organization_type
+
   has_many :survey_logs, :class_name => "SurveyLog", :foreign_key => "user_id"
   has_many :resources, :class_name => "Resource", :foreign_key => "author_id"
   has_many :batches, :class_name => "Batch", :foreign_key => "uploader_id"
