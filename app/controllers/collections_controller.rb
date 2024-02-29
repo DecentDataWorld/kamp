@@ -121,9 +121,8 @@ class CollectionsController < ApplicationController
     authenticate_current_user_role_for_collections
 
     respond_to do |format|
+      @collection.tag_list = params[:collection][:tags]
       if @collection.update(collection_params)
-
-        @collection.tag_list = params[:collection][:tags]
         @collection.save
 
         format.html { redirect_to @collection, notice: 'Collection was successfully updated.' }
