@@ -19,6 +19,9 @@ class Ability
         can :add, Resource
         can :edit, Resource
         can :update, Resource
+        can :read, Cop
+        can :edit, Cop
+        can :update, Cop
       end
     end
 

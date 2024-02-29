@@ -37,8 +37,9 @@ class ModeratorMailer < ActionMailer::Base
     @submission = submission
     @organization_name = submission.organization.name
     @recipients = User.where(id: UserSubscription.where(subscribed_to: 'organization', subscribed_to_id: @submission.organization_id).pluck(:user_id)).pluck(:email)
-
-    mail(to: @recipients, subject: "[KaMP] A new resource has been uploaded to #{@organization_name}")
+    if @recipients.length > 0
+      mail(to: @recipients, subject: "[KaMP] A new resource has been uploaded to #{@organization_name}")
+    end
   end
 
 end

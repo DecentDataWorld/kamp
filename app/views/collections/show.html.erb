@@ -89,7 +89,7 @@
               <% end %>
             </p>
             <% else %>
-            <% @collection.resources.each do |resource| %>
+            <% @collection.resources.order(updated_at: :desc).each do |resource| %>
               <%= render resource %>
               <% if (can? :moderate, @collection) or (@collection.can_edit(@current_user)) or (@collection.can_add_resources(@current_user)) %>
                 <div class="d-flex flex-row-reverse"><%= link_to "Remove From Collection", remove_resourcing_path(resource_id: resource.id, collection_id: @collection.id), :data => { :turbo_confirm => 'Are you sure you want to remove this resource? It will not be deleted but will be removed from this collection.' }, class: 'btn btn-outline-danger btn-sm' %></div>

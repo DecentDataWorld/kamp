@@ -9,6 +9,7 @@ en:
     access_denied: "You do not have access to this area."
     invalid_date: " is invalid"
     organization_or_application_required: "You must either select an organization or apply for a new organization."
+    organization_type_required: "You must specify an organization type for a new organization."
   helpers:
     select:
       prompt: Please select

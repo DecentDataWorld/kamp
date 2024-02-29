@@ -6,6 +6,7 @@ class AnnouncementsController < ApplicationController
   def public_announcements
     @announcements = Announcement.active.is_public.order(:expiration_date => :desc)
     @featured_announcements = @announcements.featured
+    @new_announcement_request_email_body = Announcement.request_email_body(@current_user)
   end
 
   #GET /announcements/1

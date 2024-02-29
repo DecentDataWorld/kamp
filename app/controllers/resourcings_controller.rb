@@ -117,7 +117,7 @@ class ResourcingsController < ApplicationController
 
   def resourcing_params
     params.require(:resourcing).permit(:resource_id, :resourceable_id, :resourceable_type, :resources,
-                                       :resource_attributes => [:activity_id, :name, :description, :format, :collection_id, :resource_type, :status, :attachment, :author_id, :organization_id, :private, :source, :language, :issue_date, :view_count, :corporate_authorship])
+                                       :resource_attributes => [:activity_id, :name, :description, :format, :collection_id, :resource_type, :status, :attachment, :author_id, :organization_id, :private, :source, :language, :issue_date, :view_count, :corporate_authorship, :cop_id, :cop_private])
   end
 
 end

@@ -1,7 +1,7 @@
 class OrganizationsController < ApplicationController
   load_and_authorize_resource :only => [:edit, :update, :destroy], :find_by => :url
   before_action :set_organization, only: [:show, :edit, :update, :destroy, :deactivate, :private_resources]
-  before_action :authorized?, :except => [:index, :show, :not_found, :apply]
+  before_action :authorized?, :except => [:index, :show, :not_found, :apply, :new, :create]
 
   # GET /organizations
   def index
@@ -52,11 +52,11 @@ class OrganizationsController < ApplicationController
     end
 
     # get all submissions for this organization
-    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=@organization.id, language=nil, days_back=nil, only_approved=true, exclude_private=hide_private)
+    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=@organization.id, cop=nil, language=nil, days_back=nil, only_approved=true, exclude_private=hide_private)
     @resource_count = resource_results[:count]
     @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
 
-    collection_results = Collection.search_kmp(search_terms=params[:resource_query], tags="", org=@organization.id, days_back=nil, only_approved=true, exclude_private=hide_private)
+    collection_results = Collection.search_kmp(search_terms=params[:resource_query], tags="", org=@organization.id, cop=nil, days_back=nil, only_approved=true, exclude_private=hide_private)
     @collection_count = collection_results[:count]
     @collections = Collection.where(id: collection_results[:ids]).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
 
@@ -343,7 +343,7 @@ class OrganizationsController < ApplicationController
         @organization = Organization.find_by_id(params[:id])
       end
       if @organization.nil?
-        @organization = Organization.find_by_url(params[:organization])
+        @organization = Organization.find_by_url(params[:organization].to_s)
       end
 
       unless (!@organization.nil? && @organization.can_manage_users(current_user))
