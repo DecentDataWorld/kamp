@@ -28,7 +28,7 @@
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
           <div class="icon-box w-100">
             <h4><%= link_to e.name, show_event_path(e), data: { turbo_frame: "modal" } %></h4>
-            <p><span class="text-muted">date: </span><%= e.start_date %></p>
+            <p><span class="text-muted">date: </span><%= e.start_date.strftime("%Y-%m-%d") %></p>
             <p><span class="text-muted">location: </span><%= e.location %></p>
             <p><span class="text-muted">description: </span> <%= e.short_description %></p>
             <p><%= link_to "click for more", show_event_path(e), data: { turbo_frame: "modal" } %></p>
