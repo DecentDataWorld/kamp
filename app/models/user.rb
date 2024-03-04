@@ -55,7 +55,9 @@ class User < ActiveRecord::Base
 
   def send_admin_mail
     @user = self
-    UserMailer.registration_email(@user).deliver
+    unless User.do_not_email.pluck(:email).include? @user.email
+      UserMailer.registration_email(@user).deliver
+    end
   end
 
   def has_approved_org
