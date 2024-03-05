@@ -218,7 +218,11 @@ class UsersController < ApplicationController
   def send_invite
     digest = OpenSSL::Digest.new('sha1')
     @email_address = params[:invitation_email]
-    unless User.do_not_email.pluck(:email).include?(@email_address) || User.unregistered_do_not_email.include?(@email_address)
+
+    if User.do_not_email.pluck(:email).include?(@email_address) || User.unregistered_do_not_email.include?(@email_address)
+      flash[:error] = "This user has requested not to receive emails from Jordan KaMP and cannot be invited to register."
+      redirect_back(fallback_location: users_path)
+    else
       @verify = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], @email_address)
       UserMailer.invitation_email(@email_address, @verify).deliver
       redirect_to root_path, :notice => "An invitation to register has been sent to #{@email_address}. Please check your email inbox."
