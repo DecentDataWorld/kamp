@@ -344,6 +344,9 @@ class ResourcesController < ApplicationController
     if @resource.nil?
       redirect_to resources_not_found_path, message: "That resource was not found"
     else
+      if @cookies.nil?
+        session["init"] = true
+      end
       impressionist(@resource)
     end
   end
