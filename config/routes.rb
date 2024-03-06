@@ -129,6 +129,8 @@ Rails.application.routes.draw do
   put 'users/remove_membership', to: 'users#remove_membership', as: :remove_membership
   put 'users/update_role', to: 'users#update_role', as: :update_role
   put 'users/remove_cop_membership', to: 'users#remove_cop_membership', as: :remove_cop_membership
+  get '/unsubscribe', to: 'users#unsubscribe'
+
 
   #HEALTHCHECK
   get '/healthcheck', to: 'healthcheck#check_db'

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!, except: [:show, :request_invite, :send_invite]
+  before_action :authenticate_user!, except: [:show, :request_invite, :send_invite, :unsubscribe]
   before_action :authorize_user_admin, only: [:index, :get_users]
   after_action :assign_cop, only: [:create]
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
@@ -218,9 +218,31 @@ class UsersController < ApplicationController
   def send_invite
     digest = OpenSSL::Digest.new('sha1')
     @email_address = params[:invitation_email]
-    @verify = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], @email_address)
-    UserMailer.invitation_email(@email_address, @verify).deliver
-    redirect_to root_path, :notice => "An invitation to register has been sent to #{@email_address}. Please check your email inbox."
+
+    if User.do_not_email.pluck(:email).include?(@email_address) || User.unregistered_do_not_email.include?(@email_address)
+      flash[:error] = "This user has requested not to receive emails from Jordan KaMP and cannot be invited to register."
+      redirect_back(fallback_location: users_path)
+    else
+      @verify = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], @email_address)
+      UserMailer.invitation_email(@email_address, @verify).deliver
+      redirect_to root_path, :notice => "An invitation to register has been sent to #{@email_address}. Please check your email inbox."
+    end
+  end
+
+  def unsubscribe
+    if params.has_key?(:verify) && params.has_key?(:email)
+      digest = OpenSSL::Digest.new('sha1')
+      hmac = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], params[:email])
+
+      if params[:verify] == hmac
+        User.unsubscribe(params[:email])
+        render json: {:message => 'You have successfully unsubscribed from Jordan KaMP emails.'}, status: :ok
+      else
+        render json: {:message => 'Failed to unsubscribe you from Jordan KaMP emails. Please contact the website administrator at help@jordankmportal.com'}, status: :unprocessable_entity
+      end
+    else
+      render json: {:message => t('errors.error')}, status: :unprocessable_entity
+    end
   end
 
   private

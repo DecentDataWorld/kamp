@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_22_140632) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_04_211426) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -175,6 +175,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_22_140632) do
     t.integer "result_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "do_not_email", force: :cascade do |t|
+    t.string "email", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "events", force: :cascade do |t|
@@ -446,6 +452,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_22_140632) do
     t.text "organization_entered"
     t.boolean "mail_chimp_user", default: false
     t.datetime "deactivated_at"
+    t.boolean "do_not_email", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["expired_at"], name: "index_users_on_expired_at", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

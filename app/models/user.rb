@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
   devise :invitable, :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable#, :secure_validatable
 
+  scope :do_not_email, -> () { where do_not_email: true }
+
   attr_accessor :organization_type
 
   has_many :survey_logs, :class_name => "SurveyLog", :foreign_key => "user_id"
@@ -53,7 +55,9 @@ class User < ActiveRecord::Base
 
   def send_admin_mail
     @user = self
-    UserMailer.registration_email(@user).deliver
+    unless User.do_not_email.pluck(:email).include? @user.email
+      UserMailer.registration_email(@user).deliver
+    end
   end
 
   def has_approved_org
@@ -83,6 +87,22 @@ class User < ActiveRecord::Base
 
   def reactivate
     update_attribute(:deactivated_at, nil)
+  end
+
+  def self.unregistered_do_not_email
+    query = "select email from do_not_email"
+    results = ActiveRecord::Base.connection.exec_query(query)
+    emails = results.map { |r| r["email"]}
+    return emails
+  end
+
+  def self.unsubscribe(email)
+    if User.where(email: email).length > 0
+      User.where(email: email).update(do_not_email: true)
+    else
+      query = "insert into do_not_email (email, created_at, updated_at) values ('#{email}', now(), now());"
+      result = ActiveRecord::Base.connection.exec_query(query)
+    end
   end
 
 end
