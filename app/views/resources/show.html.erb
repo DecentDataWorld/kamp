@@ -27,10 +27,10 @@
               <% if @resource.can_edit(current_user) %>
                 <li><%= link_to "Edit Resource", edit_resource_path(@resource), class: "dropdown-item" %></li>
               <% end %>
-              <% if ((can? :delete, @resource) || @resource.organization.can_edit_organization(current_user)) %>
+              <% if can? :delete, @resource || (@resource.organization && @resource.organization.can_edit_organization(current_user)) %>
                   <li><%= link_to "Delete", @resource, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "dropdown-item" %></li>
               <% end %>
-              <% if ((can? :approve, @resource) || @resource.organization.can_edit_organization(current_user)) && !@resource.approved %>
+              <% if (can? :approve, @resource || (@resource.organization && @resource.organization.can_edit_organization(current_user))) && !@resource.approved %>
                 <li><%= link_to "Approve Resource", approve_submission_path(:submission_id => @resource.id, :submission_type => "resource"), :class => "dropdown-item" %></li>
                 <li><%= link_to "Deny Submission", denial_submission_path(:submission_id => @resource.id, :submission_type => "resource"), :class => "dropdown-item" %></li>
               <% end %>

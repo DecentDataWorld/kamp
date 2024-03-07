@@ -27,7 +27,7 @@
                       <% get_resource = Resource.find(resource.id) %>
                       <tr>
                         <td><%= link_to get_resource.name, get_resource %></td>
-                        <td><%= link_to get_resource.organization.name, get_resource.organization %></td>
+                        <td><%= link_to get_resource.organization.name, get_resource.organization if resource.organization %></td>
                         <td><%= get_resource.positive %></td>
                         <td>
                           <% get_resource.positive_users.each do |user| %>

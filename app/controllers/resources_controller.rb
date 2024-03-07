@@ -369,7 +369,7 @@ class ResourcesController < ApplicationController
       redirect_to root_path, alert: 'You do not have access to this private resource.'
 
       # authenticated users cannot view private resources that arent in their organization unless they are moderators or are the user that uploaded it
-    elsif !@current_user.nil? and @resource.private and @current_user.has_org(@resource.organization).count == 0 and !can? :approve, @resource
+    elsif !@current_user.nil? and @resource.private and (@resource.organization && @current_user.has_org(@resource.organization).count == 0) and !can? :approve, @resource
       redirect_to root_path, alert: 'You do not have access to this private resource.'
 
       # authenticated users cannot view resources that are not approved yet unless they are moderators
