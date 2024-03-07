@@ -45,7 +45,7 @@
                       <div class="tab-content">
                         <div id="inner_resources" class="tab-pane show fade active">
                           <% @resources.each do |resource| %>
-                            <% if !resource.private || resource.organization.can_add_collections(current_user) %>
+                            <% if !resource.private || (resource.organization && resource.organization.can_add_collections(current_user)) %>
                               <%= render resource %>
                             <% end %>
                           <% end %>
