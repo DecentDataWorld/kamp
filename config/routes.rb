@@ -108,6 +108,7 @@ Rails.application.routes.draw do
   post 'organizations/invite_user', to: 'organizations#invite_user', as: :org_invite_user
   get 'organizations/private_resources/:id', to: 'organizations#private_resources', as: :org_private_resources
   resources :organizations, path: '/admin/organizations'
+  get 'organizations/:id', to: 'organizations#show'
   put 'organizations/deactivate/:id', to: 'organizations#deactivate', as: 'deactivate_organization'
   put 'organizations/reactivate/:id', to: 'organizations#reactivate', as: 'reactivate_organization'
   get 'user_orgs_index', to: 'organizations#user_orgs_index', as: 'user_orgs_index'
