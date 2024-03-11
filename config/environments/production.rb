@@ -67,7 +67,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # TODO: CHANGE THIS BACK AT CUTOVER!!
-  config.action_mailer.default_url_options = { :host => 'staging.jordankmportal.com' }
+  config.action_mailer.default_url_options = { :host => 'jordankmportal.com' }
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :ses
   config.action_mailer.perform_deliveries = true
