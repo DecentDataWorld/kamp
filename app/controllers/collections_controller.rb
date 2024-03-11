@@ -238,6 +238,9 @@ class CollectionsController < ApplicationController
     if @collection.nil?
       redirect_to collections_not_found_path, message: "That collection was not found"
     else
+      if @cookies.nil?
+        session["init"] = true
+      end
       impressionist(@collection)
     end
   end
