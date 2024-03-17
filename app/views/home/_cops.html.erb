@@ -7,7 +7,7 @@
     <%= link_to request_invite_path do %><i class="bi bi-envelope"></i><% end %>
   </div>
 
-<%  elsif user_signed_in? && current_user.cops.length != 0 %>
+<%  elsif user_signed_in? %>
   <h3 class="card-title text-success">Communities of Practice</h3>
   <div class="scrollable">
     <div class="row p-2 d-flex text-secondary card-text">
