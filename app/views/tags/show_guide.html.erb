@@ -1,0 +1,16 @@
+<%= render "layouts/modal", title: "Tag Types Guide" do %>
+  <table class="table table-hover table-striped">
+    <thead>
+      <th>Tag Type</th>
+      <th>Tag</th>
+    </thead>
+    <tbody>
+      <% @tags.each do |t| %>
+        <tr>
+          <td><%= t.tag_type ? t.tag_type.name : "" %></td>
+          <td><%= t.name %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

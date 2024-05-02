@@ -9,8 +9,8 @@ class Organization < ActiveRecord::Base
   has_many :resources, :class_name => "Resource", :foreign_key => "organization_id"
   has_many :organization_applications, :class_name => "OrganizationApplication", :foreign_key => "organization_id"
 
-  has_many :users, through: :users_organizations
   has_many :users_organizations, :class_name => 'UsersOrganization', dependent: :destroy
+  has_many :users, through: :users_organizations
   belongs_to :organization_type, :class_name => "OrganizationType", :foreign_key => "organization_type_id"
 
   validates_presence_of :name, :message => "Name is required"
@@ -50,7 +50,7 @@ class Organization < ActiveRecord::Base
   end
 
   def can_add_collections(user)
-    if (self.users.exists?(user))
+    if user && self.users.exists?(user.id)
       return true
     else
       return false
@@ -75,6 +75,14 @@ class Organization < ActiveRecord::Base
 
   def to_param
     url
+  end
+
+  def deactivate
+    update_attribute(:deactivated_at, Time.current)
+  end
+
+  def reactivate
+    update_attribute(:deactivated_at, nil)
   end
 
 end

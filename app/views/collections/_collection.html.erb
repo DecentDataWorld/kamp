@@ -1,5 +1,5 @@
 
-<% str_title = ' <i class="fa fa-files-o"></i>' %>
+<% str_title = ' <i class="bi bi-archive"></i> ' %>
 <% str_title = str_title + collection.title.truncate(55) %>
 <% if collection.private == true %>
     <% str_title = str_title + ' <i class="fa fa-eye-slash"></i>' %>
@@ -8,42 +8,28 @@
 <div class="tag-box tag-box-v4 margin-bottom-20 well well-sm">
   <!-- Begin Inner Results -->
 
-  <% if can? :approve, collection and !collection.approved %>
-      <div class="btn-group pull-right">
-        <button type="button" class="btn btn-success"><i class="fa fa-cog"></i></button>
-        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-          <i class="fa fa-angle-down"></i>
-          <span class="sr-only">Toggle Dropdown</span>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li><%= link_to "Approve Collection", approve_submission_path(:submission_id => collection.id, :submission_type => "collection") %></li>
-          <li class="divider"></li>
-          <li><a href="<%= denial_submission_path(:submission_id => collection.id, :submission_type => "collection") %>">Deny Submission</a></li>
-        </ul>
+  <div class="card border-top-0 border-end-0 border-bottom-0 border-primary border-4">
+      <div class="card-body">
+      <!-- Begin Inner Results -->
+      <% if can? :approve, collection and !collection.approved %>
+        <div class="float-end">
+          <%= link_to "Approve", approve_submission_path(:submission_id => collection.id, :submission_type => "collection"), :class => "btn btn-outline-primary btn-sm" %></li>
+          <%= link_to "Deny", denial_submission_path(:submission_id => collection.id, :submission_type => "collection"), :class => "btn btn-outline-danger btn-sm" %></li>
+        </div>
+     <% end %>
+      <h4 class="card-title pb-2"><%= link_to raw(str_title), collection_path(collection) %></h4>
+      <h6 class="card-subtitle mb-2 text-muted">
+        <%= raw collection.tags[0..2].map { |t| link_to raw('<span class="badge rounded-pill bg-secondary dark-badge-link"><i class="fa fa-tag"></i> ' + t.name), update_search_path(:tags=>[t.id]) }.join('</span>&nbsp;') %>
+        <%= link_to raw('...more'), collection_path(collection) if collection.tag_list.size > 4 %>
+      </h6>
+      <%= simple_format collection.description.truncate(80) if !collection.description.nil? %>
+      <div class="text-muted resource-small"><%= link_to collection.organization.name, organization_path(collection.organization) if !collection.organization.nil? %> (<%= link_to collection.author.name, user_path(collection.author) if !collection.author.nil? %>)</div>
+      <div class="row resource-small pt-3">
+      <div class="col text-muted fw-light text-center border-end"><%= collection.resources.count %> Resource<% if collection.resources.count > 1 %>s<% end %> in this collection</div>
+        <div class="col text-muted fw-light text-center border-end">Uploaded <%= time_ago_in_words collection.created_at %> ago</div>
+        <div class="col text-muted fw-light text-center">Last updated <%= time_ago_in_words collection.updated_at %> ago</div>
       </div>
-  <% end %>
-
-  <% if !collection.image.blank? %>
-      <p><%= image_tag collection.image.expiring_url(10), class: "author pull-left pad-right"  %></p>
-  <% end %>
-  <h2 class='headline-sm'><% if collection.approved == false %><span class="label label-orange">Pending Approval</span> <% end %><%= link_to raw(str_title), collection_path(collection) %></h2>
-  <ul class="list-inline">
-    <li>
-      <%= raw collection.tags[0..2].map { |t| link_to raw('<i class="fa fa-tag"></i> ' + t.name), update_search_path(:tags=>[t.id]), class: 'text-highlights rounded' }.join('</li><li>') %>
-      <%= link_to raw('...more</li>'), collection_path(collection) if collection.tag_list.size > 4 %>
-      <%= raw('</li>') if collection.tag_list.size <= 4 %>
-
-  </ul>
-  <p class="text-muted "><smaller>
-    <%= simple_format collection.description.truncate(80) if !collection.description.nil? %></smaller>
-  </p>
-  <ul class="list-inline down-ul">
-    <% if collection.resources.count > 0 %>
-        <li><%= collection.resources.count %> Resource<% if collection.resources.count > 1 %>s<% end %> in this collection</li>
-    <% end %>
-    <li>Uploaded <%= time_ago_in_words collection.created_at %> ago</li>
-    <li>Last updated <%= time_ago_in_words collection.updated_at %> ago</li>
-    <li><%= link_to collection.organization.name, organization_path(collection.organization) if !collection.organization.nil? %> (<%= link_to collection.author.name, user_path(collection.author) if !collection.author.nil? %>)</li>
-  </ul>
+      </div>
+    </div>
 </div>
 

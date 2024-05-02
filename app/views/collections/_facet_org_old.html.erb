@@ -1,0 +1,21 @@
+<% if params[:organization_id].present? and Organization.where(id: params[:organization_id]).exists? %>
+    <% @organization =  Organization.find(params[:organization_id]) %>
+    <%= render partial: 'organizations/info', locals: { :short => true } %>
+    <%= link_to url_for(update_search_path(params.except(:organization_id))), class: 'pull-right' do %>
+        <i class="fa fa-times-circle"></i> reset filter
+    <% end %>
+<% else %>
+    <ul id="orglist" class="list-unstyled ps-2">
+      <% @orgs.each do |o| %>
+        <li class='available-tags pb-1'>
+          <%= link_to o["name"], update_search_path(request.parameters.merge(:organization_id => o["id"]).except(:page)) %> (<%= o["org_count"] %>) 
+        </li>
+      <% end %>
+    </ul>
+    <% if @orgs.count > 5 %>
+        <p><a id="expandOrgsList"><i class="fa fa-arrow-circle-down"></i> More Organizations</a></p>
+    <% end %>
+<% end %>
+
+
+

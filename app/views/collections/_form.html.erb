@@ -2,117 +2,93 @@
     <%= f.input :url, :as => "hidden" %>
     <%= f.input :author_id, :as => "hidden" %>
     <%= f.input :maintainer_id, :as => "hidden" %>
-    <input type="hidden" name="tags_list" value="" id="tags_list">
 
-    <% if @collection.errors.count > 0 %>
-        <div class="alert alert-danger fade in">
-          <h4>Correct Errors Before Continuing</h4>
-          <p>The following fields have to be corrected.</p>
-          <% @collection.errors.each do |e| %>
-              <%= e %><br>
+    <% if @collection.errors.any? %>
+      <div id="error_explanation">
+        <h2>
+          <%= pluralize(@collection.errors.count, t('errors.error')) %>
+          <%= t('errors.prohibited') %>
+        </h2>
+        <ul>
+          <% @collection.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
           <% end %>
-        </div>
+        </ul>
+      </div>
     <% end %>
 
-    <div class="form-group">
-      <label for="title">Title</label>
-      <%= f.input_field :title, class: "form-control", id: 'title', placeholder: 'Enter Title', maxlength: 255 %>
+    <div class="row p-2">
+      <div class="col-md-12">
+        <%= f.label :title %><br>
+        <%= f.input_field :title, class: "form-control", id: 'title', placeholder: 'Enter Title', maxlength: 255 %>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="description">Description</label>
-      <%= f.input_field :description, class: "form-control", id: 'description', placeholder: 'Information about this collection' %>
+    <div class="row p-2">
+      <div class="col-md-12">
+        <%= f.label :description %><br>
+        <%= f.input_field :description, class: "form-control", id: 'description', label: false, placeholder: 'Information about this collection' %>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="tags">Tag(s)</label>
-      <%= f.collection_select :tags, Resource.tag_counts, :name, :name, {}, {:multiple => true, :style => 'width:100%', :class => "col-xs-10 form-control multiple-chosen-select"} %>
-    </div>
+    <%
 
-    <div class="checkbox">
-      <%= f.check_box :private %> <%= f.label :private %>
-    </div>
+      grouped_tags = {}
+      TagType.all.order(:name).each do |category|
+        category.tags.order(:name).each do |tag|
+          grouped_tags[category.name] ||= []
+          grouped_tags[category.name] << tag.name
+        end
+      end
 
-    <% if !@collection.image.blank? %>
-        <%= image_tag @collection.image.url(:thumb), class: "img-responsive pull-left" %>
-        <div class="form-group col-lg-offset-1">
-          <label for="title">Replace Image</label>
-          <%= f.input_field :image, id: 'image',  data: { :"show-upload" => "false" } %>
+    %>
+
+    <div class="row p-2">
+      <div class="col-md-12">
+      <span class="text-danger">*</span> <%= f.label :tags %><br>
+        <%= f.input_field :tags,
+                          :label => false,
+                          :id => "multiselect",
+                          :as => :grouped_select,
+                          :collection => grouped_tags,
+                          :group_method => :last,
+                          :multiple => true,
+                          :class => "form-control",
+                          data: {controller: "multiselect", placeholder: "Begin typing to search for tags"} %>
+      </div>
+    </div> 
+
+    <div class="row p-2">
+      <div class="col-md-12">
+        <div class="form-check form-switch pt-4">
+          <%= f.check_box :private, class: "form-check-input", role: "switch" %>
+          <%= f.label "Mark as a private collection that can only be accessed by users in my organization", class: "form-check-label" %>
         </div>
-    <% else %>
-        <div class="form-group">
-          <label for="title">Image</label>
-          <%= f.input_field :image, id: 'image',  data: { :"show-upload" => "false" } %>
-        </div>
-    <% end %>
-
-    <div class="clear"></div>
-
-    <div class="form-group">
-      <label for="attachment">Activity</label>
-
-      <%= f.select :activity_id, Activity.all.collect {|x| [x.name, x.id]}, class: 'form-control', label: false, placeholder: 'Choose an Actvitity', :include_blank => true %><br>
-      <small>If this resource relates to one of the listed activities, select it above</small>
+      </div>
     </div>
 
-    <% if current_user.organizations.count > 0 && @collection.id.nil? %>
-        <div class="form-group">
-          <label for="attachment">Organization</label>
-          <%= f.select :organization_id, current_user.organizations.all.collect {|x| [x.name, x.id]}, label: false %>
-        </div>
-    <% end %>
-
-    <div class="form-group">
-      <label for="description">Notes</label>
-      <%= f.input_field :notes, class: 'form-control', id: 'notes', placeholder: 'Enter notes' %>
+    <div class="row p-2">
+      <% if current_user.organizations.count > 1 && @collection.id.nil? %>
+          <div class="col-md-12">
+            <%= f.label :organization %><br>
+            <%= f.select :organization_id, current_user.organizations.all.collect {|x| [x.name, x.id]}, { include_blank: true}, {class: 'form-select'}%>
+          </div>
+      <% elsif current_user.organizations.count == 1 && @collection.id.nil? %>
+        <%= f.input_field :organization_id, :value => current_user.organizations.first.id, :as => "hidden" %>
+      <% end %>
     </div>
 
+    <div class="row p-2">
+      <div class="col-md-12">
+        <%= f.label :notes %><br>
+        <%= f.input_field :notes, class: 'form-control', id: 'notes', placeholder: 'Enter notes' %>
+      </div>
+    </div>
 
-    <% if can? :add_newsletter_collection, @collection %>
-        <div class="checkbox">
-          <%=
-            f.input :newsletter_only, label: false, as: :boolean do
-              f.check_box :newsletter_only, {}, "true", "false"
-            end
-          %> Limit access to newsletter subscribers only
-        </div>
-    <% end %>
-
-    <div class="form-actions">
-      <%= f.button :submit, class: 'btn btn-lg btn-color' %>
+    <div class="row p-2">
+      <div class="col-md-12">
+        <%= f.button :submit, class: 'btn btn-outline-primary btn-sm' %>
+      </div>
     </div>
 <% end %>
 
-
-<script>
-    var substringMatcher = function(strs) {
-        return function findMatches(q, cb) {
-            var matches, substringRegex;
-
-// an array that will be populated with substring matches
-            matches = [];
-
-// regex used to determine if a string contains the substring `q`
-            substrRegex = new RegExp(q, 'i');
-
-// iterate through the pool of strings and for any string that
-// contains the substring `q`, add it to the `matches` array
-            $.each(strs, function(i, str) {
-                if (substrRegex.test(str)) {
-// the typeahead jQuery plugin expects suggestions to a
-// JavaScript object, refer to typeahead docs for more info
-                    matches.push({ value: str });
-                }
-            });
-
-            cb(matches);
-        };
-    };
-
-    $(function(){
-
-        $(".chosen-select").chosen();
-        $(".multiple-chosen-select").chosen();
-
-    });
-</script>

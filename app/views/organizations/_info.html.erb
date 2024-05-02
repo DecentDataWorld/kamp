@@ -1,17 +1,66 @@
-<% if @organization.logo.blank? %>
-    <img src="/img/placeholder-organization.png" alt="Placeholder Image" class="img-responsive">
-<% else %>
-    <%= link_to organization_path(@organization) do %>
-        <%= image_tag @organization.logo.expiring_url(10), class: "img-responsive" %>
+<div class="row border-bottom pb-2 me-1">
+  <% if current_user && current_user.organizations.count > 1 %>
+    <div class="col fs-5 dropdown">
+      <button class="btn btn-link btn-lg p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-buildings"></i>
+      </button> Orgs
+      <ul class="dropdown-menu">
+        <% current_user.organizations.each do |o| %>
+          <li><%= link_to o.name, organization_path(o), class: "dropdown-item" %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% else %>
+    <div class="col fs-5"><i class="bi bi-buildings"></i> Orgs</div>
+  <% end %>
+
+  <div class="col d-flex flex-row-reverse available-tags">
+    <% if (can? :manage, :all || (can? :approve, @organization && !@organization.approved)) && !local_assigns[:editing] %>
+      <div class="dropdown">
+        <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa fa-cog"></i>
+        </button>
+        <ul class="dropdown-menu">
+        <% if can? :manage, :all %>
+          <li><%= link_to "Edit Organization", edit_organization_path(@organization, show_org: true), class: "dropdown-item", data: {:show_org => true} %></li>
+        <% end %>
+        <% if (can? :approve, @organization) && (!@organization.approved) %>
+          <li><%= link_to "Approve Organization", organization_approve_path(@organization.url), :class => "dropdown-item" %></li>
+          <li><%= link_to("Delete Organization", organization_path(@organization), :data => { turbo_method: :delete, turbo_confirm: "Are you sure?" }, :method => :delete, :class => "dropdown-item") %></li>
+        <% end %>
+        </ul>
+      </div>
     <% end %>
-<% end %>
-<h4><%= link_to @organization.name, organization_path(@organization) %></h4>
-<% if !@organization.organization_type.blank? %>
-    <p><strong>Organization Type:</strong><br>
-      <%= @organization.organization_type.organization_type %></p>
-<% end %>
-<% if short.nil? or !short %>
-    <p>
-      <%= simple_format @organization.description, class: 'well well-sm' %>
-    </p>
-<% end %>
+  </div>
+</div>
+
+<div>
+  <ul class="list-group list-group-flush bg-transparent">
+    <% if !@organization.organization_type.blank? %>
+      <li class="list-group-item bg-transparent text-muted">
+        <div class="text-danger">Organization Type</div>
+        <div class="ms-3"><%= @organization.organization_type.organization_type %></div>
+      </li>
+    <% end %>
+    <% if !@organization.description.blank? %>
+      <li class="list-group-item bg-transparent text-muted">
+        <div class="text-danger">Description</div>
+        <div class="ms-3">
+          <%= simple_format @organization.description %>
+        </div>
+      </li>
+    <% end %>
+    <li class="list-group-item bg-transparent text-muted">
+      <% if @subscribed %>
+        <span class="label label-success rounded-2x"><i class="fa-solid fa-bell"></i> You are subscribed to this organization</span>
+      <% elsif @logged_in %>
+        <div class="btn-group">
+          <%= link_to user_save_subscriptions_url(id: current_user.id.to_s, subscribed_to: 'organization', subscribed_to_id: @organization.id.to_s, destination: organizations_path(@organization)), :data => { turbo_method: :post }, method: "post" do %>
+            <i class="fa-solid fa-bell"></i>&nbsp;Subscribe to Updates
+          <% end %>
+        </div>
+      <% end %>
+    </li>
+  </ul>
+</div>
+

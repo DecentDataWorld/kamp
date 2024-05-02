@@ -1,0 +1,32 @@
+
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+      <li><%= link_to admin_index_path do %><%=t('navigation.administration')%><% end %></li>
+      <li><%= link_to announcements_path do %>Announcements<% end %></li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
+
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <div class="border-bottom pb-2 h5"><i class="bi bi-megaphone"></i> Announcements</div>
+        <%= render 'admin/side_nav' %>
+        <br/>
+      </div>
+
+      <div class="col-9">
+        <div class="border-bottom pb-2 h5">
+          Edit Announcement
+        </div>
+        <%= render 'form' %>
+      </div>
+    </div>
+  </div>
+</section>
+

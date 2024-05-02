@@ -1,61 +1,61 @@
-<!--=== Breadcrumbs ===-->
-<div class="breadcrumbs">
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
   <div class="container">
-    <h1 class="pull-left">Login</h1>
-  </div><!--/container-->
-</div><!--/breadcrumbs-->
-<!--=== End Breadcrumbs ===-->
+    <ol>
+      <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+      <li>Sign In</li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
+    
+<!-- ======= Services Section ======= -->
+<section id="services" class="services">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h5 class="border-bottom pb-2 mb-5"><i class="bi bi-box-arrow-in-right"></i> Sign in to your account</h5>
 
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-      <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :role => 'form', :class => 'reg-page' }) do |f| %>
-        <div class="reg-header">
-          <h2>Login to your account</h2>
-        </div>
-
-          <%= devise_error_messages! %>
-        <div class="input-group margin-bottom-20">
-          <span class="input-group-addon"><i class="fa fa-user"></i></span>
-          <%= f.email_field :email, :autofocus => true, class: 'form-control', placeholder: 'Enter email', id: 'email', title: 'Enter email' %>
-        </div>
-        <div class="input-group margin-bottom-20">
-          <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-          <%= f.password_field :password, class: 'form-control', id: "exampleInputPassword1", placeholder: "Password", title: "Enter Password", autocomplete: "off" %>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6">
-            <label class="checkbox pull-left">
-              <% if devise_mapping.rememberable? %>
-                  <%= f.check_box :remember_me %>
-              <% end %>
-              <%= f.label :remember_me %>
-            </label>
-
-          </div>
-          <div class="col-md-6">
-            <%= f.submit 'Login', :class => 'btn-u pull-right' %>
+        <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :role => 'form', :class => 'reg-page' }, data: { turbo: false }) do |f| %>
+         <div class="row d-flex justify-content-center">
+          <div class="form-outline mb-4 col-md-6">
+            <%= f.email_field :email, :autofocus => true, class: 'form-control', placeholder: 'Email Address', id: 'email', title: 'Enter email address' %>
           </div>
         </div>
+        <div class="row d-flex justify-content-center">
+          <div class="form-outline mb-4 col-md-6">
+            <%= f.password_field :password, class: 'form-control', id: "exampleInputPassword1", placeholder: "Password", title: "Enter Password", autocomplete: "off" %>
+          </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+          <div class="form-outline mb-4 col-md-6 border-bottom pb-4">
+            <%= f.submit 'Login', :class => 'btn btn-outline-primary' %>
+          </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+          <div class="form-outline mb-4 col-md-6 border-bottom pb-4">
+            <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %>
+          </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+          <div class="form-outline mb-4 col-md-6 border-bottom pb-4">
+            <h6>Not Registered?</h6>
+            <p> <%= link_to 'Request an Invite', request_invite_path, class: 'btn-u btn-u-blue btn-block text-center' %></p>
+          </div>
+        </div>
 
-          <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
-              <div class="row">
-              <%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %>
-              </div>
-          <% end -%>
+        <div class="row d-flex justify-content-center">
+          <div class="form-outline mb-4 col-md-6 border-bottom pb-4">
+            <h6>Forget Your Password ?</h6>
+            <p>No worries, <%= link_to "click here to reset your password", new_password_path(resource_name), class: "color-blue" %>.</p>
+          </div>
+        </div>
 
-        <hr>
 
-          <h4>Not Registered?</h4>
-          <p> <%= link_to 'Request an Invite', request_invite_path, class: 'btn-u btn-u-blue btn-block text-center' %></p>
-          <hr/>
-          <h4>Forget Your Password ?</h4>
-          <p>No worries, <%= link_to "click here to reset your password", new_password_path(resource_name), class: "color-blue" %>.</p>
-      <% end %>
+        <% end %>
+
+      </div>
     </div>
-  </div><!--/row-->
-</div><!--/container-->
-<!--=== End Content Part ===-->
 
+
+  </div>
+</section><!-- End Services Section -->

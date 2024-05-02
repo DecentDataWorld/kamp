@@ -1,66 +1,78 @@
 
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-sm-9">
-      <div class="tab-v2">
-        <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#recent_signups">Recent Signups</a></li>
-          <li><a data-toggle="tab" href="#organization_approvals"><span class="badge rounded-2x badge-u"><%= @organizations.count %></span> Pending Organization</a></li>
-          <% if can? :approve, Resource or can? :approve, Collection %>
-            <li><a data-toggle="tab" href="#pending_submissions"><span class="badge rounded-2x badge-u"><%= @pending_submissions.count %></span> Pending Submissions</a></li>
-          <% end %>
-          <li><a data-toggle="tab" href="#invite_user">Invite User</a></li>
-        </ul>
-        <div class="tab-content">
-          <div id="organization_approvals" class="tab-pane fade in">
-            <%= link_to raw('<i class="fa fa-building"></i> Manage Organizations'), orgs_path, class: 'btn btn-u btn-sm pull-right' %>
-            <% if @organizations.count > 0 %>
-                <p>The following organizations are pending approval. Check their domains to make sure they are a valid organization and click "Approve".</p>
-                <%= render partial: 'organizations/table_list' %>
-                <%= will_paginate @organizations %>
-            <% else %>
-                <p>There are no organizations pending approval right now</p>
-            <% end %>
-          </div>
-          <% if can? :approve, Resource or can? :approve, Collection %>
-            <div id="pending_submissions" class="tab-pane fade in">
-              <%= link_to raw('<i class="fa fa-spinner"></i> Manage Submissions'), moderate_submissions_path, class: 'btn btn-u btn-sm pull-right' %>
-              <%= render :partial => 'show_pending_submissions', :locals => { :pending_submissions => @pending_submissions } %>
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+        <li><%=t('navigation.administration')%></li>
+      </ol>
+    </div>
+</section><!-- End Breadcrumbs -->
+
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+      <h5 class="border-bottom pb-2"><i class="bi bi-toggles2"></i> <%=t('navigation.administration')%></h5>
+        <%= render 'admin/side_nav' %>
+        <br/>
+      </div>
+
+      <div class="col-9">
+
+        <div>
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded=<%= !@show_orgs ? "true" : "false" %> aria-controls="collapseOne">
+                  <h5 class="text-primary p-2"><%= @users_needing_role.count %> Users Pending Portal Role Assignment</h5>
+                </button>
+              </h2>
+              <div id="collapseOne" class="<%= !@show_orgs ? "accordion-collapse collapse show" : "accordion-collapse collapse" %>" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <%= render partial: 'users/simple_table_list', locals: { users: @users_needing_role } %>
+                  <div class="apple_pagination">
+                    <%= will_paginate @users_needing_role %>
+                  </div>
+                </div>
+              </div>
             </div>
-          <% end %>
-          <div id="recent_signups" class="tab-pane fade in active">
-            <%= link_to 'Manage Users', users_path, class: 'btn btn-u btn-sm pull-right' %>
-            <p>Showing most recent sign ups to the portal</p>
-            <%= render partial: 'users/table_list', locals: { users: @users } %>
-            <%= will_paginate @users %>
-          </div>
-          <div id="invite_user" class="tab-pane fade in">
-            <h4>Invite User</h4>
-            <%= simple_form_for @inviteuser,
-                                :url => url_for(:action => 'invite_user', :controller => 'admin'),
-                                :method => 'post' do |f| %>
-                <div class="form-group">
-                  <label for="name">Name</label>
-                  <%= f.input_field :name, class: "form-control", id: 'name', placeholder: 'Enter Name' %>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  <h5 class="text-primary p-2"><%= @organizations.count %> Organizations Pending Approval</h5>
+                </button>
+              </h2>
+              <div id="collapseTwo" class="<%= @show_orgs ? "accordion-collapse collapse show" : "accordion-collapse collapse" %>" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <% if @organizations.count > 0 %>
+                      <p class="resource-small">The following organizations are pending approval. Check their domains to make sure they are a valid organization and click "Approve".</p>
+                      <%= render partial: 'organizations/table_list', locals: {user_memberships_tab: false} %>
+                      <div class="apple_pagination">
+                        <%= will_paginate @organizations, :param_name => 'org_page' %>
+                      </div>
+                  <% else %>
+                      <p>There are no organizations pending approval right now.</p>
+                  <% end %>
                 </div>
-
-                <div class="form-group">
-                  <label for="name">Email</label>
-                  <%= f.input_field :email, class: "form-control", id: 'email', placeholder: 'Enter Email' %>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                  <h5 class="text-primary p-2"><%= @pending_submissions.count %> Pending Submissions</h5>
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <%= render :partial => 'show_pending_submissions', :locals => { :pending_submissions => @pending_submissions } %>
                 </div>
-
-                <div class="form-actions">
-                  <%= f.button :submit, value: 'Invite User', class: 'btn btn-sm btn-color' %>
-                </div>
-            <% end %>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-3">
-      <%= render 'admin/sidebar' %>
-    </div>
   </div>
-</div>
-
+</section><!-- End About Section -->

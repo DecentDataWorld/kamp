@@ -1,0 +1,35 @@
+<% if !user_signed_in? %>
+  <h3 class="card-title text-success">Register</h3>
+  <div class="row p-2 d-flex text-secondary">
+    Contribute to the Jordan KaMP! Click the envelope to request an invitation.
+  </div>
+  <div class="col d-flex justify-content-center">
+    <%= link_to request_invite_path do %><i class="bi bi-envelope"></i><% end %>
+  </div>
+
+<%  elsif user_signed_in? %>
+  <h3 class="card-title text-success">Communities of Practice</h3>
+  <div class="scrollable">
+    <div class="row p-2 d-flex text-secondary card-text">
+      <ul class="list-group list-group-flush bg-transparent">
+        <% Cop.order(:name).each do |cop| %>
+          <% if current_user.cops.include?(cop) %>
+            <li class="list-group-item bg-transparent"><%= link_to cop.name, show_cop_path(cop) %></li>
+          <% else %>
+            <li class="list-group-item bg-transparent"><%= cop.name %> <a class="btn btn-sm btn-outline-primary float-end" href="mailto:<%=cop.admin.email%>?subject=Jordan KAMP: Request to Join COP&body=Dear Admin,%0D%0A KAMP user <%= current_user.name %> (<%=current_user.email %>) would like to join the Community of Practice <%= cop.name %>. Please review their request and admit them if you approve.%0D%0A Regards,%0D%0AJordan KAMP">Join</a></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% else %>
+  <h3 class="card-title text-success">FAQ</h3>
+  <div class="scrollable">
+    <div class="d-flex text-secondary card-text">
+      Welcome to the Jordan KAMP, a place where development resources can be shared with the Jordan M&E community. Anyone can view resources, but registration is required to submit. Please click “More” to learn about the KAMP.
+    </div>
+  </div>
+  <div class="pt-2 d-flex flex-row-reverse">
+    <%= link_to raw('more  &raquo;'), faq_path %> 
+  </div>
+<% end %>

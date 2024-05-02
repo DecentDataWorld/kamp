@@ -1,12 +1,17 @@
-<table class="table table-condensed data-tables-org">
+<table class="table table-sm table-striped">
   <thead>
   <tr>
     <th>Organization</th>
     <th>Email Domain</th>
-    <th>Admins</th>
-    <th>Editors</th>
-    <th>Members</th>
+    <% if !user_memberships_tab %>
+      <th>Admins</th>
+      <th>Editors</th>
+      <th>Members</th>
+    <% end %>
     <th>Added</th>
+    <% if user_memberships_tab %>
+      <th>Role</th>
+    <% end %>
     <th></th>
     <th></th>
   </tr>
@@ -16,19 +21,29 @@
       <tr>
         <td><%= link_to organization.name, organization %></td>
         <td><%= organization.domain %></td>
-        <td><%= organization.admins.count %></td>
-        <td><%= organization.editors.count %></td>
-        <td><%= organization.members.count %></td>
+        <% if !user_memberships_tab %>
+          <td><%= organization.admins.count %></td>
+          <td><%= organization.editors.count %></td>
+          <td><%= organization.members.count %></td>
+        <% end %>
         <td><%= organization.created_at.to_date %></td>
-        <td>
+        <% if user_memberships_tab %>
+          <td><%= organization.users_organizations.where(user_id: user_id).first.role.titleize %></td>
+        <% end %>
+        <td class="text-end">
           <% if !organization.approved and can? :approve, organization %>
-              <%= link_to organization_approve_path(organization.url), :data => { :confirm => "Approve this organization?" }, class: 'btn-u btn-u-yellow btn-xs rounded' do %>
-                  <i class="fa fa-check"></i>
-                  Approve
-              <% end %>
+            <%= link_to organization_approve_path(organization.url), :data => { turbo_method: :get, turbo_confirm: "Approve this organization?" }, class: 'btn btn-outline-primary btn-sm' do %>
+              Approve
+            <% end %>
           <% end %>
         </td>
-        <td><%= link_to("Delete", organization_path(organization), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn-u btn-u-red btn-xs rounded') %></td>
+        <td class="text-end">
+          <% if !user_memberships_tab && (can? :delete, organization ) %>
+            <%= link_to("Delete", organization_path(organization), :data => { turbo_method: :delete, turbo_confirm: "Are you sure?" }, :method => :delete, :class => 'btn btn-outline-danger btn-sm') %>
+          <% elsif user_memberships_tab %>
+            <%= link_to("Remove Membership", remove_membership_path(organization_id: organization.id, user_id: @user.id), data: {turbo_method: :put, turbo_confirm: "Are you sure?"}, class: 'btn btn-outline-danger btn-sm') %>
+          <% end %>
+        </td>
       </tr>
   <% end %>
   </tbody>

@@ -1,0 +1,38 @@
+
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <p>There are currently <strong><%= @admin_role.count + @member_role.count %></strong> active users</p>
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#members" data-toggle="tab">Members <span class="label label-rounded label-info"><%= @member_role.count %></span></a></li>
+        <li><a href="#admins" data-toggle="tab">Admins <span class="label label-rounded label-warning"><%= @admin_role.count %></span></a></li>
+      </ul>
+      <!-- End Nav tabs -->
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div class="tab-pane fade in active" id="members">
+          <%= render partial: 'users/table_list', locals: { users: @member_role } %>
+        </div>
+        <div class="tab-pane fade" id="admins">
+          <%= render partial: 'users/table_list', locals: { users: @admin_role } %>
+        </div>
+      </div> <!-- End Tab panes -->
+
+    </div>
+    <div class="col-md-3">
+      <%= render 'admin/sidebar' %>
+    </div>
+  </div>
+</div>
+
+<% content_for :page_javascript do %>
+  <script>
+      jQuery(document).ready(function() {
+          $('.data-tables-user').DataTable({
+              "searching": true
+          });
+      });
+  </script>
+<% end %>

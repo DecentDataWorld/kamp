@@ -1,25 +1,34 @@
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <% if @has_pending %>
-        <div class="headline">
-          <h2>Application for Organization Pending</h2>
-        </div>
-        <p>Thanks for applying to be a partner organization. Your organization request is still pending.</p>
-        <p>You will be notified by email once administrators have made a decision about your organization.</p>
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+          <li><%= link_to root_path do %>Home<% end %></li>
+          <li>No Organization Memberships</li>
+      </ol>
+    </div>
+</section><!-- End Breadcrumbs -->
 
-    <% else %>
-        <div class="shadow-wrapper">
-          <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
-            <p><i class="fa fa-warning"></i> You aren't part of any approved partner organizations. This means your ability to interact with this site is limited.</p>
+<!--=== Content Part ===-->
+<section id="services" class="services">
+  <div class="container">
+    <div class="row">
+      <% if @has_pending %>
+          <h5 class="border-bottom pb-2 mb-3">Application for Organization Pending</h5>
+          <p>Thanks for applying to be a partner organization. Your organization request is still pending.</p>
+          <p>You will be notified by email once administrators have made a decision about your organization.</p>
+      <% else %>
+          <div class="shadow-wrapper">
+            <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
+              <p class="text-danger"><i class="fa fa-warning"></i> You aren't part of any approved partner organizations. This means your ability to interact with this site is limited.</p>
+            </div>
           </div>
-        </div>
-        <h4>Approved Partners</h4>
-        <p>Being part of an approved organization allows you to add resources that can be shared with the community.</p>
-        <p>You can add your own by clicking on the "Add New Organization" button below.</p>
-        <h4>Adding a New Organization</h4>
-        <p>If you decide to add a new partner organization, use the button below. Your organization will first have to be approved by site administrators. Unnapproved Organizations will not be able to add new resources to the site until they become approved.</p>
-        <%= link_to "Add New Organization", new_organization_path, class: 'btn-u' %>
-    <% end %>
+          <h5>Approved Partners</h5>
+          <p>Being part of an approved organization allows you to add resources that can be shared with the community.</p>
+          <p>You can add your own by clicking on the "Add New Organization" button below.</p>
+          <h5>Adding a New Organization</h5>
+          <p>If you decide to add a new partner organization, use the button below. Your organization will first have to be approved by site administrators. Unnapproved Organizations will not be able to add new resources to the site until they become approved.</p>
+          <p><%= link_to "Add New Organization", new_organization_path, class: 'btn-u' %></p>
+      <% end %>
+    </div>
   </div>
-</div>
+</section>

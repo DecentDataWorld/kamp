@@ -1,0 +1,77 @@
+docker-compose.yml
+.git
+.gitignore
+
+# Created by https://www.gitignore.io/api/git,ruby,rails,jetbrains+all
+# Edit at https://www.gitignore.io/?templates=git,ruby,rails,jetbrains+all
+
+### Git ###
+# Created by git for backups. To disable backups in Git:
+# $ git config --global mergetool.keepBackup false
+*.orig
+
+# Created by git when using merge tools for conflicts
+*.BACKUP.*
+*.BASE.*
+*.LOCAL.*
+*.REMOTE.*
+*_BACKUP_*.txt
+*_BASE_*.txt
+*_LOCAL_*.txt
+*_REMOTE_*.txt
+
+### Rails ###
+*.rbc
+.rspec
+/public/system
+/coverage/
+/spec/tmp
+rerun.txt
+
+# Ignore all logfiles and tempfiles.
+/log/*
+
+## Environment normalization:
+/.bundle
+/vendor/bundle
+
+# unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
+.rvmrc
+
+# Ignore pow environment settings
+.powenv
+
+# Ignore Byebug command history file.
+.byebug_history
+
+# Ignore node_modules
+node_modules/
+
+# Ignore yarn files
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+# Ignore uploaded files in development
+/storage/*
+!/storage/.keep
+
+### Ruby ###
+*.gem
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+
+## Documentation cache and generated files:
+/.yardoc/
+/_yardoc/
+/doc/
+/rdoc/
+
+/.bundle/
+/lib/bundler/man/
+
+# End of https://www.gitignore.io/api/git,ruby,rails,jetbrains+all

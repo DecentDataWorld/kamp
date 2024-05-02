@@ -1,23 +1,38 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!, except: [:show, :request_invite, :send_invite]
-  before_filter :authorize_user_admin, only: [:index, :get_users]
+  before_action :authenticate_user!, except: [:show, :request_invite, :send_invite, :unsubscribe]
+  before_action :authorize_user_admin, only: [:index, :get_users]
+  after_action :assign_cop, only: [:create]
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
 
   def index
-    add_crumb 'Administration', admin_index_path
-    @page_title = "Manage Users"
+    authorize! :index, @user, :message => 'Not authorized as an administrator.'
+    @users = User.where(deactivated_at: nil).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30)
 
-    #authorize! :index, @user, :message => 'Not authorized as an administrator.'
-    @admin_role = User.joins(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).includes(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).order(created_at: :desc).with_any_role(:admin, :moderator)
-    @member_role = User.joins(:users_organizations, :organizations, :roles, :users_roles).includes(:users_organizations, :organizations, :roles, :users_roles, :organization_applications).order(created_at: :desc).without_role(:admin)
+    if params[:organization_id]
+      @users = @users.filter{|u| params[:organization_id].length > 0 ? u.users_organizations.pluck(:organization_id).include?(params[:organization_id].to_i) : u.users_organizations.pluck(:organization_id)}
+    end
+
+    if params[:role_id]
+      @users = @users.filter{|u| params[:role_id].length > 0 ? u.roles.pluck(:role_id).include?(params[:role_id].to_i) : u.roles.pluck(:role_id)}
+    end
+
+    if params[:usage_id]
+      if params[:usage_id] == 'ninety'
+        @users = @users.where('users.created_at > ? ', Time.now - 90.days)
+      elsif params[:usage_id] == 'year'
+        @users = @users.where('last_sign_in_at < ?', Time.now - 1.year)
+      end
+    end
   end
 
   def show
     @user = User.find(params[:id])
-    @page_title = @user.name + " Profile"
     @resources = @user.resources.where("private = false and approved = true and newsletter_only = false").page(params[:resources_page]).per_page(10).order("updated_at desc")
     @collections = @user.collections_authored.where("private = false and approved = true and newsletter_only = false").page(params[:collections_page]).per_page(10).order("updated_at desc")
     @organizations = @user.organizations.page(params[:organizations_page]).per_page(10).order("updated_at desc")
+    @cops = @user.cops.page(params[:cops_page]).per_page(10).order('updated_at desc')
+    @subscriptions = @user.subscriptions.where(subscribed_to: 'organization')
+    @page_title = @user.name
 
     # if user is current user can view pending submissions, query for them
     @current_user = current_user
@@ -38,18 +53,40 @@ class UsersController < ApplicationController
       @resources_pending = @user.resources.where("approved = false").order("updated_at desc")
     end
   end
+
+  def edit
+    @user = User.find(params[:id])
+    @page_title = "Edit " + @user.name
+  end
   
   def update
     authorize! :update, @user, :message => 'Not authorized as an administrator.'
     @user = User.find(params[:id])
-
-    if @user.update_attributes(user_params)
-      redirect_to users_path, :notice => "User updated."
-    else
-      redirect_to users_path, :alert => "Unable to update user."
+    respond_to do |format|
+      if @user.update(user_params)
+        flash[:notice] = I18n.t("notices.update_success")
+        format.html { redirect_to users_path }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        flash[:error] = "Could not update user"
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
     end
   end
-    
+
+  def update_role
+    authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
+    @user = User.find(params[:id])
+    unless @user == current_user
+      if @user.update_attribute(:role_ids, params[:role_ids])
+        redirect_back(fallback_location: users_path)
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
+    end
+  end
+
   def destroy
     authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
     @user = User.find(params[:id])
@@ -62,19 +99,25 @@ class UsersController < ApplicationController
     end
   end
 
-  def unlock_user
-
+  def deactivate
     authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
-
     @user = User.find(params[:id])
+    unless @user == current_user
+      @user.deactivate
+      flash[:notice] = "User deactivated."
+      redirect_back(fallback_location: users_path)
+    else
+      flash[:notice] = "Can't deactivate yourself."
+      redirect_back(fallback_location: users_path)
+    end
+  end
 
+  def unlock_user
+    authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
+    @user = User.find(params[:id])
     @user.expired_at = nil?
-
     @user.save
-
     redirect_to users_path, :notice => "User unlocked."
-
-
   end
 
   def get_users
@@ -87,7 +130,6 @@ class UsersController < ApplicationController
   end
 
   def save_subscriptions
-
     @user = User.find(params[:id])
 
     if current_user != @user
@@ -110,35 +152,24 @@ class UsersController < ApplicationController
       end
 
     elsif params[:subscribed_to] == 'organization'
-      get_org = Organization.find_by(:name => params[:organization].strip)
-      if !get_org.nil?
-        subscribed_to_id = get_org.id
-        check_if_exists = UserSubscriptions.where("user_id = ? and subscribed_to = ? and subscribed_to_id = ?", @user.id, params[:subscribed_to].strip, subscribed_to_id)
-        if check_if_exists.count == 0
-          user_sub = UserSubscriptions.new(:user_id => params[:user_id], :subscribed_to_id => subscribed_to_id, :subscribed_to => 'organization')
-          user_sub.save
+      respond_to do |format|
+        organization = Organization.find_by_id(params[:subscribed_to_id])
+        subscription = UserSubscription.new(user_id: params[:id], subscribed_to_id: params[:subscribed_to_id], subscribed_to: 'organization')
+
+        if organization && subscription.save
+          flash[:notice] = "Subscription added."
+          format.html { redirect_back(fallback_location: params[:destination]) }
+          format.json { head :no_content }
+        else
+          flash[:notice] = "Could not add subscription."
+          format.html { redirect_back(fallback_location: params[:destination]) }
+          format.json { render json: user_sub.errors, status: :unprocessable_entity }
         end
-      else
-        error_msg = "Organization not found"
       end
-
     end
-
-    if error_msg == ""
-      if params[:destination].nil?
-        redirect_to @user, :notice => "Subscription Added."
-      else
-        redirect_to params[:destination], :notice => "Subscription Added."
-      end
-    else
-      redirect_to @user, :alert => error_msg
-    end
-
-
   end
 
   def remove_subscription
-
     @user = User.find(params[:id])
 
     if current_user != @user
@@ -147,11 +178,31 @@ class UsersController < ApplicationController
 
     if !params[:subscribed_to_id].nil?
       subscription = UserSubscriptions.find_by(user_id: @user.id, subscribed_to: params[:subscribed_to], subscribed_to_id: params[:subscribed_to_id])
-      subscription.delete
+      if subscription.delete
+        flash[:notice] = "Successfully unsubscribed."
+      else
+        flash[:notice] = "Could not unsubscribe."
+      end
     end
 
-    redirect_to @user, :notice => "Subscription Removed."
+    redirect_back(fallback_location: @user)
+  end
 
+  def remove_membership
+    uo = UsersOrganization.find_by(user_id: params[:user_id], organization_id: params[:organization_id])
+    uo.destroy! if uo
+    redirect_back(fallback_location: users_path)
+  end
+
+  def remove_cop_membership
+    user = User.find_by_id(params[:user_id])
+    cop = user.cops.find_by_id(params[:cop_id])
+    if cop && user.cops.delete(cop)
+      flash[:notice] = "Successfully removed user from COP."
+    else
+      flash[:error] = "Could not remove user from COP."
+    end
+    redirect_back(fallback_location: users_path)
   end
 
   def export
@@ -167,21 +218,49 @@ class UsersController < ApplicationController
   def send_invite
     digest = OpenSSL::Digest.new('sha1')
     @email_address = params[:invitation_email]
-    @verify = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], @email_address)
-    UserMailer.invitation_email(@email_address, @verify).deliver
-    redirect_to root_path, :notice => "An invitation to register has been sent to #{@email_address}. Please check your email inbox."
+
+    if User.do_not_email.pluck(:email).include?(@email_address) || User.unregistered_do_not_email.include?(@email_address)
+      flash[:error] = "This user has requested not to receive emails from Jordan KaMP and cannot be invited to register."
+      redirect_back(fallback_location: users_path)
+    else
+      @verify = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], @email_address)
+      UserMailer.invitation_email(@email_address, @verify).deliver
+      redirect_to root_path, :notice => "An invitation to register has been sent to #{@email_address}. Please check your email inbox."
+    end
+  end
+
+  def unsubscribe
+    if params.has_key?(:verify) && params.has_key?(:email)
+      digest = OpenSSL::Digest.new('sha1')
+      hmac = OpenSSL::HMAC.hexdigest(digest, ENV['EMAIL_HASH_KEY'], params[:email])
+
+      if params[:verify] == hmac
+        User.unsubscribe(params[:email])
+        render json: {:message => 'You have successfully unsubscribed from Jordan KaMP emails.'}, status: :ok
+      else
+        render json: {:message => 'Failed to unsubscribe you from Jordan KaMP emails. Please contact the website administrator at help@jordankmportal.com'}, status: :unprocessable_entity
+      end
+    else
+      render json: {:message => t('errors.error')}, status: :unprocessable_entity
+    end
   end
 
   private
+  def assign_cop
+    @user = User.find(params[:id])
+    @user.assign_cop
+  end
+
   def authorize_user_admin
     unless can? :manage, User
-      redirect_to access_denied_path, :alert => 'You do not have access to this section'
+      flash[:error] = "You are not authorized to view that page."
+      redirect_to root_path
     end
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_user
-      @user = User.find(id: params[:id])
+    @user = User.find(id: params[:id])
   end
 
   def handle_record_not_found
@@ -190,6 +269,6 @@ class UsersController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.require(:user).permit(:id, :role_ids, :invitation_email)
+    params.require(:user).permit(:id, :role_ids, :invitation_email, :search, :organization_id)
   end
 end

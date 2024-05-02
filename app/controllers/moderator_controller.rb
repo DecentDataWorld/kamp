@@ -4,7 +4,7 @@ class ModeratorController < ApplicationController
   def index
     @page_title = "Moderate Pending Submissions"
 
-    handle_pending_resources
+    handle_pending_submissions
   end
 
   def approve
@@ -19,8 +19,9 @@ class ModeratorController < ApplicationController
 
       # send email notification
       ModeratorMailer.notify_submitter_of_approval(@submission, @submission.author).deliver
+      ModeratorMailer.notify_subscribers(@submission).deliver
 
-      return redirect_to moderate_submissions_path, notice: 'Submission was approved'
+      return redirect_back(fallback_location: moderate_submissions_path), notice: 'Submission was approved'
     else
       return redirect_to moderate_submissions_path, alert: 'The link you followed does not appear to be valid'
     end
@@ -84,15 +85,16 @@ class ModeratorController < ApplicationController
   private
 
   def authorize_moderator
-    if !can? :approve, Resource and !can? :approve, Collection
+    if !can? :approve, Resource and !can? :approve, Collection and !current_user.users_organizations.pluck(:role).include?("admin")
       return redirect_to root_path, alert: 'You do not have the ability to moderate submissions'
     end
   end
 
-  def handle_pending_resources
-
-    @pending_submissions = Resource.where(:approved => false).paginate(page: params[:page], per_page: 10)
-
+  def handle_pending_submissions
+    if can? :approve, Resource or can? :approve, Collection
+      @pending_submissions = Resource.where(:approved => false) + Collection.where(:approved => false)
+    end
   end
+
 
 end

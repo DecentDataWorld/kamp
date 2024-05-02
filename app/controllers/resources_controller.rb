@@ -117,7 +117,6 @@ class ResourcesController < ApplicationController
 # POST /resources
 # POST /resources.json
   def create
-
     @full_tags_list = ActsAsTaggableOn::Tag.all
     @resource = Resource.new(resource_params)
     @resource.tag_list = params[:resource][:tags]
@@ -128,10 +127,8 @@ class ResourcesController < ApplicationController
 
     respond_to do |format|
       if @resource.save
-
         ModeratorMailer.notify_submitter_of_moderation(@resource, current_user).deliver
         ModeratorMailer.notify_admins_of_new_submission(@resource, current_user).deliver
-
         format.html {
           if params[:commit] == 'Save & Add Another'
             redirect_to new_resource_path, notice: 'Resource was successfully created.'
@@ -141,11 +138,8 @@ class ResourcesController < ApplicationController
         }
         format.json { render action: 'show', status: :created, location: @resource }
       else
-        format.html {
-          @collections = Collection.where("organization_id in (?)", current_user.organizations.map(&:id)).order("title")
-          #@resource.tags = params[:resource][:tags]
-          render action: 'new'
-        }
+        flash[:error] = "Could not add resource"
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @resource.errors, status: :unprocessable_entity }
       end
     end
@@ -154,7 +148,6 @@ class ResourcesController < ApplicationController
 # PATCH/PUT /resources/1
 # PATCH/PUT /resources/1.json
   def update
-
     @full_tags_list = ActsAsTaggableOn::Tag.all
     respond_to do |format|
       @resource.tag_list = params[:resource][:tags]
@@ -165,7 +158,6 @@ class ResourcesController < ApplicationController
 
         @resource.handle_file_type
 
-
         @resource.save
         format.html {
           if !params[:destination].nil?
@@ -173,14 +165,12 @@ class ResourcesController < ApplicationController
           else
             redirect_to @resource, notice: 'Resource was successfully updated.'
           end
-
-
         }
         format.json { head :no_content }
       else
         format.html {
           @collections = Collection.where("organization_id in (?)", current_user.organizations.map(&:id)).order("title")
-          render action: 'edit' }
+          render action: 'edit', status: :unprocessable_entity }
         format.json { render json: @resource.errors, status: :unprocessable_entity }
       end
     end
@@ -191,6 +181,7 @@ class ResourcesController < ApplicationController
   def destroy
     @resource.destroy
     respond_to do |format|
+      flash[:notice] = I18n.t('notices.delete_success')
       format.html { redirect_to resources_url }
       format.json { head :no_content }
     end
@@ -353,6 +344,9 @@ class ResourcesController < ApplicationController
     if @resource.nil?
       redirect_to resources_not_found_path, message: "That resource was not found"
     else
+      if @cookies.nil?
+        session["init"] = true
+      end
       impressionist(@resource)
     end
   end
@@ -375,7 +369,7 @@ class ResourcesController < ApplicationController
       redirect_to root_path, alert: 'You do not have access to this private resource.'
 
       # authenticated users cannot view private resources that arent in their organization unless they are moderators or are the user that uploaded it
-    elsif !@current_user.nil? and @resource.private and @current_user.has_org(@resource.organization).count == 0 and !can? :approve, @resource
+    elsif !@current_user.nil? and @resource.private and (@resource.organization && @current_user.has_org(@resource.organization).count == 0) and !can? :approve, @resource
       redirect_to root_path, alert: 'You do not have access to this private resource.'
 
       # authenticated users cannot view resources that are not approved yet unless they are moderators
@@ -425,6 +419,6 @@ class ResourcesController < ApplicationController
 
 # Never trust parameters from the scary internet, only allow the white list through.
   def resource_params
-    params.require(:resource).permit(:activity_id, :url, :name, :description, :format, :collection_id, :status, :resource_type, :attachment, :author_id, :license_id, :organization_id, :private, :tag_list, :source, :language, :issue_date, :corporate_authorship, :newsletter_only)
+    params.require(:resource).permit(:activity_id, :url, :name, :description, :format, :collection_id, :status, :resource_type, :attachment, :author_id, :license_id, :organization_id, :private, :tag_list, :source, :language, :issue_date, :corporate_authorship, :newsletter_only, :cop_id, :cop_private )
   end
 end

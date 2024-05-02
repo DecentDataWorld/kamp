@@ -86,4 +86,15 @@ pickle-email-*.html
 # Ignore application configuration
 /config/application.yml
 
+/node_modules
 
+
+
+/config/master.key
+
+/app/assets/builds/*
+!/app/assets/builds/.keep
+
+yarn-error.log
+
+/public/assets

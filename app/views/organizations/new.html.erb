@@ -1,19 +1,32 @@
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %>Home<% end %></li>
+      <li><%= link_to users_path do %>Administration<% end %></li>
+      <li><%= link_to organizations_path(:page => params[:page]) do %>Organizations<% end %></li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
 
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-  <div class="col-sm-9">
+<!--=== About Section ===-->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <h5 class="border-bottom pb-2"><i class="bi bi-buildings"></i>  Organizations</h5>
+        <%= render 'admin/side_nav' %>
+      </div>
 
-    <div class="tag-box tag-box-v3 form-page">
-      <p>Enter the details of your organization below:</p>
-
-      <%= render partial: 'form' %>
+      <div class="col-9">
+        <div class="border-bottom pb-2 h5">Apply to Become a Partner Organization</div>
+        <div class="row pb-1">
+            <h6>Why do I need one?</h6>
+            <p>Organizations are used to create, manage and publish collections of collections. Users can have different roles within an Organization, depending on their level of authorization to create, edit and publish. </p>
+            <p>Enter the details of your organization below</p>
+            <%= render partial: 'form' %>
+        </div>
+      </div>
     </div>
-
   </div>
-  <div class="col-sm-3">
-    <div class="headline"><h2>Why do I need one?</h2></div>
-    <p>Organizations are used to create, manage and publish collections of collections. Users can have different roles within an Organization, depending on their level of authorization to create, edit and publish. </p>
-  </div>
-  </div>
-</div>
+</section>

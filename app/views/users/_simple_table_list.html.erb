@@ -1,0 +1,58 @@
+<table class="table table-sm table-striped">
+  <thead>
+  <tr>
+    <th>User</th>
+    <th>Organization(s)</th>
+    <th>Registered</th>
+    <th>Last Accessed</th>
+    <th>Portal Role</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% users.each do |user| %>
+    <%= render user %>
+      <tr>
+        <td>
+          <strong><%= link_to user.name, user %></strong>
+          <small>(<%= user.email %>)<br>
+            <%= raw("<strong>Logged In:</strong> " + user.last_sign_in_at.strftime("%m/%d/%Y")) if !user.last_sign_in_at.nil? %>
+          </small>
+        </td>
+        <td>
+          <% if !user.organizations.nil? %>
+            <% user.users_organizations.each do |userorganization| %>
+              <% if userorganization.organization %>
+                <%= link_to userorganization.organization.name, organization_path(userorganization.organization) %> (<%= userorganization.role %>)<br>
+              <% end %>
+            <% end %>
+          <% end %>
+          <% if !user.organization_applications.nil? %>
+            <% user.organization_applications.each do |userapplication| %>
+              <% if userapplication.approved == false || userapplication.approved.nil? %>
+                <%= link_to userapplication.organization.name, organization_path(userapplication.organization) %> (applied to join)<br>
+              <% end %>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= user.created_at.to_date %></td>
+        <td><%= user.last_sign_in_at.to_date if !user.last_sign_in_at.nil? %></td>
+        <% if can? :manage, user %>
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= user.roles.pluck(:name).first || "Select" %>
+              </button>
+              <ul class="dropdown-menu">
+                <% Role.where(name: ['admin', 'member']).each do |r| %>
+                  <li><%= link_to r.name.capitalize, update_role_path(id: user.id, role_ids: r.id), data: { turbo_method: :put, turbo_confirm: "Assign #{r.name.capitalize} role to #{user.name}?"}, class: "dropdown-item" %></li>
+                <% end %>
+              </ul>
+            </div>
+          </td>
+          <td><%= button_to deactivate_user_path(user), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deactivate<% end %></td>
+        <% end %>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

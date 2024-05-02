@@ -1,10 +1,8 @@
 class HealthcheckController < ApplicationController
-  skip_before_action :authenticate_user!
-
   before_action :set_cache_headers
 
   def check_db
-    connection = ActiveRecord::Base.connection_pool.connected?
+    connection = ActiveRecord::Base.connection_pool.stat
     status = connection ? :ok : :service_unavailable
     render json: {:connected => connection}, status: status
   end

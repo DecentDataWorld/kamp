@@ -43,7 +43,7 @@ test:
   adapter:  postgresql
   encoding: unicode
   host:     <%= ENV['POSTGRES_HOST'] %>
-  database: <%= ENV['POSTGRES_DATABASE'] %>
+  database: mesp_test
   pool:     5
   username: <%= ENV['POSTGRES_USERNAME'] %>
   password: <%= ENV['POSTGRES_PASSWORD'] %>

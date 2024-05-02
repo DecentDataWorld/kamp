@@ -2,74 +2,164 @@
 
 <%
    # check for existing tags in query string
-  existing_tag_facets = []
-  if params[:tags].present?
-    existing_tag_facets = params[:tags]
+  if !params[:tags].present?
+    params[:tags] = []
   end
 
-  @tag_facet_links_off = ''
-  tag_facet_links_off_counter = 1
-  @tag_facet_links_on = ''
+  @selected_tags = ''
 
-  @tags.each do |t| 
-    if !existing_tag_facets.include? t["id"]
-      tag_facets = existing_tag_facets + [t["id"]]
-      @tag_facet_links_off << "<li>(#{t["tag_count"]}) #{link_to t["name"], update_search_path(params.merge(:tags => tag_facets))}</li>"
-      tag_facet_links_off_counter = tag_facet_links_off_counter + 1
-    else
-      tag_facets = existing_tag_facets - [t["id"]]
-      updated_params = params.merge(:tags => tag_facets).except(:page)
-      @tag_facet_links_on << "<li>#{link_to raw("<i class='fa fa-times' rel='tooltip' title='Remove' id='Remove This Filter'></i> " + t["name"]), update_search_path(updated_params)}</li>"
-    end
+  if params[:query].present?
+    @selected_tags << "<span class='badge rounded-pill bg-danger dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> '" + params[:query] + "'"), update_search_path(request.parameters.merge(:query => "").merge(:days_back => @days_back ? @days_back : "").merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:cop_id => @cop ? @cop.id : ""))}</span> &nbsp;"
   end
 
+  if @organization
+    @selected_tags << "<span class='badge rounded-pill bg-primary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @organization.name), update_search_path(request.parameters.merge(:organization_id => "").merge(:days_back => @days_back ? @days_back : "").merge(:language => @language ? @language : "").merge(:cop_id => @cop ? @cop.id : "").merge(:tags => params[:tags]))}</span> &nbsp;"
+  end
+
+  if @language
+    @selected_tags << "<span class='badge rounded-pill bg-dark dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @languages[@language.to_sym]), update_search_path(request.parameters.merge(:language => "").merge(:days_back => @days_back ? @days_back : "").merge(:organization_id => @organization ? @organization.id : "").merge(:cop_id => @cop ? @cop.id : "").merge(:tags => params[:tags]))}</span> &nbsp;"
+  end
+
+  if @days_back
+    @selected_tags << "<span class='badge rounded-pill bg-warning dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @days_backs[@days_back.to_i]), update_search_path(request.parameters.merge(:days_back => "").merge(:language => @language ? @language : "").merge(:organization_id => @organization ? @organization.id : "").merge(:cop_id => @cop ? @cop.id : "").merge(:tags => params[:tags]))}</span> &nbsp;"
+  end
+
+  if @cop
+    @selected_tags << "<span class='badge rounded-pill bg-info dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + @cop.name), update_search_path(request.parameters.merge(:cop_id => "").merge(:days_back => @days_back ? @days_back : "").merge(:language => @language ? @language : "").merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]))}</span> &nbsp;"
+  end
 %>
 
-<div id="tags" data-step="1" data-intro="Click 'More Tags' to see all available tags" data-position="top" class="col-md-12 col-sm-4 margin-bottom-10">
-  <h3><strong>Tag(s)</strong></h3>
-  <% if @tag_facet_links_on.length > 0 %>
-    <ul class="list-unstyled">
-      <li><b>Filtering By:</b></li>
-      <%= raw @tag_facet_links_on %>
-    </ul>
-  <% end %>
-
-    <ul class="list-unstyled">
-      <% if @tag_facet_links_on.length > 0 and @tag_facet_links_off.length > 0 %><li><b>Available Tags:</b></li><% end %>
-      <%= raw @tag_facet_links_off %>
-    </ul>
-
-  <% if tag_facet_links_off_counter > 8 %>
-      <div class="text-center"><a class="expandTagsList"><i class="fa fa-arrow-circle-down"></i> More Tags</a></div>
-  <% end %>
-</div>
-
-
-<div class="col-md-12 col-sm-4 margin-bottom-10">
-  <h3><strong>Uploaded By</strong></h3>
-  <%= render partial: 'collections/facet_org' %>
-</div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        <% if !params.has_key?('more_tags') %>
-        $('#tags li:gt(8)').hide();
-        <% else %>
-        $('#tags li:gt(15)').hide();
-        introJs().start();
+<ul class="nav nav-tabs" id="tagsTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link <% if @last_filter_choice == 'tags' || nil %> active <% end %>" id="tags-tab" data-bs-toggle="tab" data-bs-target="#tags" type="button" role="tab" aria-controls="tags" aria-selected="true">Tags</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link <% if @last_filter_choice == 'orgs' %> active <% end %>" id="orgs-tab" data-bs-toggle="tab" data-bs-target="#orgs" type="button" role="tab" aria-controls="orgs" aria-selected="false">Organizations</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link <% if @last_filter_choice == 'cops' %> active <% end %>" id="cops-tab" data-bs-toggle="tab" data-bs-target="#cops" type="button" role="tab" aria-controls="cops" aria-selected="false">COPs</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link <% if @last_filter_choice == 'other' %> active <% end %>" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" type="button" role="tab" aria-controls="other" aria-selected="false">Other</button>
+  </li>
+</ul>
+<div class="tab-content pt-2" id="tagsTabContent">
+  <div class="tab-pane fade <% if @last_filter_choice == 'tags' %> show active <% end %>" id="tags" role="tabpanel" aria-labelledby="tags-tab">
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+      <%  
+        @tags.each_key do |tag_type| 
+        @tags[tag_type].sort_by! { |hsh| hsh["name"] }
+      %>
+        <% if @tags[tag_type].length > 0 %>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-heading<%= tag_type %>">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse<%= tag_type.parameterize(separator: '_') %>" aria-expanded="false" aria-controls="flush-collapse<%= tag_type %>">
+                <%= tag_type %>
+              </button>
+            </h2>
+            <div id="flush-collapse<%= tag_type.parameterize(separator: '_') %>" class="accordion-collapse collapse" aria-labelledby="flush-heading<%= tag_type %>" data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body pb-0">
+                <ul class="list-unstyled ps-2">
+                  <% @tags[tag_type].each do |t|  %>
+                    <% if !params[:tags].include? t["id"].to_s %>
+                      <li class='available-tags pb-1'><%= link_to t["name"], update_search_path(request.parameters.merge(:tags => params[:tags] + [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : "")) %> (<%= t["tag_count"] %>) </li>
+                    <% 
+                      else 
+                        @selected_tags << "<span class='badge rounded-pill bg-secondary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : ""))}</span> &nbsp;"
+                    %>
+                      <li class='selected-tags pb-1'><%= link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : "")) %></li>
+                    <% end %>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
         <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div class="tab-pane fade <% if @last_filter_choice == 'orgs' %> show active <% end %>" id="orgs" role="tabpanel" aria-labelledby="orgs-tab">
+    <div class="pt-3">
+      <% if @organization %>
+        <% if !@organization.logo.blank? %>
+          <%= link_to organization_path(@organization) do %>
+              <%= image_tag @organization.logo.expiring_url(10), class: "img-responsive" %>
+          <% end %>
+        <% end %>
+        <strong><%= link_to @organization.name, organization_path(@organization) %></strong>
+        <% if !@organization.organization_type.blank? %>
+          <p><span class="fw-light">Organization Type: </span>
+            <%= @organization.organization_type.organization_type %></p>
+        <% end %>
+        <%= link_to url_for(update_search_path(request.parameters.merge(:organization_id => "").merge(:cop_id => @cop ? @cop.id : "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : ""))) do %>
+            <i class="fa fa-times-circle"></i> reset filter
+        <% end %>
+      <% else %>
+        <ul class="list-group list-group-flush">
+          <% @orgs.each do |o| %>
+            <li class="list-group-item available-tags">
+              <%= link_to o["name"], update_search_path(request.parameters.merge(:organization_id => o["id"]).merge(:cop_id => @cop ? @cop.id : "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").except(:page)) %> (<%= o["org_count"] %>)
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+  <div class="tab-pane fade <% if @last_filter_choice == 'cops' %> show active <% end %>" id="cops" role="tabpanel" aria-labelledby="cops-tab">
+    <div class="pt-3">
+      <% if @cop %>
+        <strong><%= link_to @cop.name, cop_path(@cop) %></strong>
+        <%= link_to url_for(update_search_path(request.parameters.merge(:cop_id => "").merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : ""))) do %>
+            <p><i class="fa fa-times-circle"></i> reset filter</p>
+        <% end %>
+      <% else %>
+        <ul class="list-group list-group-flush">
+          <% @cops.each do |c| %>
+            <li class="list-group-item available-tags">
+              <%= link_to c["name"], update_search_path(request.parameters.merge(:cop_id => c["id"]).merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").except(:page)) %> (<%= c["cop_count"] %>)
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+  <div class="tab-pane fade <% if @last_filter_choice == 'other' %> show active <% end %>" id="other" role="tabpanel" aria-labelledby="other-tab">
+    <div class="pt-3">
+      Language:
+      <% if @language %> 
+        <p><strong><%= @languages[@language.to_sym] %></strong>
+          <%= link_to url_for(update_search_path(request.parameters.merge(:language => params[:language] = "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : ""))) do %></p>
+              <i class="fa fa-times-circle"></i> reset filter
+          <% end %>
+      <% else %>
+          <ul class="list-group list-group-flush">
+            <% @languages.each_key do |l| %>
+              <li class="list-group-item available-tags">
+                <%= link_to @languages[l], update_search_path(request.parameters.merge(:language => l).merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : "").except(:page)) %>
+              </li>
+            <% end %>
+          </ul>
+      <% end %>
+    </div>
+    <div class="pt-3">
+      Uploaded/Updated:
+      <% if @days_back %> 
+        <p><strong><%= @days_backs[@days_back.to_i] %></strong>
+          <%= link_to url_for(update_search_path(request.parameters.merge(:days_back => params[:days_back] = "").merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:cop_id => @cop ? @cop.id : ""))) do %></p>
+              <i class="fa fa-times-circle"></i> reset filter
+          <% end %>
+      <% else %>
+          <ul class="list-group list-group-flush">
+            <% @days_backs.each_key do |d| %>
+              <li class="list-group-item available-tags">
+                <%= link_to @days_backs[d], update_search_path(request.parameters.merge(:days_back => d).merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:cop_id => @cop ? @cop.id : "").except(:page)) %>
+              </li>
+            <% end %>
+          </ul>
+      <% end %>
+    </div>
+  </div>
+</div>
 
-        $('#tags .expandTagsList').click(function() {
 
-            if(this.innerHTML == '<i class="fa fa-arrow-circle-down"></i> More Tags') {
-                $('#tags li:gt(8)').show();
-                this.innerHTML = '<i class="fa fa-arrow-circle-up"></i> Less Tags';
-            } else {
-                $('#tags li:gt(8)').hide();
-                this.innerHTML = '<i class="fa fa-arrow-circle-down"></i> More Tags';
-            }
-        });
 
-    });
-</script>

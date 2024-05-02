@@ -1,0 +1,51 @@
+
+
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+  <div class="container">
+    <ol>
+      <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+      <li><%= link_to admin_index_path do %><%=t('navigation.administration')%><% end %></li>
+      <li><%= t('navigation.featured_searches')%></li>
+    </ol>
+  </div>
+</section><!-- End Breadcrumbs -->
+
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+        <h5 class="border-bottom pb-2"><i class="bi bi-search-heart"></i> Featured Searches</h5>
+        <%= render 'admin/side_nav' %>
+        <br/>
+      </div>
+
+      <div class="col-9">
+        <div class="h5 border-bottom text-end mt-n3 mb-0 pb-1"><%= link_to t('navigation.new_featured_search'), new_featured_search_path, class: "btn btn-outline-primary mt-1 pt-2" %></div>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover" data-controller="table-sort">
+            <thead>
+              <tr>
+                <th><%=t('activerecord.attributes.featured_search.name') %></th>
+
+                <th><%= t('activerecord.attributes.featured_search.url') %></th>
+
+                <th><%= t('activerecord.attributes.featured_search.cop') %></th>
+              </tr>
+            </thead>
+            <tbody>
+            <% @featured_searches.each do |t| %>
+              <tr>
+                <td><%= link_to t.name, edit_featured_search_path(t)  %></td>
+                <td><%= t.get_url %></td>
+                <td><%= t.cop != nil ? t.cop.name : "N/A" %></td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

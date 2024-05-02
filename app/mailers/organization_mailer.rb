@@ -8,14 +8,18 @@ class OrganizationMailer < ActionMailer::Base
     @user = user
 
     @to_string = ''
-    @organization.admins.each do |user_org|
-      if @to_string.length > 1
-        @to_string = @to_string + ','
+    if @organization.admins.length > 0
+      @organization.admins.each do |user_org|
+        if @to_string.length > 1
+          @to_string = @to_string + ','
+        end
+        @to_string = @to_string + user_org.user.email
       end
-      @to_string = @to_string + user_org.user.email
+      mail(to: @to_string, subject: '[KaMP] Someone has applied to join your organization: ')
+    else
+      site_admins = User.with_role(:admin).pluck(:email)
+      mail(to: site_admins.join(','), subject: '[KaMP] Someone has applied to join an organization: ')
     end
-    mail(to: @to_string, subject: '[KaMP] Someone has applied to join your organization: ')
-
   end
 
   def deny_organization_application(organization, user)

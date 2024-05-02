@@ -23,15 +23,18 @@ class Resource < ActiveRecord::Base
 
   has_many :resourcings
   has_many :collections, :through => :resourcings, :source => :resourceable, :source_type => 'Collection'
-  belongs_to :activity, :class_name => "Activity", :foreign_key => "activity_id"
-  belongs_to :collection, :class_name => "Collection", :foreign_key => "collection_id"
+  belongs_to :activity, :class_name => "Activity", :foreign_key => "activity_id", :optional => true
+  belongs_to :collection, :class_name => "Collection", :foreign_key => "collection_id", :optional => true
   belongs_to :author, :class_name => "User", :foreign_key => "author_id"
   belongs_to :organization, :class_name => "Organization", :foreign_key => "organization_id"
-  belongs_to :license, :class_name => "License", :foreign_key => "license_id"
-  belongs_to :batch, :class_name => "Batch", :foreign_key => "batch_id"
+  belongs_to :license, :class_name => "License", :foreign_key => "license_id", :optional => true
+  belongs_to :batch, :class_name => "Batch", :foreign_key => "batch_id",  :optional => true
+  belongs_to :cop, :class_name => "Cop", :foreign_key => "cop_id",  :optional => true
 
-  has_attached_file :attachment
+  has_attached_file :attachment, validate_media_type: false
   do_not_validate_attachment_file_type :attachment
+
+  has_and_belongs_to_many :cops
 
   # before_create :scan_for_viruses
 
@@ -164,17 +167,20 @@ class Resource < ActiveRecord::Base
 
   end
 
-def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exclude_private=true)
+def self.search_kmp(search_terms=nil, tags=nil, org=nil, cop=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=true)
+  target_date = Date.today - days_back.to_i if !days_back.nil?
   query = "
     WITH resources_search AS (
       SELECT 
         r.id,
+        r.updated_at,
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
       WHERE 0=0 "
       query = query + " AND r.approved = true " if only_approved
       query = query + " AND r.private = false " if exclude_private
+      query = query + " AND r.cop_private = false " if exclude_cop_private
       query = query + "
     ),
     filtered_resources_tags AS (
@@ -185,18 +191,25 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
       query = query + "
       WHERE 0=0 "
       query = query + " AND r.organization_id = " + org.to_s if !org.nil? 
+      query = query + " AND r.cop_id = " + cop.to_s if !cop.nil?
+      query = query + " AND r.language = '" + language + "'" if !language.nil? && language.length > 0
+      query = query + " AND r.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
       query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
       query = query + " GROUP BY r.id "
       query = query + " HAVING COUNT( r.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
       query = query + "
     )
     SELECT 
-      distinct rs.id
+      rs.id,
+      rs.updated_at
     FROM resources_search rs
     INNER JOIN filtered_resources_tags frt on rs.id = frt.id
     WHERE 0=0 "
     if !search_terms.nil? && search_terms.length > 0
       query = query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+      query = query + " ORDER BY ts_rank(rs.document, to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')) DESC"
+    else
+      query = query + " ORDER BY rs.updated_at DESC"
     end
 
     results = Resource.find_by_sql(query)
@@ -206,7 +219,8 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
     return {ids: ids, count: count }
   end
 
-  def self.search_tags(search_terms=nil, tags=nil, org=nil, only_approved=true, exclude_private=true)
+  def self.search_tags(search_terms=nil, tags=nil, org=nil, cop=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=true)
+    target_date = Date.today - days_back.to_i if !days_back.nil?
     query = "
     WITH resources_search AS (
       SELECT 
@@ -217,6 +231,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
       WHERE 0=0 "
       query = query + " AND r.approved = true " if only_approved
       query = query + " AND r.private = false " if exclude_private
+      query = query + " AND r.cop_private = false " if exclude_cop_private
       query = query + "
     ),
     filtered_resources_tags AS (
@@ -227,6 +242,9 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
       query = query + "
       WHERE 0=0 "
       query = query + " AND r.organization_id = " + org.to_s if !org.nil? 
+      query = query + " AND r.cop_id =  " + cop.to_s if !cop.nil?
+      query = query + " AND r.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
+      query = query + " AND r.language = '" + language + "'" if !language.nil?  && language.length > 0
       query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
       query = query + " GROUP BY r.id "
       query = query + " HAVING COUNT( r.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
@@ -235,23 +253,29 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
     SELECT 
       t.id, 
       t.name,
+      tt.name as tag_type,
+      tt.id as tag_type_id,
       count(t.id) as tag_count
     FROM resources_search rs
     INNER JOIN filtered_resources_tags frt on rs.id = frt.id
     INNER JOIN taggings tg on rs.id = tg.taggable_id and tg.taggable_type = 'Resource'
     INNER JOIN tags t on tg.tag_id = t.id
+    INNER JOIN tag_types tt on t.tag_type_id = tt.id
     WHERE 0=0 "
     if !search_terms.nil? && search_terms.length > 0
       query = query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
     end
-    query = query + " GROUP BY t.name, t.id ORDER BY tag_count desc"
+    query = query + " GROUP BY t.name, t.id, tt.name, tt.id ORDER BY tt.name, t.name desc"
 
     results = ActiveRecord::Base.connection.exec_query(query)
 
-    return results.to_hash
+    grouped_results = results.group_by { |r| r["tag_type"] }
+
+    return grouped_results
   end
 
-  def self.search_orgs(search_terms=nil, tags=nil, only_approved=true, exclude_private=true)
+  def self.search_orgs(search_terms=nil, tags=nil, cop=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=true)
+    target_date = Date.today - days_back.to_i if !days_back.nil?
     query = "
     WITH resources_search AS (
       SELECT 
@@ -260,9 +284,10 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
         setweight(to_tsvector('english', r.name), 'A') || 
         setweight(to_tsvector('english', r.description), 'B') as document
       FROM resources r 
-      WHERE 0=0 "
+      WHERE r.cop_private = false "
       query = query + " AND r.approved = true " if only_approved
       query = query + " AND r.private = false " if exclude_private
+      query = query + " AND r.cop_private = false " if exclude_cop_private
       query = query + "
     ),
     filtered_resources_tags AS (
@@ -272,6 +297,9 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
       INNER JOIN tags t on tg.tag_id = t.id"
       query = query + "
       WHERE 0=0 "
+      query = query + " AND r.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
+      query = query + " AND r.cop_id =  " + cop.to_s if !cop.nil?
+      query = query + " AND r.language = '" + language + "'" if !language.nil?  && language.length > 0
       query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
       query = query + " GROUP BY r.id "
       query = query + " HAVING COUNT( r.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
@@ -294,9 +322,62 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exc
 
     results = ActiveRecord::Base.connection.exec_query(query)
 
-    return results.to_hash
+    return results.to_ary
   end
 
+  def self.search_cops(search_terms=nil, tags=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=true)
+    target_date = Date.today - days_back.to_i if !days_back.nil?
+    query = "
+    WITH resources_search AS (
+      SELECT 
+        r.id,
+        r.cop_id,
+        setweight(to_tsvector('english', r.name), 'A') || 
+        setweight(to_tsvector('english', r.description), 'B') as document
+      FROM resources r 
+      WHERE 0 = 0 "
+      query = query + " AND r.approved = true " if only_approved
+      query = query + " AND r.private = false " if exclude_private
+      query = query + " AND r.cop_private = false " if exclude_cop_private
+      query = query + "
+    ),
+    filtered_resources_tags AS (
+      SELECT r.id 
+      FROM resources r 
+      INNER JOIN taggings tg on r.id = tg.taggable_id and tg.taggable_type = 'Resource'
+      INNER JOIN tags t on tg.tag_id = t.id"
+      query = query + "
+      WHERE 0=0 "
+      query = query + " AND r.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
+      query = query + " AND r.language = '" + language + "'" if !language.nil?  && language.length > 0
+      query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
+      query = query + " GROUP BY r.id "
+      query = query + " HAVING COUNT( r.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
+      query = query + "
+    )
+    SELECT 
+      c.id, 
+      c.name,
+      count(distinct rs.id) as cop_count
+    FROM resources_search rs
+    INNER JOIN cops c on rs.cop_id = c.id
+    INNER JOIN filtered_resources_tags frt on rs.id = frt.id
+    INNER JOIN taggings tg on rs.id = tg.taggable_id and tg.taggable_type = 'Resource'
+    INNER JOIN tags t on tg.tag_id = t.id
+    WHERE 0=0 "
+    if !search_terms.nil? && search_terms.length > 0
+      query = query + " AND rs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+    end
+    query = query + " GROUP BY c.name, c.id ORDER BY cop_count desc"
+
+    results = ActiveRecord::Base.connection.exec_query(query)
+
+    return results.to_ary
+  end
+
+  def self.pending_count
+    Resource.where(approved: false).count + Collection.where(approved: false).count
+  end
 
   private
 

@@ -11,17 +11,18 @@ class Collection < ActiveRecord::Base
 
   validates_presence_of :title, :message => "Title is required"
   validates_presence_of :description, :message => "A description is required"
+  validates_presence_of :tag_list, :message => "Choose at least one tag"
 
   #has_many :resources, :class_name => "Resource", :foreign_key => "collection_id"
   has_many :resourcings, :as => :resourceable
   has_many :resources, :through => :resourcings
 
   belongs_to :author, :class_name => "User", :foreign_key => "author_id"
-  belongs_to :activity, :class_name => "Activity", :foreign_key => "activity_id"
+  belongs_to :activity, :class_name => "Activity", :foreign_key => "activity_id", :optional => true
   belongs_to :maintainer, :class_name => "User", :foreign_key => "maintainer_id"
   belongs_to :organization, :class_name => "Organization", :foreign_key => "organization_id"
-  belongs_to :type, :class_name => "Type", :foreign_key => "type_id"
-  belongs_to :license, :class_name => "License", :foreign_key => "license_id"
+  belongs_to :type, :class_name => "Type", :foreign_key => "type_id", :optional => true
+  belongs_to :license, :class_name => "License", :foreign_key => "license_id", :optional => true
 
   scope :by_author, lambda{ |author_id| where(author_id: author_id) unless author_id.nil? }
   scope :by_maintainer, lambda{ |maintainer_id| where(maintainer_id: maintainer_id) unless maintainer_id.nil? }
@@ -73,7 +74,8 @@ class Collection < ActiveRecord::Base
 
   end
 
-  def self.search_kmp(search_terms=nil, tags=nil, org=nil, only_approved=true, exclude_private=true)
+  def self.search_kmp(search_terms=nil, tags=nil, org=nil, cop=nil, days_back=nil, only_approved=true, exclude_private=true)
+    target_date = Date.today - days_back.to_i if !days_back.nil?
     query = "
       WITH collections_search AS (
         SELECT 
@@ -94,7 +96,9 @@ class Collection < ActiveRecord::Base
         INNER JOIN tags t on tg.tag_id = t.id "
         query = query + "
         WHERE 0=0 "
+        query = query + " AND 1 = 0 " if !cop.nil? # do not search collections if filtering by cop 
         query = query + " AND c.organization_id = " + org.to_s if !org.nil? 
+        query = query + " AND c.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
         query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
         query = query + " GROUP BY c.id "
         query = query + " HAVING COUNT( c.id )=" + tags.length.to_s if !tags.nil? && tags.length > 0
@@ -108,6 +112,9 @@ class Collection < ActiveRecord::Base
       WHERE 0=0 "
       if !search_terms.nil? && search_terms.length > 0
         query = query + " AND cs.document @@ to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')"
+        query = query + " ORDER BY ts_rank(cs.document, to_tsquery('english', '" + search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') + "')) DESC"
+      else
+        query = query + " ORDER BY cs.updated_at DESC"
       end
   
       results = Collection.find_by_sql(query)

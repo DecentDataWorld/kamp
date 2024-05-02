@@ -4,10 +4,12 @@ class AdminController < ApplicationController
 
   def index
     @page_title = "Administration"
-    @users = User.all.page(params[:page]).per_page(5).order("created_at desc")
-    @organizations = Organization.where(approved: [false, nil]).page(params[:page]).per_page(5).order("created_at asc")
+    no_role_ids = User.no_role_ids
+    @show_orgs = params[:org_page].to_i > params[:page].to_i
+    @users_needing_role = User.where(id: no_role_ids).where(deactivated_at: nil).page(params[:page]).per_page(5).order("created_at desc")
+    @organizations = Organization.where(approved: [false, nil]).page(params[:org_page]).per_page(5).order("created_at asc")
 
-    handle_pending_resources
+    handle_pending_submissions
 
     @licenses = License.all
     @types = Type.all
@@ -276,18 +278,16 @@ class AdminController < ApplicationController
   private
 
   def authorized?
-    unless can? :dashboard, current_user
+    unless can? :manage, :all
       flash[:error] = "You are not authorized to view that page."
       redirect_to root_path
     end
   end
 
-  def handle_pending_resources
-
+  def handle_pending_submissions
     if can? :approve, Resource or can? :approve, Collection
-      @pending_submissions = Resource.where(:approved => false).paginate(page: params[:page], per_page: 10)
+      @pending_submissions = Resource.where(:approved => false) + Collection.where(:approved => false)
     end
-
   end
 
   def translate_relationship_for_collections(resource)

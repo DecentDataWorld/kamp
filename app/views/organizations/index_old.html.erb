@@ -1,0 +1,42 @@
+<% content_for :title do %><%= @page_title %><% end %>
+<!--=== Content Part ===-->
+<div class="container content">
+  <div class="row">
+    <div class="col-sm-9">
+      <div class="row">
+        <%= render partial: 'organizations/boxes' %>
+        <%= will_paginate @collections %>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <% if !user_signed_in? %>
+          <h5>Do You Have Resources to Share?</h5>
+          <p><%= link_to new_resource_path, class: 'btn btn-color btn-block' do %>
+                <i class="fa fa-plus"></i> Sign Up
+            <% end %></p>
+          <hr>
+      <% end %>
+      <!-- Search -->
+      <%= form_for organizations_path, method: 'get', role: 'form', class: 'shop-search' do %>
+          <div class="form-group">
+            <label for="query" class="sr-only">Search</label>
+            <%= text_field_tag :query, params[:query], class: 'form-control', placeholder: 'Find Organizations', id: 'query' %>
+          </div>
+          <button class="btn btn-color btn-block"><i class="fa fa-search"></i> Search</button>
+      <% end %>
+      <% if user_signed_in? %>
+          <hr>
+
+          <p>
+            <%= link_to new_organization_path, class: 'btn btn-color btn-block' do %>
+                <i class="fa fa-plus-circle"></i>  New Organization
+            <% end %>
+          </p>
+
+      <% end %>
+    </div>
+
+  </div>
+
+</div>
+

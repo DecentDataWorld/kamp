@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-4">
+    <%= form_with url: users_path, method: :get do |form| %>
+      <div class="input-group mt-n3 m-0 p-0">
+        <%= form.collection_select :organization_id, Organization.order(:name), :id, :name, {include_blank: "All Orgs", selected: params[:organization_id], disabled:true}, { class: "form-select mt-1 pt-2" } %>
+        <button type="submit" class="btn btn-outline-primary mt-1 pt-2"><i class="fa-solid fa-arrow-right"></i></button>
+        <% if params[:organization_id] && params[:organization_id].length > 0 %>
+          <%= link_to users_path, class: 'btn btn-outline-primary mt-1 pt-2', role: "button" do %><i class="fa fa-refresh"></i><% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-4">
+    <%= form_with url: users_path, method: :get do |form| %>
+      <div class="input-group mt-n3 m-0 p-0">
+        <%= form.collection_select :role_id, Role.where.not(name: ['moderator', 'user']), :id, :human_name, {include_blank: "All Roles", selected: params[:role_id]}, { class: "form-select mt-1 pt-2" } %>
+        <button type="submit" class="btn btn-outline-primary mt-1 pt-2"><i class="fa-solid fa-arrow-right"></i></button>
+        <% if params[:role_id] && params[:role_id].length > 0 %>
+          <%= link_to users_path, class: 'btn btn-outline-primary mt-1 pt-2', role: "button" do %><i class="fa fa-refresh"></i><% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-4">
+    <%= form_with url: users_path, method: :get do |form| %>
+      <div class="input-group mt-n3 m-0 p-0">
+        <select class="form-select mt-1 pt-2" name="usage_id">
+          <option value="" default>All Usage</option>
+          <option value="ninety" <% if params[:usage_id] == 'ninety' %> selected <% end %>>Signed up in the last 90 days</option>
+          <option value="year" <% if params[:usage_id] == 'year' %> selected <% end %>>Have not signed in within the last year</option>
+        </select>
+        <button type="submit" class="btn btn-outline-primary mt-1 pt-2"><i class="fa-solid fa-arrow-right"></i></button>
+        <% if params[:usage_id] && params[:usage_id].length > 0 %>
+          <%= link_to users_path, class: 'btn btn-outline-primary mt-1 pt-2', role: "button" do %><i class="fa fa-refresh"></i><% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

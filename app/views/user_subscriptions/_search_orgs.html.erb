@@ -1,0 +1,9 @@
+<%= form_with url: user_save_subscriptions_path, method: :post do |form| %>
+  <div class="input-group">
+    <%= form.hidden_field :subscribed_to, value: 'organization' %>
+    <%= form.hidden_field :user_id, value: user_id %>
+    <%= form.label "Subscribe to an organization", class: "p-2"%>
+    <%= select_tag :subscribed_to_id, grouped_options_for_select(OrganizationType.order("organization_type").map{ |ot| [ot.organization_type, Organization.where("approved=true #{subscribed_ids.length > 0 ? "and id NOT IN (?)" :""}", subscribed_ids).where("organization_type_id=#{ot.id}").order("name").collect{|o| [o.name, o.id] }] if ot.organizations.any? }.compact), {:prompt => t("please_select"), :class=>"form-control mb-3", :style=>"border-radius:5px 0px 0px 5px", :id => "organization_select_list"}%>
+    <button type="submit" class="btn btn-outline-primary mb-3"><i class="fa fa-bell"></i></button>
+  </div>
+<% end %>

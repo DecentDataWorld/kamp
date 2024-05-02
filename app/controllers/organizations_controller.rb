@@ -1,24 +1,11 @@
 class OrganizationsController < ApplicationController
-  before_action :authenticate_user!, :except => [:index, :show, :not_found]
   load_and_authorize_resource :only => [:edit, :update, :destroy], :find_by => :url
-  before_action :set_organization, only: [:show, :edit, :update, :destroy, :private_resources]
-
-  add_crumb("View All Organizations") { |instance| instance.send :organizations_path }
+  before_action :set_organization, only: [:show, :edit, :update, :destroy, :deactivate, :private_resources]
+  before_action :authorized?, :except => [:index, :show, :not_found, :apply, :new, :create]
 
   # GET /organizations
   def index
-    if !params[:query].nil?
-      add_crumb("Find Organization(s)")
-      @page_title = 'Find Organization(s)'
-    else
-      add_crumb("Recent Organizations")
-      @page_title = "Recent Organizations"
-    end
-    if can? :manage, :all
-      add_crumb "Administration", admin_index_path
-    end
-
-    @organizations = Organization.where(approved: true).page(params[:page]).per_page(5).order("created_at asc")
+    @organizations = Organization.where(deactivated_at: nil).where("organizations.name ILIKE ?", "%#{params[:search]}%").order(name: :asc).paginate(:page => params[:page], :per_page => 30)
   end
 
   # GET /organizations/1
@@ -34,7 +21,7 @@ class OrganizationsController < ApplicationController
 
     @page_title = @organization.name
 
-    @users = @organization.users
+    @users = @organization.users.where(deactivated_at: nil).order(:name)
     params[:id] = @organization.id
 
     # decide if we have to hide private and pending resources from this user
@@ -65,11 +52,11 @@ class OrganizationsController < ApplicationController
     end
 
     # get all submissions for this organization
-    resource_results = Resource.search_kmp(params[:resource_query], "", @organization.id, true, hide_private)
+    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=@organization.id, cop=nil, language=nil, days_back=nil, only_approved=true, exclude_private=hide_private)
     @resource_count = resource_results[:count]
     @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
 
-    collection_results = Collection.search_kmp(params[:resource_query], "", @organization.id, true, hide_private)
+    collection_results = Collection.search_kmp(search_terms=params[:resource_query], tags="", org=@organization.id, cop=nil, days_back=nil, only_approved=true, exclude_private=hide_private)
     @collection_count = collection_results[:count]
     @collections = Collection.where(id: collection_results[:ids]).order("updated_at desc").paginate(page: params[:collection_page], per_page: 10)
 
@@ -77,6 +64,11 @@ class OrganizationsController < ApplicationController
        # puts "cannot see newsletter stuff"
        # with(:newsletter_only, false)
      # end
+
+    # get all private resources for this organization
+    if (current_user && current_user.organizations.exists?(@organization.id)) or can? :manage, :all
+      @private_resources = @organization.private_resources.paginate(:page => params[:page]).per_page(20)
+    end
 
     # if user can view pending submissions, query for them
     if @hide_pending == false
@@ -123,7 +115,7 @@ class OrganizationsController < ApplicationController
         format.html { redirect_to @organization, notice: 'Organization was successfully created.' }
         format.json { render action: 'show', status: :created, location: @organization }
       else
-        format.html { render action: 'new' }
+        format.html { render action: 'new', status: :unprocessable_entity }
         format.json { render json: @organization.errors, status: :unprocessable_entity }
       end
     end
@@ -145,7 +137,7 @@ class OrganizationsController < ApplicationController
         format.html { redirect_to @organization, notice: 'Organization was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: 'edit', status: :unprocessable_entity }
         format.json { render json: @organization.errors, status: :unprocessable_entity }
       end
     end
@@ -154,7 +146,6 @@ class OrganizationsController < ApplicationController
   # DELETE /organizations/1
   # DELETE /organizations/1.json
   def destroy
-
     if !@organization.admins and !@organization.admins.first.nil
       OrganizationMailer.deny_organization_application(@organization, @organization.admins.first.user).deliver
     end
@@ -162,13 +153,19 @@ class OrganizationsController < ApplicationController
 
     @organization.destroy
     respond_to do |format|
-      format.html { redirect_to admin_index_path }
+      format.html { redirect_to organizations_path }
       format.json { head :no_content }
     end
   end
 
-  def process_application
+  def deactivate
+    authorize! :destroy, @organization, :message => 'Not authorized as an administrator.'
+    if @organization.deactivate
+      redirect_to organizations_path, :notice => "Organization deactivated."
+    end
+  end
 
+  def process_application
     @get_application = OrganizationApplication.find(params[:id])
 
     if @get_application.nil?
@@ -201,8 +198,6 @@ class OrganizationsController < ApplicationController
     end
 
     @organization = @get_application.organization
-
-
   end
 
   def process_application_denial
@@ -224,9 +219,6 @@ class OrganizationsController < ApplicationController
     OrganizationMailer.deny_membership_to_user(@get_application.organization, @get_application.user, @get_application.comment).deliver
 
     return redirect_to organization_path(@get_application.organization_id), notice: 'User application denied'
-
-
-
   end
 
   def add_user
@@ -271,20 +263,22 @@ class OrganizationsController < ApplicationController
   end
 
   def approve_organization
-
     @organization = Organization.find_by_url(params[:organization])
 
     if cannot? :approve, @organization
-      redirect_to organizations_no_access_path, notice: 'You do not have sufficient rights to perform that action.'
+      flash[:notice] = 'You do not have sufficient rights to perform that action.'
+      return redirect_back(fallback_location: organizations_path)
     end
 
     @organization.approved = true
-    @organization.save
-
-    AdminMailer.notify_organization_admins_of_org_approval(@organization).deliver
-
-    redirect_to admin_index_path, notice: 'Organization was successfully approved.'
-
+    if @organization.save
+      AdminMailer.notify_organization_admins_of_org_approval(@organization).deliver
+      flash[:notice] = 'Organization was successfully approved.'
+      redirect_back(fallback_location: organizations_path)
+    else
+      flash[:error] = 'Could not approve organization.'
+      redirect_back(fallback_location: organizations_path)
+    end
   end
 
   def apply
@@ -296,7 +290,6 @@ class OrganizationsController < ApplicationController
     else
       @has_pending = false
     end
-
   end
 
   def not_found
@@ -322,6 +315,12 @@ class OrganizationsController < ApplicationController
     redirect_to organizations_process_user_path(params[:organization_id]), notice: 'Invitation was successfully sent.'
   end
 
+  # GET /user_orgs_index
+  def user_orgs_index
+    @organizations = current_user.organizations.where(deactivated_at: nil).order(name: :asc)
+  end
+
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -331,7 +330,25 @@ class OrganizationsController < ApplicationController
         @organization = Organization.find_by_id(params[:id])
       end
       if @organization.nil?
-        redirect_to organization_not_found_path
+        flash[:error] = "Could not find organization"
+        redirect_back(fallback_location: organizations_path)
+      end
+    end
+
+    def authorized?
+      return true if can? :manage, :all
+
+      @organization = Organization.find_by_url(params[:id])
+      if @organization.nil?
+        @organization = Organization.find_by_id(params[:id])
+      end
+      if @organization.nil?
+        @organization = Organization.find_by_url(params[:organization].to_s)
+      end
+
+      unless (!@organization.nil? && @organization.can_manage_users(current_user))
+        flash[:error] = "You are not authorized to view that page."
+        redirect_to root_path
       end
     end
 
@@ -340,7 +357,7 @@ class OrganizationsController < ApplicationController
       params.require(:organization).permit(:url, :name, :description, :status, :logo, :users, :domain, :organization_type_id)
     end
     # Never trust parameters from the scary internet, only allow the white list through.
-  def users_organization_params
-    params.permit(:organization_id, :user_id, :role, :organization_type_id)
-  end
+    def users_organization_params
+      params.permit(:organization_id, :user_id, :role, :organization_type_id)
+    end
 end

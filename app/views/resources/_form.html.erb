@@ -1,27 +1,30 @@
-<%= simple_form_for(resource, :html => { role: "form", multipart: true, class: "sky-form" }) do |f| %>
+<%= simple_form_for(resource, :html => { role: "form", multipart: true }) do |f| %>
     <% if !destination.blank? %>
         <input type="hidden" name="destination" value="<%= destination %>">
     <% end %>
 
-    <div class="tag-box tag-box-v3 form-page">
-    <% if resource.errors.count > 0 %>
-          <h4>Correct Errors Before Continuing</h4>
-          <div class="bg-danger">
-          <p>The following fields are mandatory or have errors in them.</p>
-          <dl>
-            <% resource.errors.each do |attr,msg| %>
-              <dd><%= msg.to_s %></dd>
-            <% end %>
-          </dl>
-        </div>
+    <div>
+    <% if @resource.errors.any? %>
+      <div id="error_explanation">
+        <h2>
+          <%= pluralize(@resource.errors.count, t('errors.error')) %>
+          <%= t('errors.prohibited') %>
+        </h2>
+        <ul>
+          <% @resource.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
-
 
       <%= render partial: 'resources/form_fields', locals: { f: f, resource: @resource } %>
 
-      <div class="form-group">
-        <%= f.button :submit, class: 'btn btn-u btn-u-blue', value: 'Save & Add Another' if resource.id.blank? %>
-        <%= f.button :submit, class: 'btn btn-u btn-u-blue', value: 'Save' %>
+      <div class="row p-2">
+        <div class="col-md-12">
+          <%= f.button :submit, class: 'btn btn-outline-primary btn-sm', value: 'Save & Add Another' if resource.id.blank? %>
+          <%= f.button :submit, class: 'btn btn-outline-primary btn-sm', value: 'Save' %>
+        </div>
       </div>
 
     </div>

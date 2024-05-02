@@ -1,17 +1,26 @@
-
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-md-9">
-
-      <%= render 'form' %>
-
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+        <li><%= link_to users_path do %><%=t('navigation.administration')%><% end %></li>
+        <li><%= link_to organization_types_path do %><%=t('navigation.organization_types')%><% end %></li>
+      </ol>
     </div>
-    <div class="col-md-3">
+</section><!-- End Breadcrumbs -->
 
-      <%= render 'admin/sidebar' %>
-
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+    <div class="col-3 border-end">
+      <h5 class="border-bottom pb-2"><i class="bi bi-building-gear"></i> Organization Types</h5>
+      <%= render 'admin/side_nav' %>
+      <br/>
+    </div>
+    <div class="col-9">
+      <div class="border-bottom pb-2 h5">Edit Organization Type</div>
+      <%= render 'form' %>
     </div>
   </div>
-</div>
-
+</section

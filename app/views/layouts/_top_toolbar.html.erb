@@ -1,0 +1,38 @@
+<!-- ======= Top Bar ======= -->
+<section id="topbar" class="d-flex align-items-center">
+  <div class="container d-flex justify-content-center justify-content-md-between">
+    <div class="contact-info d-flex align-items-center">
+      <% if current_page?(root_url) %>
+        <i class="bi bi-info-circle d-flex align-items-center"><a href="javascript:void(0);" id="help_link" data-controller="intro"> Help</a></i>
+      <% end %>
+      <i class="bi bi-question-circle d-flex align-items-center ms-4"><%= link_to faq_path do %> FAQs<% end %></i>
+    </div>
+    <div class="social-links d-none d-md-flex align-items-center">
+      <% if user_signed_in? and (can? :approve, Resource or can? :approve, Collection) %>
+        <%= link_to moderate_submissions_path, :class=> "toolbar-item" do %><i class="fa-solid fa-list-check"></i></i> Moderate Submissions&nbsp;<span class="badge rounded-pill bg-secondary secondary-badge-link align-text-bottom"><%= Resource.pending_count %></span><% end %>
+      <% end %>
+
+      <% if user_signed_in? and can? :manage, :all %>
+        <%= link_to admin_index_path, :class=> "toolbar-item" do %><i class="bi bi-toggles2"></i></i> Administration<% end %>
+      <% elsif user_signed_in? && current_user.cop_admin? %>
+        <%= link_to cops_path, :class=> "toolbar-item" do %><i class="bi bi-toggles2"></i></i> COP Administration<% end %>
+      <% end %>
+      <% if user_signed_in? %>
+          <%= link_to user_path(current_user), :class=> "toolbar-item" do %><i class="fa fa-user"></i> Profile<% end %>
+      <% end %>
+      <% if user_signed_in? %>
+        <% if @current_user.has_approved_org %>
+          <%= link_to organization_path(@current_user.organizations.order(:name).first), :class=> "toolbar-item" do %><i class="fa fa-building"></i> My Organization<% end %>
+        <% else %>
+          <%= link_to organization_apply_path, :class=> "toolbar-item" do %><i class="fa fa-building"></i> My Organization<% end %>
+        <% end %>
+      <% end %>
+      <% if user_signed_in? %>
+        <%= link_to destroy_user_session_path, data: { turbo_method: :delete } do %> <i class="fa fa-sign-out-alt"></i> Log Out <% end %>
+      <% else %>
+        <%= link_to new_user_session_path, :class=> "toolbar-item" do %> <i class="fa fa-sign-in-alt"></i> Sign In <% end %>
+        <%= link_to request_invite_path do %> <i class="bi bi-envelope"></i> Register <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>

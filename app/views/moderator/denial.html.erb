@@ -1,52 +1,55 @@
 
-<!--=== Content Part ===-->
-<div class="container content">
-  <div class="row">
-    <div class="col-sm-9">
-      <p>To deny this submission, select a reason for the denial below and click the button to confirm</p>
-
-      <%= simple_form_for @submission, url: deny_submission_path, method: "post", html: { id: 'denial_form' } do |f| %>
-        <input type="hidden" name="submission_id" value="<%= @submission.id.to_s %>">
-        <input type="hidden" name="submission_type" value="<%= params[:submission_type] %>">
-
-          <div class="form-group">
-            <label for="reason">Reason for Denial</label>
-
-            <%= f.select :reason, DenialReason.all.collect {|x| [x.reason, x.id]}, html: { class: 'form-control', id: 'reason' }, label: false, placeholder: 'Choose a Reason', :include_blank => true %><br>
-          </div>
-
-          <div class="form-group">
-            <%= f.button :submit, class: 'btn btn-u btn-u-blue', value: 'Confirm' %>
-          </div>
-
-          <% end %>
-
-
-
-
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><%= link_to root_path do %><%=t('navigation.home')%><% end %></li>
+        <% if can? :manage, :all %>
+          <li><%= link_to admin_index_path do %><%=t('navigation.administration')%><% end %></li>
+        <% end %>
+        <li>Moderate Submissions</li>
+      </ol>
     </div>
-    <div class="col-md-3">
+</section><!-- End Breadcrumbs -->
 
-      <%= render 'sidebar' %>
+<!-- ======= About Section ======= -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-3 border-end">
+      <% if can? :manage, :all %>
+        <h5 class="border-bottom pb-2"><%=t('navigation.administration')%></h5>
+        <%= render 'admin/side_nav' %>
+        <br/>
+      <% else %>
+        <h5 class="border-bottom pb-2">Moderate Submissions</h5>
+       <% end %>
+      </div>
 
+      <div class="col-9">
+        <p>To deny this submission, select a reason for the denial below and click the button to confirm</p>
+
+        <%= simple_form_for @submission, url: deny_submission_path, method: "post", html: { id: 'denial_form' } do |f| %>
+          <input type="hidden" name="submission_id" value="<%= @submission.id.to_s %>">
+          <input type="hidden" name="submission_type" value="<%= params[:submission_type] %>">
+
+          <div class="row p-2">
+            <div class="col-md-12">
+              <%= f.label "Reason for Denial" %><br>
+              <%= f.select :reason, DenialReason.all.collect {|x| [x.reason, x.id]}, {:include_blank => true }, {class: 'form-select'} %>
+            </div>
+          </div>
+
+          <div class="row p-2">
+            <div class="col-md-12">
+              <%= f.button :submit, class: 'btn btn-outline-primary btn-sm', value: 'Confirm' %>
+            </div>
+          </div>
+
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
+</section><!-- End About Section -->
 
-<script>
-
-  $(function() { //shorthand document.ready function
-    $('#denial_form').on('submit', function(e) { //use on if jQuery 1.7+
-      var reason_value = $('#<%= @submission.class.name.downcase %>_reason').val();
-      if (reason_value == "") {
-        alert("Choose a reason for this denial");
-        return false;
-      }
-
-      // e.preventDefault();  //prevent form from submitting
-
-    });
-  });
-
-</script>
 

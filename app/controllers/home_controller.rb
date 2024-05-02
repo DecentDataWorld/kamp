@@ -12,7 +12,9 @@ class HomeController < ApplicationController
     @resources_viewed = Resource.where("id in (?)", most_viewed_ids)
     @tags = Resource.tag_counts_on(:tags).limit(15)
     #@search_results = []
-
+    @featured_searches = FeaturedSearch.home_searches.order(:name)
+    @announcements = Announcement.active.is_public.featured.limit(5)
+    @events = Event.active.is_public.featured.limit(5)
   end
 
   def error

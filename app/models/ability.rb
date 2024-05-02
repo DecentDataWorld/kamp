@@ -19,6 +19,9 @@ class Ability
         can :add, Resource
         can :edit, Resource
         can :update, Resource
+        can :read, Cop
+        can :edit, Cop
+        can :update, Cop
       end
     end
 
@@ -40,7 +43,7 @@ class Ability
       can :approve, Resource
       can :add_newsletter_resource, Resource
       can :add_newsletter_collection, Collection
-      can :access, :ckeditor
+      #can :access, :ckeditor
     end
 
     if user.has_role? :admin
@@ -67,11 +70,10 @@ class Ability
       can :index, User
 
       can :access, :rails_admin       # only allow admin users to access Rails Admin
-      #can :dashboard, User                 # allow access to dashboard
 
       can :add_newsletter_resource, Resource
       can :add_newsletter_collection, Collection
-      can :access, :ckeditor
+      #can :access, :ckeditor
     end
 
     # Define abilities for the passed in user here. For example:
