@@ -62,12 +62,12 @@
                 <ul class="list-unstyled ps-2">
                   <% @tags[tag_type].each do |t|  %>
                     <% if !params[:tags].include? t["id"].to_s %>
-                      <li class='available-tags pb-1'><%= link_to t["name"], update_search_path(request.parameters.merge(:tags => params[:tags] + [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : "")) %> (<%= t["tag_count"] %>) </li>
+                      <li class='available-tags pb-1'><%= link_to raw("<i class='fa-regular fa-square'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] + [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : "")) %> (<%= t["tag_count"] %>) </li>
                     <% 
                       else 
                         @selected_tags << "<span class='badge rounded-pill bg-secondary dark-badge-link'>#{link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : ""))}</span> &nbsp;"
                     %>
-                      <li class='selected-tags pb-1'><%= link_to raw("<i class='fa fa-times'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : "")) %></li>
+                      <li class='available-tags pb-1'><%= link_to raw("<i class='fa-regular fa-square-check'></i> " + t["name"]), update_search_path(request.parameters.merge(:tags => params[:tags] - [t["id"].to_s]).merge(:organization_id => @organization ? @organization.id : "").merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : "")) %></li>
                     <% end %>
                   <% end %>
                 </ul>
