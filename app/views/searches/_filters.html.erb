@@ -79,14 +79,12 @@
     </div>
   </div>
   <div class="tab-pane fade <% if @last_filter_choice == 'orgs' %> show active <% end %>" id="orgs" role="tabpanel" aria-labelledby="orgs-tab">
-    <div class="pt-3">
+    <div class="pt-3 available-tags">
       <% if @organization %>
         <% if !@organization.logo.blank? %>
-          <%= link_to organization_path(@organization) do %>
-              <%= image_tag @organization.logo.expiring_url(10), class: "img-responsive" %>
-          <% end %>
+          <%= link_to raw("<i class='fa-regular fa-square'></i> " + @organization.name), organization_path(@organization) %>
         <% end %>
-        <strong><%= link_to @organization.name, organization_path(@organization) %></strong>
+        <strong><%= link_to raw("<i class='fa-regular fa-square'></i> " + @organization.name), organization_path(@organization) %></strong>
         <% if !@organization.organization_type.blank? %>
           <p><span class="fw-light">Organization Type: </span>
             <%= @organization.organization_type.organization_type %></p>
@@ -106,11 +104,11 @@
     </div>
   </div>
   <div class="tab-pane fade <% if @last_filter_choice == 'cops' %> show active <% end %>" id="cops" role="tabpanel" aria-labelledby="cops-tab">
-    <div class="pt-3">
+    <div class="available-tags pt-3">
       <% if @cop %>
-        <strong><%= link_to @cop.name, cop_path(@cop) %></strong>
+        <strong><%= link_to raw("<i class='fa-regular fa-square'></i> " + @cop.name), cop_path(@cop) %></strong>
         <%= link_to url_for(update_search_path(request.parameters.merge(:cop_id => "").merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : ""))) do %>
-            <p><i class="fa fa-times-circle"></i> reset filter</p>
+          <p><i class="fa fa-times-circle"></i> reset filter</p>
         <% end %>
       <% else %>
         <ul class="list-group list-group-flush">
