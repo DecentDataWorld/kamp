@@ -30,7 +30,7 @@
 %>
 
 <ul class="nav nav-tabs" id="tagsTab" role="tablist">
-  <li class="nav-item" role="presentation" data-intro="To filter by Tags, first click a caret next to a Tag Type to expand the list of related Tags, then check any boxes you like.">
+  <li class="nav-item" role="presentation" data-intro="To filter by Tags, first click a caret next to a Tag Type to expand the list of related Tags, then check any boxes you like." data-position="left">
     <button class="nav-link <% if @last_filter_choice == 'tags' || nil %> active <% end %>" id="tags-tab" data-bs-toggle="tab" data-bs-target="#tags" type="button" role="tab" aria-controls="tags" aria-selected="true">Tags</button>
   </li>
   <li class="nav-item" role="presentation">

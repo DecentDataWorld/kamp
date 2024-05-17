@@ -2,7 +2,7 @@
 <section id="topbar" class="d-flex align-items-center">
   <div class="container d-flex justify-content-center justify-content-md-between">
     <div class="contact-info d-flex align-items-center">
-      <% if current_page?(root_url) || current_page?(search_path) %>
+      <% if current_page?(root_url) || (params[:id] && current_page?(search_path)) %>
         <i class="bi bi-info-circle d-flex align-items-center"><a href="javascript:void(0);" id="help_link" data-controller="intro"> Help</a></i>
       <% end %>
       <i class="bi bi-question-circle d-flex align-items-center ms-4"><%= link_to faq_path do %> FAQs<% end %></i>
