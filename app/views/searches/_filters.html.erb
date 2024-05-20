@@ -115,37 +115,35 @@
   <div class="tab-pane fade <% if @last_filter_choice == 'other' %> show active <% end %>" id="other" role="tabpanel" aria-labelledby="other-tab">
     <div class="pt-3">
       Language:
-      <% if @language %> 
-        <p><strong><%= @languages[@language.to_sym] %></strong>
-          <%= link_to url_for(update_search_path(request.parameters.merge(:language => params[:language] = "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : ""))) do %></p>
-              <i class="fa fa-times-circle"></i> reset filter
+      <ul class="list-group list-group-flush">
+        <% if @language %>
+          <li class="list-group-item available-tags">
+            <%= link_to raw("<i class='fa-regular fa-square-check'></i> " + @languages[@language.to_sym]), url_for(update_search_path(request.parameters.merge(:language => params[:language] = "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : ""))) %>
+          </li>
+        <% else %>
+          <% @languages.each_key do |l| %>
+            <li class="list-group-item available-tags">
+              <%= link_to raw("<i class='fa-regular fa-square'></i> " + @languages[l]), update_search_path(request.parameters.merge(:language => l).merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : "").except(:page)) %>
+            </li>
           <% end %>
-      <% else %>
-          <ul class="list-group list-group-flush">
-            <% @languages.each_key do |l| %>
-              <li class="list-group-item available-tags">
-                <%= link_to @languages[l], update_search_path(request.parameters.merge(:language => l).merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:days_back => @days_back ? @days_back : "").merge(:cop_id => @cop ? @cop.id : "").except(:page)) %>
-              </li>
-            <% end %>
-          </ul>
-      <% end %>
+        <% end %>
+      </ul>
     </div>
     <div class="pt-3">
       Uploaded/Updated:
-      <% if @days_back %> 
-        <p><strong><%= @days_backs[@days_back.to_i] %></strong>
-          <%= link_to url_for(update_search_path(request.parameters.merge(:days_back => params[:days_back] = "").merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:cop_id => @cop ? @cop.id : ""))) do %></p>
-              <i class="fa fa-times-circle"></i> reset filter
+      <ul class="list-group list-group-flush">
+        <% if @days_back %>
+          <li class="list-group-item available-tags">
+            <%= link_to raw("<i class='fa-regular fa-square-check'></i> " + @days_backs[@days_back.to_i]), url_for(update_search_path(request.parameters.merge(:days_back => params[:days_back] = "").merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:cop_id => @cop ? @cop.id : ""))) %></p>
+          </li>
+        <% else %>
+          <% @days_backs.each_key do |d| %>
+            <li class="list-group-item available-tags">
+              <%= link_to raw("<i class='fa-regular fa-square'></i> " + @days_backs[d]), update_search_path(request.parameters.merge(:days_back => d).merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:cop_id => @cop ? @cop.id : "").except(:page)) %>
+            </li>
           <% end %>
-      <% else %>
-          <ul class="list-group list-group-flush">
-            <% @days_backs.each_key do |d| %>
-              <li class="list-group-item available-tags">
-                <%= link_to @days_backs[d], update_search_path(request.parameters.merge(:days_back => d).merge(:language => @language ? @language : "").merge(:tags => params[:tags]).merge(:organization_id => @organization ? @organization.id : "").merge(:cop_id => @cop ? @cop.id : "").except(:page)) %>
-              </li>
-            <% end %>
-          </ul>
-      <% end %>
+        <% end %>
+      </ul>
     </div>
   </div>
 </div>
