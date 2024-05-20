@@ -91,26 +91,25 @@
               <%= link_to raw("<i class='fa-regular fa-square'></i> " + o["name"]), update_search_path(request.parameters.merge(:organization_id => o["id"]).merge(:cop_id => @cop ? @cop.id : "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").except(:page)) %> (<%= o["org_count"] %>)
             </li>
           <% end %>
-        </ul>
-      <% end %>
+        <% end %>
+      </ul>
     </div>
   </div>
   <div class="tab-pane fade <% if @last_filter_choice == 'cops' %> show active <% end %>" id="cops" role="tabpanel" aria-labelledby="cops-tab">
     <div class="available-tags pt-3">
-      <% if @cop %>
-        <strong><%= link_to raw("<i class='fa-regular fa-square'></i> " + @cop.name), cop_path(@cop) %></strong>
-        <%= link_to url_for(update_search_path(request.parameters.merge(:cop_id => "").merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : ""))) do %>
-          <p><i class="fa fa-times-circle"></i> reset filter</p>
-        <% end %>
-      <% else %>
-        <ul class="list-group list-group-flush">
+      <ul class="list-group list-group-flush">
+        <% if @cop %>
+          <li class="list-group-item available-tags">
+            <%= link_to raw("<i class='fa-regular fa-square-check'></i> " + @cop.name), url_for(update_search_path(request.parameters.merge(:cop_id => "").merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : ""))) %>
+          </li>
+        <% else %>
           <% @cops.each do |c| %>
             <li class="list-group-item available-tags">
-              <%= link_to c["name"], update_search_path(request.parameters.merge(:cop_id => c["id"]).merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").except(:page)) %> (<%= c["cop_count"] %>)
+              <%= link_to raw("<i class='fa-regular fa-square'></i> " + c["name"]), update_search_path(request.parameters.merge(:cop_id => c["id"]).merge(:organization_id => @organization ? @organization.id : "").merge(:tags => params[:tags]).merge(:language => @language ? @language : "").merge(:days_back => @days_back ? @days_back : "").except(:page)) %> (<%= c["cop_count"] %>)
             </li>
           <% end %>
-        </ul>
-      <% end %>
+        <% end %>
+      </ul>
     </div>
   </div>
   <div class="tab-pane fade <% if @last_filter_choice == 'other' %> show active <% end %>" id="other" role="tabpanel" aria-labelledby="other-tab">
