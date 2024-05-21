@@ -125,6 +125,7 @@ Rails.application.routes.draw do
   post 'users/send_invite', to: 'users#send_invite', as: :send_invite
   devise_for :users, :controllers => {:registrations => 'registrations'}, :path => '', :path_names => {:sign_in => 'login', :sign_out => 'logout'}
   resources :users, path: 'admin/users'
+  put 'users/deny/:id', to: 'users#deny', as: 'deny_user'
   put 'users/deactivate/:id', to: 'users#deactivate', as: 'deactivate_user'
   put 'users/reactivate/:id', to: 'users#reactivate', as: 'reactivate_user'
   put 'users/remove_membership', to: 'users#remove_membership', as: :remove_membership
