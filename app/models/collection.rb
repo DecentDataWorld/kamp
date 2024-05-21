@@ -57,7 +57,7 @@ class Collection < ActiveRecord::Base
       puts 'returning true to add check'
       return true
     else
-      puts 'returning false to add check' + user_org.role.inspect
+      puts 'returning false to add check'
       return false
     end
   end
