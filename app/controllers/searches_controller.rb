@@ -182,7 +182,7 @@ class SearchesController < ApplicationController
       if params[:cop_id].present? and Cop.where(id: params[:cop_id]).exists?
         @cop =  Cop.find(params[:cop_id])
       else
-        @cops = Resource.search_cops(params[:query], params[:tags], params[:language], params[:days_back])
+        @cops = Resource.search_cops(params[:query], params[:tags], params[:organization_id], params[:language], params[:days_back])
       end
 
       collection_results = Collection.search_kmp(params[:query], params[:tags], params[:organization_id], params[:cop_id], params[:days_back])
