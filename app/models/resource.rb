@@ -325,7 +325,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, cop=nil, language=nil, 
     return results.to_ary
   end
 
-  def self.search_cops(search_terms=nil, tags=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=true)
+  def self.search_cops(search_terms=nil, tags=nil, org=nil, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=true)
     target_date = Date.today - days_back.to_i if !days_back.nil?
     query = "
     WITH resources_search AS (
@@ -349,6 +349,7 @@ def self.search_kmp(search_terms=nil, tags=nil, org=nil, cop=nil, language=nil, 
       query = query + "
       WHERE 0=0 "
       query = query + " AND r.updated_at > '" + target_date.to_s + "'" if !days_back.nil?
+      query = query + " AND r.organization_id = " + org.to_s if !org.nil?
       query = query + " AND r.language = '" + language + "'" if !language.nil?  && language.length > 0
       query = query + " AND tg.tag_id IN (" + tags.join(",") + ")" if !tags.nil? && tags.length > 0
       query = query + " GROUP BY r.id "
