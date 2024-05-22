@@ -27,7 +27,7 @@
             </div>
           </li>
           <li class="list-group-item bg-transparent text-muted">
-            <div class="text-danger">Members</div>
+            <div><span class="text-danger">Members</span>&nbsp;<span><a class="btn btn-sm btn-outline-primary float-end" type="button" href="mailto:<%= @cop.users.pluck(:email).join(',') %>?subject=[KaMP] New message for members of <%= @cop.name %>" title="Email Members"><i class="bi bi-envelope"></i></a></span></div>
             <ul class="list-group border-0 bg-transparent">
               <% @cop.users.each do |m| %>
                 <li class="list-group-item bg-transparent border-0"><%= link_to m.name, user_path(m) %></li>
