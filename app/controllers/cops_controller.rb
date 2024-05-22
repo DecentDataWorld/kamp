@@ -50,7 +50,7 @@ class CopsController < ApplicationController
 
   # GET /cops/1
   def show_cop
-    hide_cop_private = !current_user.cops.include?(@cop)
+    hide_cop_private = !current_user || !current_user.cops.include?(@cop)
     # get all submissions for this cop
     resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=nil, cop=@cop.id, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=hide_cop_private)
     @resource_count = resource_results[:count]
