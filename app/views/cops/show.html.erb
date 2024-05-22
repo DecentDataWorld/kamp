@@ -147,6 +147,7 @@
                             <th><%=t('activerecord.attributes.event.date') %></th>
                             <th><%=t('activerecord.attributes.event.location') %></th>
                             <th><%=t('activerecord.attributes.event.short_description') %></th>
+                            <th><%=t('activerecord.attributes.event.notify') %></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -156,6 +157,7 @@
                               <td><%= e.start_date.strftime("%Y-%m-%d") %></td>
                               <td><%= e.location %></td>
                               <td><%= e.short_description %></td>
+                              <td><a class="btn btn-sm btn-outline-primary ms-2" type="button" href="mailto:<%= @cop.users.pluck(:email).join(',') %>?subject=[KaMP] New <%= @cop.name %> Event: <%= e.name %>&body=<%= @cop.event_email_body(e) %>" title="Notify members about this event"><i class="bi bi-envelope"></i></a></td>
                             </tr>
                           <% end %>
                         </tbody>
