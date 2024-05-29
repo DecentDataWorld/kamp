@@ -13,9 +13,11 @@
   <div class="container">
 
    <div class="row">
-     <div class="col-3 border-end" data-intro="Refine your search by applying filters. Check the box next to any available filter criteria to apply it to your results. Note that once any filters have been applied, remaining filter choices will be reduced to only those connected with items in the filtered results (indicated by a number in parentheses after the filter name).">
-        <h5 class="border-bottom pb-2">Filter By</h5>
-        <%= render partial: 'searches/filters' %>
+     <div class="col-3 border-end">
+        <div data-intro="Refine your search by applying filters. Check the box next to any available filter criteria to apply it to your results. Note that once any filters have been applied, remaining filter choices will be reduced to only those connected with items in the filtered results (indicated by a number in parentheses after the filter name).">
+          <h5 class="border-bottom pb-2">Filter By</h5>
+          <%= render partial: 'searches/filters' %>
+        </div>
      </div>
      <div class="col-9">
        <div class="border-bottom pb-2" data-intro="Search terms and filters appear here as they are added. Click the 'x' inside any of these applied parameters to remove them from your results."><%= render partial: 'searches/show_filters' %> &nbsp;</div>
