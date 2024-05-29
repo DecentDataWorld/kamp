@@ -27,7 +27,7 @@
               <% if (can? :moderate, @collection) or @collection.can_edit(current_user) %>
                 <li><%= link_to "Edit Collection", edit_collection_path(@collection), class: "dropdown-item" %></li>
               <% end %>
-              <% if can? :delete, @collection or can? :moderate, @collection or @collection.can_add_resources(@current_user) %>
+              <% if can? :moderate, @collection or @collection.can_add_resources(@current_user) %>
                 <li><%= link_to "Add Resource", new_collection_resourcing_path(@collection), class: "dropdown-item" %></li>
               <% end %>
               <% if can? :delete, @collection or can? :moderate, @collection %>
