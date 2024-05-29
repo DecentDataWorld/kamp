@@ -27,9 +27,11 @@
               <% if (can? :moderate, @collection) or @collection.can_edit(current_user) %>
                 <li><%= link_to "Edit Collection", edit_collection_path(@collection), class: "dropdown-item" %></li>
               <% end %>
+              <% if can? :moderate, @collection or @collection.can_add_resources(@current_user) %>
+                <li><%= link_to "Add Resource", new_collection_resourcing_path(@collection), class: "dropdown-item" %></li>
+              <% end %>
               <% if can? :delete, @collection or can? :moderate, @collection %>
-              <li><%= link_to "Add Resource", new_collection_resourcing_path(@collection), class: "dropdown-item" %></li>
-                  <li><%= link_to "Delete", @collection, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "dropdown-item" %></li>
+                <li><%= link_to "Delete", @collection, data: { turbo_confirm: 'Are you sure?', turbo_method: :delete }, class: "dropdown-item" %></li>
               <% end %>
               <% if can? :approve, @collection and !@collection.approved %>
                 <li><%= link_to "Approve collection", approve_submission_path(:submission_id => @collection.id, :submission_type => "collection"), :class => "dropdown-item" %></li>

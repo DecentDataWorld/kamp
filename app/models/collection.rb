@@ -52,12 +52,12 @@ class Collection < ActiveRecord::Base
 
   def can_add_resources(user)
     return false if user.nil?
-    user_org = UsersOrganization.where("user_id = ?", user.id).where("organization_id = ?", self.organization.id)
-    if (!user_org.nil? and (user_org.role == :editor or user_org.role == :admin or user_org.role == "editor" or user_org.role == "admin")) or (self.author == user)
+    user_org = UsersOrganization.find_by :user_id => user.id, :organization_id => self.organization.id
+    if (!user_org.nil? and (user_org.role == :editor or user_org.role == :admin or user_org.role == :member or user_org.role == "editor" or user_org.role == "admin" or user_org.role == "member")) or (self.author == user)
       puts 'returning true to add check'
       return true
     else
-      puts 'returning false to add check' + user_org.role.inspect
+      puts 'returning false to add check'
       return false
     end
   end
