@@ -99,12 +99,18 @@ class UsersController < ApplicationController
     end
   end
 
-  def deactivate
+  def deny
+    @user = User.find(params[:id])
+    UserMailer.denial_email(@user).deliver
+    deactivate("User denied.")
+  end
+
+  def deactivate(msg="")
     authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
     @user = User.find(params[:id])
     unless @user == current_user
       @user.deactivate
-      flash[:notice] = "User deactivated."
+      flash[:notice] = msg.blank? ? "User deactivated." : msg
       redirect_back(fallback_location: users_path)
     else
       flash[:notice] = "Can't deactivate yourself."

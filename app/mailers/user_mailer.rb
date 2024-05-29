@@ -15,4 +15,8 @@ class UserMailer < ActionMailer::Base
     mail(:to => @email_address, :subject => "Invitation to register for the Jordan Knowledge Management Portal [KaMP]")
   end
 
+  def denial_email(user)
+    mail(to: user.email, subject: "[KaMP] Your application was denied")
+  end
+
 end

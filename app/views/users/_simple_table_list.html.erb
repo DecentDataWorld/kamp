@@ -50,7 +50,7 @@
               </ul>
             </div>
           </td>
-          <td><%= button_to deactivate_user_path(user), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deactivate<% end %></td>
+          <td><%= button_to deny_user_path(user), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deny<% end %></td>
         <% end %>
       </tr>
   <% end %>
