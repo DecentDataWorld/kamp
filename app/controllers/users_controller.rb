@@ -99,12 +99,18 @@ class UsersController < ApplicationController
     end
   end
 
-  def deactivate
+  def deny
+    @user = User.find(params[:id])
+    UserMailer.denial_email(@user).deliver
+    deactivate("User denied.")
+  end
+
+  def deactivate(msg="")
     authorize! :destroy, @user, :message => 'Not authorized as an administrator.'
     @user = User.find(params[:id])
     unless @user == current_user
       @user.deactivate
-      flash[:notice] = "User deactivated."
+      flash[:notice] = msg.blank? ? "User deactivated." : msg
       redirect_back(fallback_location: users_path)
     else
       flash[:notice] = "Can't deactivate yourself."
@@ -216,6 +222,12 @@ class UsersController < ApplicationController
   end
 
   def send_invite
+    if User.all.pluck(:email).include?(params[:invitation_email])
+      flash[:notice] = "An account already exists with this email address. Please enter a different email address, or click 'Sign In' to log in with this existing account."
+      redirect_back(fallback_location: request_invite_path)
+      return
+    end
+
     digest = OpenSSL::Digest.new('sha1')
     @email_address = params[:invitation_email]
 
