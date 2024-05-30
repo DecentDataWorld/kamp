@@ -1,5 +1,5 @@
 class CopsController < ApplicationController
-  before_action :set_cop, only: [:edit, :update, :destroy, :show, :show_cop]
+  before_action :set_cop, only: [:edit, :update, :destroy, :show, :show_cop, :show_event_email_info]
   before_action :authorized?, except: [:show_cop]
 
   # GET /admin/cops
@@ -66,6 +66,11 @@ class CopsController < ApplicationController
     if (current_user && current_user.cops.exists?(@cop.id)) or can? :manage, :all
       @private_resources = @cop.private_resources.paginate(:page => params[:page]).per_page(20)
     end
+  end
+
+  #GET /cop_event_email_info/1
+  def show_event_email_info
+    @event = Event.find(params[:event])
   end
 
   # POST /admin/cops

@@ -1,0 +1,25 @@
+<h6>Due to the large number of members in this COP, the addresses and content for this notification must be entered manually rather than being automatically populated into your email client. Please <strong>copy and paste the following addresses, subject, and body into a new email</strong> using your preferred email client.</h6>
+<div class="row p-2">
+  <div class="col-md-2 d-flex flex-row-reverse text-danger">
+    Addresses:
+  </div>
+  <div class="col-md-10">
+    <%= cop.users.pluck(:email).join(', ') %>
+  </div>
+</div>
+<div class="row p-2">
+  <div class="col-md-2 d-flex flex-row-reverse text-danger">
+    Subject:
+  </div>
+  <div class="col-md-10">
+    <%= "[KaMP] New #{cop.name} Event: #{event.name}" %>
+  </div>
+</div>
+<div class="row p-2">
+  <div class="col-md-2 d-flex flex-row-reverse text-danger">
+    Body:
+  </div>
+  <div class="col-md-10">
+    <%= "#{cop.event_email_body_html(event)}".html_safe %>
+  </div>
+</div>

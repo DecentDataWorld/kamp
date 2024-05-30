@@ -17,7 +17,7 @@ class Cop < ActiveRecord::Base
     return Resource.where("cop_id = ?", self.id).where("cop_private = ?", true)
   end
 
-  def event_email_body(event)
+  def event_email_body_encoded(event)
     "Dear #{self.name} Members,
     %0D%0A%0D%0AWe are excited to inform you about an upcoming event within our Community of Practice. Here are the details:
     %0D%0A%0D%0AEvent Title: #{event.name}
@@ -34,6 +34,24 @@ class Cop < ActiveRecord::Base
 
     %0D%0A%0D%0ABest regards,
     %0D%0A#{self.name} Administrators"
+  end
+
+  def event_email_body_html(event)
+    <<-HTML
+      <p>Dear #{self.name} Members,</p>
+      <p>We are excited to inform you about an upcoming event within our Community of Practice. Here are the details:</p>
+      <p>Event Title: #{event.name}<br/>
+      Date: #{event.start_date.strftime("%Y-%m-%d")}<br/>
+      Location: #{event.location}<br/>
+      Description: #{event.long_description}<br/>
+      &nbsp;&nbsp;&nbsp;[Provide a brief description of the event, including its purpose, topics to be covered, and any special guests or speakers.]<br/>
+      Registration:<br/>
+      &nbsp;&nbsp;&nbsp;[Include instructions on how members can register for the event, including any registration links or forms.]<br/>
+      <p>If you have any questions or need further information, please don't hesitate to reach out to #{event.user.name} at #{event.user.email}.</p>
+      <p>Thank you for your ongoing commitment to our Community of Practice. We look forward to seeing you at the event!</p>
+      <p>Best regards,<br/>
+      #{self.name} Administrators</p>
+    HTML
   end
 
 end
