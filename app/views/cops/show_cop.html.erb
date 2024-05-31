@@ -27,7 +27,17 @@
             </div>
           </li>
           <li class="list-group-item bg-transparent text-muted">
-            <div><span class="text-danger">Members</span><% if @current_user && (@current_user.has_role?('admin') || @cop.admin == @current_user) %>&nbsp;<span><a class="btn btn-sm btn-outline-primary float-end" type="button" href="mailto:<%= @cop.users.pluck(:email).join(',') %>?subject=[KaMP] New message for members of <%= @cop.name %>" title="Email Members"><i class="bi bi-envelope"></i></a></span><% end %></div>
+            <div>
+              <span class="text-danger">Members</span>&nbsp;
+              <% if @current_user && (@current_user.has_role?('admin') || @cop.admin == @current_user) %>
+                <% @mail_content = "mailto:#{@cop.users.pluck(:email).join(',')}?subject=[KaMP] New message for members of #{@cop.name}" %>
+                <% if @mail_content.length > 2000 %>
+                  <span><%= link_to cop_email_info_path(@cop), data: { turbo_frame: "modal" }, class: "btn btn-sm btn-outline-primary ms-2 float-end" do %><i class="bi bi-envelope"></i><% end %></span>
+                <% else %>
+                  <span><a class="btn btn-sm btn-outline-primary float-end" type="button" href="<%= @mail_content %>" title="Email Members"><i class="bi bi-envelope"></i></a></span>
+                <% end %>
+              <% end %>
+            </div>
             <ul class="list-group border-0 bg-transparent">
               <% @cop.users.each do |m| %>
                 <li class="list-group-item bg-transparent border-0"><%= link_to m.name, user_path(m) %></li>
