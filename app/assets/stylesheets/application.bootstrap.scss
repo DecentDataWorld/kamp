@@ -6667,18 +6667,19 @@ a.copy-text:hover {
 
 /* Toggle this class when clicking on the popup container (hide and show the popup) */
 .popup .show {
-  visibility: visible;
-  -webkit-animation: fadeIn 1s;
-  animation: fadeIn 1s;
+  -webkit-animation: fadeInOut 1s;
+  animation: fadeInOut 1s;
 }
 
 /* Add animation (fade in the popup) */
-@-webkit-keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
+@-webkit-keyframes fadeInOut {
+  0%   {opacity: 1; visibility: visible;}
+  60%  {opacity: 1;}
+  100% {opacity: 0; visibility: hidden!important;}
 }
 
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity:1 ;}
+@keyframes fadeInOut {
+  0%   {opacity: 1; visibility: visible;}
+  60%  {opacity: 1;}
+  100% {opacity: 0; visibility: hidden!important;}
 } 
