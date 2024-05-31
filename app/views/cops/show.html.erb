@@ -31,11 +31,13 @@
               <span class="text-danger">Members</span>&nbsp;
               <% if @current_user && (@current_user.has_role?('admin') || @cop.admin == @current_user) %>
                 <% @mail_content = "mailto:#{@cop.users.pluck(:email).join(',')}?subject=[KaMP] New message for members of #{@cop.name}" %>
-                <% if @mail_content.length > 2000 %>
-                  <span><%= link_to cop_email_info_path(@cop), data: { turbo_frame: "modal" }, class: "btn btn-sm btn-outline-primary ms-2 float-end" do %><i class="bi bi-envelope"></i><% end %></span>
-                <% else %>
-                  <span><a class="btn btn-sm btn-outline-primary float-end" type="button" href="<%= @mail_content %>" title="Email Members"><i class="bi bi-envelope"></i></a></span>
-                <% end %>
+                <span>
+                  <% if @mail_content.length > 2000 %>
+                    <%= link_to cop_email_info_path(@cop), title: "Email Members", data: { turbo_frame: "modal" }, class: "btn btn-sm btn-outline-primary ms-2 float-end" do %><i class="bi bi-envelope"></i><% end %>
+                  <% else %>
+                    <a class="btn btn-sm btn-outline-primary float-end" type="button" href="<%= @mail_content %>" title="Email Members"><i class="bi bi-envelope"></i></a>
+                  <% end %>
+                </span>
               <% end %>
             </div>
             <ul class="list-group border-0 bg-transparent">
@@ -170,7 +172,7 @@
                               <td>
                                 <% @event_notify_content = "mailto:#{@cop.users.pluck(:email).join(',')}?subject=[KaMP] New #{@cop.name} Event: #{e.name}&body=#{@cop.event_email_body_encoded(e)}"%>
                                 <% if @event_notify_content.length > 2000 %>
-                                  <%= link_to cop_event_email_info_path(@cop, event: e), data: { turbo_frame: "modal" }, class: "btn btn-sm btn-outline-primary ms-2" do %><i class="bi bi-envelope"></i><% end %>
+                                  <%= link_to cop_event_email_info_path(@cop, event: e), title: "Notify members about this event", data: { turbo_frame: "modal" }, class: "btn btn-sm btn-outline-primary ms-2" do %><i class="bi bi-envelope"></i><% end %>
                                 <% else %>
                                   <a class="btn btn-sm btn-outline-primary ms-2" type="button" href="<%= @event_notify_content %>" title="Notify members about this event"><i class="bi bi-envelope"></i></a>
                                 <% end %>
