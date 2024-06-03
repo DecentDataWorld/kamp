@@ -32,7 +32,7 @@
               <% if @current_user && (@current_user.has_role?('admin') || @cop.admin == @current_user) %>
                 <% @mail_content = "mailto:#{@cop.users.pluck(:email).join(',')}?subject=[KaMP] New message for members of #{@cop.name}" %>
                 <span>
-                  <% if @mail_content.length > 2000 %>
+                  <% if @mail_content.length > 1800 %>
                     <%= link_to cop_email_info_path(@cop), title: "Email Members", data: { turbo_frame: "modal" }, class: "btn btn-sm btn-outline-primary ms-2 float-end" do %><i class="bi bi-envelope"></i><% end %>
                   <% else %>
                     <a class="btn btn-sm btn-outline-primary float-end" type="button" href="<%= @mail_content %>" title="Email Members" target="_blank"><i class="bi bi-envelope"></i></a>
@@ -174,7 +174,7 @@
                                 <% if @current_user && (@current_user.has_role?('admin') || @cop.admin == @current_user) %>
                                   <td>
                                     <% @event_notify_content = "mailto:#{@cop.users.pluck(:email).join(',')}?subject=[KaMP] New #{@cop.name} Event: #{e.name}&body=#{@cop.event_email_body_encoded(e)}"%>
-                                    <% if @event_notify_content.length > 2000 %>
+                                    <% if @event_notify_content.length > 1800 %>
                                       <%= link_to cop_event_email_info_path(@cop, event: e), title: "Notify members about this event", data: { turbo_frame: "modal" }, class: "btn btn-sm btn-outline-primary ms-2" do %><i class="bi bi-envelope"></i><% end %>
                                     <% else %>
                                       <a class="btn btn-sm btn-outline-primary ms-2" type="button" href="<%= @event_notify_content %>" title="Notify members about this event" target="_blank"><i class="bi bi-envelope"></i></a>
