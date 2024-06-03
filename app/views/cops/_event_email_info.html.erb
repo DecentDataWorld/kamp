@@ -1,0 +1,52 @@
+<h6>Due to the large number of members in this COP, the addresses and content for this notification must be entered manually rather than being automatically populated into your email client. Please <strong>copy and paste the following addresses, subject, and body into a new email</strong> using your preferred email client.</h6>
+<div class="row p-2">
+  <div class="col-md-2">
+    <span class="ms-1 text-danger float-start">
+      Addresses
+    </span>
+    <span class="ms-1 text-primary float-end">
+      <a class="copy-text popup" onclick="copyText('emails')" title="Copy email addresses"><i class="fa-solid fa-clone"></i><span class="popuptext" id="emails-copied-msg">Copied!</span></a>
+    </span>
+  </div>
+  <div class="col-md-10" id="emails">
+    <%= cop.users.pluck(:email).join(', ') %>
+  </div>
+</div>
+<div class="row p-2">
+  <div class="col-md-2">
+    <span class="ms-1 text-danger float-start">
+      Subject
+    </span>
+    <span class="ms-1 text-primary float-end">
+      <a class="copy-text popup" onclick="copyText('subject')" title="Copy email subject"><i class="fa-solid fa-clone"></i><span class="popuptext" id="subject-copied-msg">Copied!</span></a>
+    </span>
+  </div>
+  <div class="col-md-10" id="subject">
+    <%= "[KaMP] New #{cop.name} Event: #{event.name}" %>
+  </div>
+</div>
+<div class="row p-2">
+  <div class="col-md-2">
+    <span class="ms-1 text-danger float-start">
+      Body
+    </span>
+    <span class="ms-1 text-primary float-end">
+      <a class="copy-text popup" onclick="copyText('body')" title="Copy email body"><i class="fa-solid fa-clone"></i><span class="popuptext" id="body-copied-msg">Copied!</span></a>
+    </span>
+  </div>
+  <div class="col-md-10" id="body">
+    <%= "#{cop.event_email_body_html(event)}".html_safe %>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function copyText(src) {
+    // copy to clipboard
+    var copyText = document.getElementById(src).textContent;
+    navigator.clipboard.writeText(copyText);
+
+    // indicate copy was successful
+    var popup = document.getElementById(`${src}-copied-msg`);
+    popup.classList.toggle("show");
+  }
+</script>

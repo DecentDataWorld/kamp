@@ -1,0 +1,3 @@
+<%= render "layouts/modal", title: "Notify COP members about upcoming #{@event.name}" do %>
+  <%= render "event_email_info", event: @event, cop: @cop %>
+<% end %>

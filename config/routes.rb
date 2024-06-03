@@ -37,7 +37,8 @@ Rails.application.routes.draw do
 
   resources :cops, path: 'admin/cops'
   get 'cops/:id', to: 'cops#show_cop', as: :show_cop
-
+  get 'cop_event_email_info/:id', to: 'cops#show_event_email_info', as: :cop_event_email_info
+  get 'cop_email_info/:id', to: 'cops#show_email_info', as: :cop_email_info
   
   resources :events, path: 'admin/events'
   get 'events', to: 'events#public_events', as: :public_events
