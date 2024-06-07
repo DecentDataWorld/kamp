@@ -102,7 +102,7 @@ class UsersController < ApplicationController
   def deny
     @user = User.find(params[:id])
     UserMailer.denial_email(@user).deliver
-    deactivate("User denied.")
+    deactivate("User denied. An email has been sent to this user providing likely reasons for denial.")
   end
 
   def deactivate(msg="")
