@@ -275,10 +275,15 @@ import introJs from "intro.js"
 
     // start help tour on home page load if no cookie saved
     const autoStartTour = () => {
-      let sawTour = getCookie("sawTour")
-      if (!sawTour) {
+      let sawHomeTour = getCookie("sawHomeTour")
+      if (!sawHomeTour && window.location.pathname == '/') {
         introJs().start();
-        document.cookie = "sawTour = true"
+        document.cookie = "sawHomeTour = true"
+      }
+      let sawSearchTour = getCookie("sawSearchTour")
+      if (!sawSearchTour && window.location.pathname.includes('search')) {
+        introJs().start();
+        document.cookie = "sawSearchTour = true"
       }
     }
     autoStartTour()
