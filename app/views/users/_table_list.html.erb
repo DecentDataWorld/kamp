@@ -27,7 +27,7 @@
           <% end %>
           <% if !user.organization_applications.nil? %>
             <% user.organization_applications.each do |userapplication| %>
-              <% if userapplication.approved == false || userapplication.approved.nil? %>
+              <% if (userapplication.approved == false || userapplication.approved.nil?) && userapplication.organization %>
                 <%= link_to userapplication.organization.name, organization_path(userapplication.organization) %> (applied to join)<br>
               <% end %>
             <% end %>
