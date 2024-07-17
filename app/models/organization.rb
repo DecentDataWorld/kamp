@@ -7,7 +7,7 @@ class Organization < ActiveRecord::Base
 
   has_many :collections, :class_name => "Collection", :foreign_key => "organization_id"
   has_many :resources, :class_name => "Resource", :foreign_key => "organization_id"
-  has_many :organization_applications, :class_name => "OrganizationApplication", :foreign_key => "organization_id"
+  has_many :organization_applications, :class_name => "OrganizationApplication", :foreign_key => "organization_id", dependent: :destroy
 
   has_many :users_organizations, :class_name => 'UsersOrganization', dependent: :destroy
   has_many :users, through: :users_organizations
