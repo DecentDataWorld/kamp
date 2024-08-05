@@ -53,6 +53,6 @@ production:
   encoding: unicode
   host:     <%= ENV['POSTGRES_HOST'] %>
   database: <%= ENV['POSTGRES_DATABASE'] %>
-  pool:     5
+  pool:     20
   username: <%= ENV['POSTGRES_USERNAME'] %>
   password: <%= ENV['POSTGRES_PASSWORD'] %>

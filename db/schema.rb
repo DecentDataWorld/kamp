@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_04_211426) do
+ActiveRecord::Schema[7.0].define(version: 2024_08_02_143526) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -315,9 +315,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_04_211426) do
     t.index "to_tsvector('english'::regconfig, (((name)::text || ' '::text) || description))", name: "idx_fts_resources_concat", using: :gin
     t.index "to_tsvector('english'::regconfig, (name)::text)", name: "idx_fts_resources_name", using: :gin
     t.index "to_tsvector('english'::regconfig, description)", name: "idx_fts_resources_description", using: :gin
+    t.index ["approved"], name: "index_resources_on_approved"
     t.index ["ci_lower_bound"], name: "index_resources_on_ci_lower_bound"
     t.index ["cop_id"], name: "index_resources_on_cop_id"
+    t.index ["cop_private"], name: "index_resources_on_cop_private"
+    t.index ["language"], name: "index_resources_on_language"
     t.index ["organization_id"], name: "index_resources_on_organization_id"
+    t.index ["private"], name: "index_resources_on_private"
+    t.index ["updated_at"], name: "index_resources_on_updated_at"
   end
 
   create_table "resourcings", id: :serial, force: :cascade do |t|
@@ -377,8 +382,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_04_211426) do
     t.string "context", limit: 128
     t.datetime "created_at", precision: nil
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
     t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
     t.index ["taggable_id", "taggable_type", "tag_id"], name: "taggable_resources_index"
+    t.index ["taggable_id"], name: "index_taggings_on_taggable_id"
+    t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
   end
 
   create_table "tags", id: :serial, force: :cascade do |t|
