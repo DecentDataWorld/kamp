@@ -139,7 +139,6 @@ class Resource < ActiveRecord::Base
       ORDER BY #{search_query ? "ts_rank(rs.document, to_tsquery('english', '#{search_query}')) DESC" : "rs.updated_at DESC"}
     SQL
 
-    puts query
     results = Resource.find_by_sql(query)
     ids = results.map(&:id)
     count = ids.length
