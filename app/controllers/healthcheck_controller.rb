@@ -2,9 +2,17 @@ class HealthcheckController < ApplicationController
   before_action :set_cache_headers
 
   def check_db
-    connection = ActiveRecord::Base.connection_pool.stat
-    status = connection ? :ok : :service_unavailable
-    render json: {:connected => connection}, status: status
+    begin
+      ActiveRecord::Base.connection.execute("SELECT 1")
+      status = :ok
+      message = "Database connection healthy"
+    rescue => e
+      status = :service_unavailable
+      message = "Database connection error: #{e.message}"
+      Rails.logger.error("Healthcheck failed: #{e.message}")
+    end
+
+    render json: { status: message }, status: status
   end
 
   private
