@@ -32,7 +32,7 @@ class CopsController < ApplicationController
   def show
     hide_cop_private = !current_user.cops.include?(@cop)
     # get all submissions for this cop
-    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=nil, cop=@cop.id, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=hide_cop_private)
+    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags=nil, org=nil, cop=@cop.id, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=hide_cop_private)
     @resource_count = resource_results[:count]
     @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
     @new_event_request_email_body = Event.request_email_body(@current_user)
@@ -52,7 +52,7 @@ class CopsController < ApplicationController
   def show_cop
     hide_cop_private = !current_user || !current_user.cops.include?(@cop)
     # get all submissions for this cop
-    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=nil, cop=@cop.id, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=hide_cop_private)
+    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags=nil, org=nil, cop=@cop.id, language=nil, days_back=nil, only_approved=true, exclude_private=true, exclude_cop_private=hide_cop_private)
     @resource_count = resource_results[:count]
     @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
     @new_event_request_email_body = Event.request_email_body(@current_user)
@@ -142,4 +142,3 @@ class CopsController < ApplicationController
       params.require(:cop).permit(:name, :description, :admin_id, :user_ids => [], :resource_ids => [])
     end
   end
-  
