@@ -146,160 +146,63 @@ class Resource < ActiveRecord::Base
     { ids: ids, count: count }
   end
 
-  def self.search_tags(search_terms = nil, tags = nil, org = nil, cop = nil, language = nil, days_back = nil, only_approved = true, exclude_private = true, exclude_cop_private = true)
-    target_date = Date.today - days_back.to_i if days_back
-    search_query = search_terms ? search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') : nil
-    tag_ids = tags ? tags.join(",") : nil
-
-    conditions = []
-    conditions << "r.approved = true" if only_approved
-    conditions << "r.private = false" if exclude_private
-    conditions << "r.cop_private = false" if exclude_cop_private
-
-    tags_conditions = []
-    tags_conditions << "r.organization_id = #{org}" if org
-    tags_conditions << "r.cop_id = #{cop}" if cop
-    tags_conditions << "r.updated_at > '#{target_date}'" if days_back
-    tags_conditions << "r.language = '#{language}'" if language
-    tags_conditions << "tg.tag_id IN (#{tag_ids}) GROUP BY r.id HAVING COUNT(r.id) = #{tags.length}" if tags
-
+  def self.resource_tags(resource_ids)
     query = <<-SQL
-      WITH resources_search AS (
-        SELECT
-          r.id,
-          setweight(to_tsvector('english', r.name), 'A') ||
-          setweight(to_tsvector('english', r.description), 'B') as document
-        FROM resources r
-        WHERE #{conditions.join(' AND ')}
-      ),
-      filtered_resources_tags AS (
-        SELECT #{!tags ? "DISTINCT" : ""} r.id
-        FROM resources r
-        INNER JOIN taggings tg ON r.id = tg.taggable_id AND tg.taggable_type = 'Resource'
-        INNER JOIN tags t ON tg.tag_id = t.id
-        WHERE #{tags_conditions.any? ? tags_conditions.join(' AND ') : '1=1'}
-      )
       SELECT
         t.id,
         t.name,
         tt.name AS tag_type,
         tt.id AS tag_type_id,
         COUNT(t.id) AS tag_count
-      FROM resources_search rs
-      INNER JOIN filtered_resources_tags frt ON rs.id = frt.id
-      INNER JOIN taggings tg ON rs.id = tg.taggable_id AND tg.taggable_type = 'Resource'
+      FROM resources r
+      INNER JOIN taggings tg ON r.id = tg.taggable_id AND tg.taggable_type = 'Resource'
       INNER JOIN tags t ON tg.tag_id = t.id
       INNER JOIN tag_types tt ON t.tag_type_id = tt.id
-      #{search_query ? "WHERE rs.document @@ to_tsquery('english', '#{search_query}')" : ""}
+      WHERE r.id IN (?)
       GROUP BY t.name, t.id, tt.name, tt.id
       ORDER BY tt.name, t.name DESC
     SQL
 
-    results = ActiveRecord::Base.connection.exec_query(query)
+    sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, resource_ids])
+    results = ActiveRecord::Base.connection.exec_query(sanitized_query)
     grouped_results = results.group_by { |r| r["tag_type"] }
 
     grouped_results
   end
 
-  def self.search_orgs(search_terms = nil, tags = nil, cop = nil, language = nil, days_back = nil, only_approved = true, exclude_private = true, exclude_cop_private = true)
-    target_date = Date.today - days_back.to_i if days_back
-    search_query = search_terms ? search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') : nil
-    tag_ids = tags ? tags.join(",") : nil
-
-    conditions = []
-    conditions << "r.approved = true" if only_approved
-    conditions << "r.private = false" if exclude_private
-    conditions << "r.cop_private = false" if exclude_cop_private
-
-    tags_conditions = []
-    tags_conditions << "r.cop_id = #{cop}" if cop
-    tags_conditions << "r.updated_at > '#{target_date}'" if days_back
-    tags_conditions << "r.language = '#{language}'" if language
-    tags_conditions << "tg.tag_id IN (#{tag_ids}) GROUP BY r.id HAVING COUNT(r.id) = #{tags.length}" if tags
-
+  def self.resource_orgs(resource_ids)
     query = <<-SQL
-      WITH resources_search AS (
-        SELECT
-          r.id,
-          r.organization_id,
-          setweight(to_tsvector('english', r.name), 'A') ||
-          setweight(to_tsvector('english', r.description), 'B') as document
-        FROM resources r
-        WHERE #{conditions.join(' AND ')}
-      ),
-      filtered_resources_tags AS (
-        SELECT #{!tags ? "DISTINCT" : ""} r.id
-        FROM resources r
-        INNER JOIN taggings tg ON r.id = tg.taggable_id AND tg.taggable_type = 'Resource'
-        INNER JOIN tags t ON tg.tag_id = t.id
-        WHERE #{tags_conditions.any? ? tags_conditions.join(' AND ') : '1=1'}
-      )
       SELECT
         o.id,
         o.name,
-        COUNT(DISTINCT rs.id) AS org_count
-      FROM resources_search rs
-      INNER JOIN organizations o ON rs.organization_id = o.id
-      INNER JOIN filtered_resources_tags frt ON rs.id = frt.id
-      INNER JOIN taggings tg ON rs.id = tg.taggable_id AND tg.taggable_type = 'Resource'
-      INNER JOIN tags t ON tg.tag_id = t.id
-      #{search_query ? "WHERE rs.document @@ to_tsquery('english', '#{search_query}')" : ""}
+        COUNT(DISTINCT r.id) AS org_count
+      FROM resources r
+      INNER JOIN organizations o ON r.organization_id = o.id
+      WHERE r.id IN (?)
       GROUP BY o.name, o.id
       ORDER BY org_count DESC
     SQL
 
-    results = ActiveRecord::Base.connection.exec_query(query)
+    sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, resource_ids])
+    results = ActiveRecord::Base.connection.exec_query(sanitized_query)
     results.to_ary
   end
 
-  def self.search_cops(search_terms = nil, tags = nil, org = nil, language = nil, days_back = nil, only_approved = true, exclude_private = true, exclude_cop_private = true)
-    target_date = Date.today - days_back.to_i if days_back
-    search_query = search_terms ? search_terms.gsub('&', ' ').gsub('|', ' ').split(' ').join(' & ') : nil
-    tag_ids = tags ? tags.join(",") : nil
-
-    conditions = []
-    conditions << "r.approved = true" if only_approved
-    conditions << "r.private = false" if exclude_private
-    conditions << "r.cop_private = false" if exclude_cop_private
-
-    tags_conditions = []
-    tags_conditions << "r.organization_id = #{org}" if org
-    tags_conditions << "r.updated_at > '#{target_date}'" if days_back
-    tags_conditions << "r.language = '#{language}'" if language
-    tags_conditions << "tg.tag_id IN (#{tag_ids}) GROUP BY r.id HAVING COUNT(r.id) = #{tags.length}" if tags
-
+  def self.resource_cops(resource_ids)
     query = <<-SQL
-      WITH resources_search AS (
-        SELECT
-          r.id,
-          r.cop_id,
-          setweight(to_tsvector('english', r.name), 'A') ||
-          setweight(to_tsvector('english', r.description), 'B') as document
-        FROM resources r
-        WHERE #{conditions.join(' AND ')}
-      ),
-      filtered_resources_tags AS (
-        SELECT #{!tags ? "DISTINCT" : ""} r.id
-        FROM resources r
-        INNER JOIN taggings tg ON r.id = tg.taggable_id AND tg.taggable_type = 'Resource'
-        INNER JOIN tags t ON tg.tag_id = t.id
-        WHERE #{tags_conditions.any? ? tags_conditions.join(' AND ') : '1=1'}
-      )
       SELECT
         c.id,
         c.name,
-        COUNT(DISTINCT rs.id) AS cop_count
-      FROM resources_search rs
-      INNER JOIN cops c ON rs.cop_id = c.id
-      INNER JOIN filtered_resources_tags frt ON rs.id = frt.id
-      INNER JOIN taggings tg ON rs.id = tg.taggable_id AND tg.taggable_type = 'Resource'
-      INNER JOIN tags t ON tg.tag_id = t.id
-      #{search_query ? "WHERE rs.document @@ to_tsquery('english', '#{search_query}')" : ""}
+        COUNT(DISTINCT r.id) AS cop_count
+      FROM resources r
+      INNER JOIN cops c ON r.cop_id = c.id
+      WHERE r.id IN (?)
       GROUP BY c.name, c.id
       ORDER BY cop_count DESC
     SQL
 
-    results = ActiveRecord::Base.connection.exec_query(query)
+    sanitized_query = ActiveRecord::Base.sanitize_sql_array([query, resource_ids])
+    results = ActiveRecord::Base.connection.exec_query(sanitized_query)
     results.to_ary
   end
 

@@ -167,15 +167,16 @@ class SearchesController < ApplicationController
     @days_backs = {7 => 'Less Than a Week Ago', 30 => 'Less Than a Month Ago', 183 => 'Less Than Six Months Ago', 365 => 'Less Than a Year Ago'}
 
     resource_results = Resource.search_kmp(params[:query], params[:tags], params[:organization_id], params[:cop_id], params[:language], params[:days_back])
+    resource_ids = resource_results[:ids]
     @resource_count = resource_results[:count]
-    @resources = Resource.where(id: resource_results[:ids]).order(Arel.sql("array_position(ARRAY[#{resource_results[:ids].join(',')}], resources.id)")).paginate(page: params[:page], per_page: 10)
-    @tags = Resource.search_tags(params[:query], params[:tags], params[:organization_id], params[:cop_id], params[:language], params[:days_back])
+    @resources = Resource.where(id: resource_ids).order(Arel.sql("array_position(ARRAY[#{resource_ids.join(',')}], resources.id)")).paginate(page: params[:page], per_page: 10)
+    @tags = Resource.resource_tags(resource_ids)
     @orgs = []
     @organization = nil
     if params[:organization_id].present? and Organization.where(id: params[:organization_id]).exists?
       @organization =  Organization.find(params[:organization_id])
     else
-      @orgs = Resource.search_orgs(params[:query], params[:tags], params[:cop_id], params[:language], params[:days_back])
+      @orgs = Resource.resource_orgs(resource_ids)
     end
 
     @cops = []
@@ -183,7 +184,7 @@ class SearchesController < ApplicationController
     if params[:cop_id].present? and Cop.where(id: params[:cop_id]).exists?
       @cop =  Cop.find(params[:cop_id])
     else
-      @cops = Resource.search_cops(params[:query], params[:tags], params[:organization_id], params[:language], params[:days_back])
+      @cops = Resource.resource_cops(resource_ids)
     end
 
     collection_results = Collection.search_kmp(params[:query], params[:tags], params[:organization_id], params[:cop_id], params[:days_back])
