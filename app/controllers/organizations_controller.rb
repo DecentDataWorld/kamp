@@ -52,7 +52,7 @@ class OrganizationsController < ApplicationController
     end
 
     # get all submissions for this organization
-    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags="", org=@organization.id, cop=nil, language=nil, days_back=nil, only_approved=true, exclude_private=hide_private)
+    resource_results = Resource.search_kmp(search_terms=params[:resource_query], tags=nil, org=@organization.id, cop=nil, language=nil, days_back=nil, only_approved=true, exclude_private=hide_private)
     @resource_count = resource_results[:count]
     @resources = Resource.where(id: resource_results[:ids]).order("updated_at desc").paginate(page: params[:page], per_page: 10)
 
