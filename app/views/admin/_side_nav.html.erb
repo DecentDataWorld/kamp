@@ -43,6 +43,9 @@
     <li class="list-group-item available-tags ps-1">
       <a href="<%= users_url %>" class="<%= 'active' if current_page?(users_url) %>"><%=t('navigation.users')%></a>
     </li>
+    <li class="list-group-item available-tags ps-1">
+      <a href="<%= users_url %>.csv"><%=t('navigation.download_users')%></a>
+    </li>
   <% end %>
   
   

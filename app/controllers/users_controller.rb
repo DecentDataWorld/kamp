@@ -1,3 +1,4 @@
+require 'csv'
 class UsersController < ApplicationController
   before_action :authenticate_user!, except: [:show, :request_invite, :send_invite, :unsubscribe]
   before_action :authorize_user_admin, only: [:index, :get_users]
@@ -6,22 +7,31 @@ class UsersController < ApplicationController
 
   def index
     authorize! :index, @user, :message => 'Not authorized as an administrator.'
-    @users = User.where(deactivated_at: nil).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30)
 
-    if params[:organization_id]
-      @users = @users.filter{|u| params[:organization_id].length > 0 ? u.users_organizations.pluck(:organization_id).include?(params[:organization_id].to_i) : u.users_organizations.pluck(:organization_id)}
-    end
+    respond_to do |format|
+      format.html {
+        @users = User.where(deactivated_at: nil).where("users.name ILIKE ?", "%#{params[:search]}%").includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc).paginate(:page => params[:page], :per_page => 30)
 
-    if params[:role_id]
-      @users = @users.filter{|u| params[:role_id].length > 0 ? u.roles.pluck(:role_id).include?(params[:role_id].to_i) : u.roles.pluck(:role_id)}
-    end
+        if params[:organization_id]
+          @users = @users.filter{|u| params[:organization_id].length > 0 ? u.users_organizations.pluck(:organization_id).include?(params[:organization_id].to_i) : u.users_organizations.pluck(:organization_id)}
+        end
 
-    if params[:usage_id]
-      if params[:usage_id] == 'ninety'
-        @users = @users.where('users.created_at > ? ', Time.now - 90.days)
-      elsif params[:usage_id] == 'year'
-        @users = @users.where('last_sign_in_at < ?', Time.now - 1.year)
-      end
+        if params[:role_id]
+          @users = @users.filter{|u| params[:role_id].length > 0 ? u.roles.pluck(:role_id).include?(params[:role_id].to_i) : u.roles.pluck(:role_id)}
+        end
+
+        if params[:usage_id]
+          if params[:usage_id] == 'ninety'
+            @users = @users.where('users.created_at > ? ', Time.now - 90.days)
+          elsif params[:usage_id] == 'year'
+            @users = @users.where('last_sign_in_at < ?', Time.now - 1.year)
+          end
+        end
+      }
+      format.csv {
+        @users = User.where(deactivated_at: nil).includes(:users_organizations, :organizations, :roles, :organization_applications).order(name: :asc)
+        send_data users_to_csv(@users)
+      }
     end
   end
 
@@ -58,7 +68,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @page_title = "Edit " + @user.name
   end
-  
+
   def update
     authorize! :update, @user, :message => 'Not authorized as an administrator.'
     @user = User.find(params[:id])
@@ -267,6 +277,23 @@ class UsersController < ApplicationController
     unless can? :manage, User
       flash[:error] = "You are not authorized to view that page."
       redirect_to root_path
+    end
+  end
+
+  def users_to_csv(users)
+    CSV.generate do |csv|
+      csv << ['ID', 'Name','Email','Role','Organizations','Last Sign In','Created']
+      users.each do |u|
+        csv_array = []
+        csv_array << u.id
+        csv_array << u.name
+        csv_array << u.email
+        csv_array << u.roles.pluck(:name).join(', ').titleize
+        !u.organizations.nil? ? csv_array << u.organizations.pluck(:name).join(', ') : csv_array << ''
+        csv_array << u.last_sign_in_at
+        csv_array << u.created_at
+        csv << csv_array
+      end
     end
   end
 
