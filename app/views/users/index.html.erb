@@ -49,10 +49,12 @@
                   <td><%= u.roles.pluck(:name).join(', ').titleize %></td>
                   <td><% if !u.organizations.nil? %>
                     <% u.users_organizations.each do |userorganization| %>
-                      <%= link_to userorganization.organization.name, organization_path(userorganization.organization) %> (<%= userorganization.role %>)<br>
+                      <% if userorganization.organization && !userorganization.organization.name.blank? %>
+                        <%= link_to userorganization.organization.name, organization_path(userorganization.organization) %> (<%= userorganization.role %>)<br>
+                      <% end %>
                     <% end %>
                   <% end %></td>
-                  <td><%= u.last_sign_in_at.strftime("%Y-%m-%d") %></td>
+                  <td><%= u.last_sign_in_at.nil? ? "Never" : u.last_sign_in_at.strftime("%Y-%m-%d") %></td>
                   <td><%= u.created_at.strftime("%Y-%m-%d") %></td>
                   <td class="text-center"><%= button_to deactivate_user_path(u), method: :put, remote: true, class: 'btn btn-outline-danger btn-sm', role: "button" do %>Deactivate<% end %></td>
                 </tr>
