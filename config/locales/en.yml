@@ -53,6 +53,8 @@ en:
         kamp_role: "Role"
         organizations: "Organizations"
         results: "Results"
+        last_sign_in_at: "Last Sign In"
+        created_at: "Created"
       organization:
         name: "Organization"
         email_domain: "Email Domain"
