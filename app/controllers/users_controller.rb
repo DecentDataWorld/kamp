@@ -284,14 +284,15 @@ class UsersController < ApplicationController
     CSV.generate do |csv|
       csv << ['ID', 'Name','Email','Role','Organizations','Last Sign In','Created']
       users.each do |u|
+        formatted_last_sign_in = u.last_sign_in_at.nil? ? 'Never' : u.last_sign_in_at.strftime("%Y-%m-%d")
         csv_array = []
         csv_array << u.id
         csv_array << u.name
         csv_array << u.email
         csv_array << u.roles.pluck(:name).join(', ').titleize
         !u.organizations.nil? ? csv_array << u.organizations.pluck(:name).join(', ') : csv_array << ''
-        csv_array << u.last_sign_in_at
-        csv_array << u.created_at
+        csv_array << formatted_last_sign_in
+        csv_array << u.created_at.strftime("%Y-%m-%d")
         csv << csv_array
       end
     end
