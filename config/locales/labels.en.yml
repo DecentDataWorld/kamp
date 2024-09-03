@@ -56,6 +56,7 @@ en:
     tag_type: "Tag Type"
     tag_types: "Tag Types"
     new_tag_type: "New Tag Type"
+    download_users: "Download Users CSV"
   headers:
     organization:
       new: "Add Organization"
