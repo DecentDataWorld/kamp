@@ -13,6 +13,23 @@ module Mesp
     config.load_defaults 5.0
     config.assets.css_compressor = nil
 
+    config.active_record.yaml_column_permitted_classes = [
+      Symbol,
+      Date,
+      Time,
+      BigDecimal,
+      Hash,
+      Array,
+      String,
+      Integer,
+      Float,
+      ActiveSupport::HashWithIndifferentAccess,
+      ActionDispatch::Http::UploadedFile,
+      Tempfile,
+      File,
+      URI
+    ]
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading

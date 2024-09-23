@@ -151,8 +151,8 @@ class ResourcesController < ApplicationController
     @full_tags_list = ActsAsTaggableOn::Tag.all
     respond_to do |format|
       @resource.tag_list = params[:resource][:tags]
-      logger.debug(@resource.tag_list + ' are the tags')
       if @resource.update(resource_params)
+
 
         handle_collection_radios
 
