@@ -75,8 +75,8 @@ Rails.application.configure do
     :storage => :s3,
     :s3_permissions => :private,
     :s3_protocol => :https,
-    :bucket => "kamp-test",
-    :s3_region => "us-east-1",
+    :bucket => "usjkamp",
+    :s3_region => ENV['AWS_REGION'],
     :s3_credentials => {
         access_key_id: ENV['AWS_ACCESS_KEY_ID'],
         secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
