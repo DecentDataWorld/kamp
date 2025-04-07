@@ -1,6 +1,6 @@
 class OrganizationMailer < ActionMailer::Base
 
-  default from: "help@jordankmportal.com"
+  default from: "help@decentdata.world"
 
 
   def notify_organization_admins_of_new_application(organization, user)

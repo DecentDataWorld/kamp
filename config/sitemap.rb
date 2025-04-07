@@ -1,4 +1,4 @@
-Sitemap::Generator.instance.load :host => "https://jordankmportal.com" do
+Sitemap::Generator.instance.load :host => "https://jordankmportal.decentdata.world" do
   path :root
   path :faq
   path :about

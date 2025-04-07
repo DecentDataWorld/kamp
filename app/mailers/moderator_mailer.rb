@@ -1,6 +1,6 @@
 class ModeratorMailer < ActionMailer::Base
 
-  default from: "help@jordankmportal.com"
+  default from: "help@decentdata.world"
 
   def notify_submitter_of_approval(submission, user)
     @submission = submission

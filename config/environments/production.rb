@@ -67,7 +67,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # TODO: CHANGE THIS BACK AT CUTOVER!!
-  config.action_mailer.default_url_options = { :host => 'jordankmportal.com' }
+  config.action_mailer.default_url_options = { :host => 'jordankmportal.decentdata.world' }
   config.action_mailer.perform_caching = false
   config.action_mailer.delivery_method = :ses
   config.action_mailer.perform_deliveries = true
@@ -101,11 +101,15 @@ Rails.application.configure do
     :s3_permissions => :private,
     :s3_protocol => :https,
     :bucket => "usjkamp",
-    :s3_region => ENV['AWS_REGION'],
+    :s3_region => 'nyc3',
     :s3_credentials => {
         access_key_id: ENV['AWS_ACCESS_KEY_ID'],
-        secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
-    }
+        secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+        s3_host_name: 'nyc3.digitaloceanspaces.com',
+        endpoint: 'https://nyc3.digitaloceanspaces.com'
+    },
+    url: ':s3_alias_url',
+    s3_host_alias: 'usjkamp.nyc3.cdn.digitaloceanspaces.com',
   }
 
   config.lograge.enabled = true

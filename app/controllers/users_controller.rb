@@ -260,7 +260,7 @@ class UsersController < ApplicationController
         User.unsubscribe(params[:email])
         render json: {:message => 'You have successfully unsubscribed from Jordan KaMP emails.'}, status: :ok
       else
-        render json: {:message => 'Failed to unsubscribe you from Jordan KaMP emails. Please contact the website administrator at help@jordankmportal.com'}, status: :unprocessable_entity
+        render json: {:message => 'Failed to unsubscribe you from Jordan KaMP emails. Please contact the website administrator at help@decentdata.world'}, status: :unprocessable_entity
       end
     else
       render json: {:message => t('errors.error')}, status: :unprocessable_entity

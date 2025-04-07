@@ -7,7 +7,7 @@ gem 'jbuilder'
 gem 'cancancan'
 gem 'devise'
 gem 'devise_invitable'
-gem 'devise-security' 
+gem 'devise-security'
 gem 'devise-i18n'
 gem 'figaro'
 gem "pg", "~> 1.1"
@@ -41,6 +41,7 @@ gem "recaptcha", require: "recaptcha/rails"
 gem 'puma', '~> 5.0'
 gem 'ckeditor'
 gem "simple_calendar", "~> 2.4"
+gem 'kamal'
 
 # Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
 gem "jsbundling-rails"
