@@ -76,11 +76,15 @@ Rails.application.configure do
     :s3_permissions => :private,
     :s3_protocol => :https,
     :bucket => "usjkamp",
-    :s3_region => ENV['AWS_REGION'],
+    :s3_region => 'nyc3',
     :s3_credentials => {
         access_key_id: ENV['AWS_ACCESS_KEY_ID'],
-        secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
-    }
+        secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+        s3_host_name: 'nyc3.digitaloceanspaces.com',
+        endpoint: 'https://nyc3.digitaloceanspaces.com'
+    },
+    url: ':s3_alias_url',
+    s3_host_alias: 'usjkamp.nyc3.cdn.digitaloceanspaces.com',
   }
 
   config.action_mailer.default_url_options = { :host => "localhost" }
