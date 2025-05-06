@@ -100,16 +100,28 @@ Rails.application.configure do
     :storage => :s3,
     :s3_permissions => :private,
     :s3_protocol => :https,
-    :bucket => "usjkamp",
-    :s3_region => 'nyc3',
+    :bucket => "usjkamp", # Your DO Space name
+
+    # --- Endpoint for the S3 API interaction ---
+    :endpoint => 'https://usjkamp.ams3.digitaloceanspaces.com', # Key setting
+
+    # --- Credentials ---
     :s3_credentials => {
-        access_key_id: ENV['AWS_ACCESS_KEY_ID'],
-        secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
-        s3_host_name: 'nyc3.digitaloceanspaces.com',
-        endpoint: 'https://nyc3.digitaloceanspaces.com'
+      #:bucket => "usjkamp", # Often needed here too
+      :access_key_id => ENV['DO_SPACES_ACCESS_KEY_ID'],
+      :secret_access_key => ENV['DO_SPACES_SECRET_ACCESS_KEY'],
+      #:s3_region => 'ams3' # REMOVED - Let endpoint define region/target
     },
-    url: ':s3_alias_url',
-    s3_host_alias: 'usjkamp.nyc3.cdn.digitaloceanspaces.com',
+
+    s3_options: {
+      force_path_style: true
+    },
+
+    # --- URL Generation ---
+    :url => ':s3_alias_url',
+    :s3_host_alias => 'usjkamp.ams3.digitaloceanspaces.com',
+
+    :s3_region => 'ams3',
   }
 
   config.lograge.enabled = true
