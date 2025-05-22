@@ -70,33 +70,17 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  # send files to AWS S3 bucket in IMS Account
+  # send files to AWS S3 bucket
   config.paperclip_defaults = {
     :storage => :s3,
     :s3_permissions => :private,
     :s3_protocol => :https,
-    :bucket => "usjkamp", # Your DO Space name
-
-    # --- Endpoint for the S3 API interaction ---
-    :endpoint => 'https://usjkamp.ams3.digitaloceanspaces.com', # Key setting
-
-    # --- Credentials ---
+    :bucket => "usjkampdocs",
+    :s3_region => ENV['AWS_REGION'],
     :s3_credentials => {
-      #:bucket => "usjkamp", # Often needed here too
-      :access_key_id => ENV['DO_SPACES_ACCESS_KEY_ID'],
-      :secret_access_key => ENV['DO_SPACES_SECRET_ACCESS_KEY'],
-      #:s3_region => 'ams3' # REMOVED - Let endpoint define region/target
-    },
-
-    s3_options: {
-      force_path_style: true
-    },
-
-    # --- URL Generation ---
-    :url => ':s3_alias_url',
-    :s3_host_alias => 'usjkamp.ams3.digitaloceanspaces.com',
-
-    :s3_region => 'ams3',
+        access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+        secret_access_key: ENV['AWS_SECRET_ACCESS_KEY']
+    }
   }
 
   config.action_mailer.default_url_options = { :host => "localhost" }
