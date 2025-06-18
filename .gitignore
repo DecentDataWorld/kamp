@@ -98,3 +98,4 @@ pickle-email-*.html
 yarn-error.log
 
 /public/assets
+/.kamal/secrets

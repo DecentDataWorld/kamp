@@ -41,7 +41,7 @@ gem "recaptcha", require: "recaptcha/rails"
 gem 'puma', '~> 5.0'
 gem 'ckeditor'
 gem "simple_calendar", "~> 2.4"
-gem 'kamal'
+gem 'kamal', '~> 2.6'
 
 # Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]
 gem "jsbundling-rails"
@@ -82,7 +82,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'faker'
 end
-gem 'dotenv-rails', groups: [:development, :test]
+gem 'dotenv-rails', '>= 3.1', groups: [:development, :test]
 group :production do
   gem 'lograge'
   gem 'logstash-event'
