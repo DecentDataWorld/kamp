@@ -95,8 +95,9 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+
   # send files to AWS S3 bucket
-  onfig.paperclip_defaults = {
+  config.paperclip_defaults = {
     :storage => :s3,
     :s3_permissions => :private,
     :s3_protocol => :https,

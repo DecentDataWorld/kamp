@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   get 'cops/:id', to: 'cops#show_cop', as: :show_cop
   get 'cop_event_email_info/:id', to: 'cops#show_event_email_info', as: :cop_event_email_info
   get 'cop_email_info/:id', to: 'cops#show_email_info', as: :cop_email_info
-  
+
   resources :events, path: 'admin/events'
   get 'events', to: 'events#public_events', as: :public_events
   get 'events/:id', to: 'events#show_event', as: :show_event
@@ -137,6 +137,8 @@ Rails.application.routes.draw do
 
   #HEALTHCHECK
   get '/healthcheck', to: 'healthcheck#check_db'
+  get '/up', to: 'healthcheck#check_db'
+
 
   # Return 404 for any unmatched paths except those bound for Rails-provided actions
   match '*path', to: redirect('/404'), via: :all, constraints: lambda { |req|

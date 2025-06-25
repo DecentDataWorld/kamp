@@ -24,7 +24,7 @@ ENV RACK_ENV=production
 ENV NODE_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true
-ENV PORT=80
+#ENV PORT=80
 ENV APP_PATH /kamp
 
 WORKDIR $APP_PATH
@@ -63,7 +63,7 @@ ENV RAILS_ENV production
 ENV NODE_ENV production
 ENV RAILS_SERVE_STATIC_FILES true
 ENV RAILS_LOG_TO_STDOUT true
-ENV PORT 80
+#ENV PORT 80
 # Some native extensions required by gems such as pg or mysql2.
 COPY --from=builder /usr/lib /usr/lib
 COPY --from=builder /usr/bin /usr/bin
@@ -79,6 +79,8 @@ COPY --from=builder /usr/local/bundle /usr/local/bundle
 COPY --from=builder /kamp /kamp
 
 EXPOSE 3000
+
+LABEL service=kamp
 
 # Start the main process.
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
